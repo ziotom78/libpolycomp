@@ -109,9 +109,10 @@ void test_rle_binary_format(void)
             input_buf[idx] = random() % 10;                            \
         }                                                              \
                                                                        \
-        pcomp_compr_fn(compr_buf, &compr_size, input_buf, input_size); \
-        pcomp_decompr_fn(decompr_buf, &decompr_size, compr_buf,        \
-                         compr_size);                                  \
+        assert(pcomp_compr_fn(compr_buf, &compr_size, input_buf,       \
+                              input_size) == PCOMP_STAT_SUCCESS);      \
+        assert(pcomp_decompr_fn(decompr_buf, &decompr_size, compr_buf, \
+                                compr_size) == PCOMP_STAT_SUCCESS);    \
                                                                        \
         assert(decompr_size == input_size);                            \
         for (idx = 0; idx < input_size; ++idx) {                       \
