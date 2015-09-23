@@ -163,9 +163,40 @@ void test_rle_decompression(void)
     test_rle_decompress_uint64();
 }
 
+/***********************************************************************
+ * Check that there are no overflows when the sequence of repeated
+ * values is very long. */
+
+void test_rle_no_overflow(void)
+{
+    size_t input_size = INT8_MAX + 2;
+    int8_t* input_buf = malloc(input_size * sizeof(int8_t));
+    size_t output_size = pcomp_rle_bufsize(input_size) * sizeof(int8_t);
+    int8_t* output_buf = malloc(output_size);
+    size_t idx;
+    const int8_t value = 123;
+
+    for (idx = 0; idx < input_size; ++idx) {
+        input_buf[idx] = value;
+    }
+
+    assert(pcomp_compress_rle_int8(output_buf, &output_size, input_buf,
+                                   input_size) == PCOMP_STAT_SUCCESS);
+
+    assert(output_size == 4);
+    assert(output_buf[0] == INT8_MAX); /* Count */
+    assert(output_buf[1] == value); /* Value */
+    assert(output_buf[2] == 2); /* Count */
+    assert(output_buf[3] == value); /* Value */
+
+    free(output_buf);
+}
+
 int main(void)
 {
     test_rle_binary_format();
     test_rle_decompression();
+    test_rle_no_overflow();
+
     return 0;
 }
