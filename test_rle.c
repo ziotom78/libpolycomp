@@ -86,42 +86,85 @@ void test_rle_binary_format(void)
 }
 
 /***********************************************************************
- * Check that the RLE routines are able to properly uncompress a
+ * Check that the RLE routines are able to properly decompress a
  * (long) sequence of data. */
 
-void test_rle_uncompress_int8(void)
+#define DEFINE_RLE_DECOMPRESS_TEST(fn_name, pcomp_compr_fn,            \
+                                   pcomp_decompr_fn, datatype_t)       \
+    void fn_name(void)                                                 \
+    {                                                                  \
+        const size_t input_size = 10000;                               \
+        datatype_t* input_buf                                          \
+            = malloc(input_size * sizeof(datatype_t));                 \
+        size_t compr_size = pcomp_rle_bufsize(input_size)              \
+                            * sizeof(datatype_t);                      \
+        datatype_t* compr_buf = malloc(compr_size);                    \
+        datatype_t* decompr_buf                                        \
+            = malloc(input_size * sizeof(datatype_t));                 \
+        size_t decompr_size = input_size;                              \
+        size_t idx;                                                    \
+                                                                       \
+        for (idx = 0; idx < input_size; ++idx) {                       \
+            /* Pick a number between 0 and 9 */                        \
+            input_buf[idx] = random() % 10;                            \
+        }                                                              \
+                                                                       \
+        pcomp_compr_fn(compr_buf, &compr_size, input_buf, input_size); \
+        pcomp_decompr_fn(decompr_buf, &decompr_size, compr_buf,        \
+                         compr_size);                                  \
+                                                                       \
+        assert(decompr_size == input_size);                            \
+        for (idx = 0; idx < input_size; ++idx) {                       \
+            assert(decompr_buf[idx] == input_buf[idx]);                \
+        }                                                              \
+                                                                       \
+        free(input_buf);                                               \
+        free(compr_buf);                                               \
+        free(decompr_buf);                                             \
+    }
+
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_int8,
+                           pcomp_compress_rle_int8,
+                           pcomp_decompress_rle_int8, int8_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_int16,
+                           pcomp_compress_rle_int16,
+                           pcomp_decompress_rle_int16, int16_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_int32,
+                           pcomp_compress_rle_int32,
+                           pcomp_decompress_rle_int32, int32_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_int64,
+                           pcomp_compress_rle_int64,
+                           pcomp_decompress_rle_int64, int64_t)
+
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_uint8,
+                           pcomp_compress_rle_uint8,
+                           pcomp_decompress_rle_uint8, uint8_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_uint16,
+                           pcomp_compress_rle_uint16,
+                           pcomp_decompress_rle_uint16, uint16_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_uint32,
+                           pcomp_compress_rle_uint32,
+                           pcomp_decompress_rle_uint32, uint32_t)
+DEFINE_RLE_DECOMPRESS_TEST(test_rle_decompress_uint64,
+                           pcomp_compress_rle_uint64,
+                           pcomp_decompress_rle_uint64, uint64_t)
+
+void test_rle_decompression(void)
 {
-    const size_t input_size = 10000;
-    int8_t* input_buf = malloc(input_size * sizeof(int8_t));
-    size_t compr_size = pcomp_rle_bufsize(input_size) * sizeof(int8_t);
-    int8_t* compr_buf = malloc(compr_size);
-    int8_t* decompr_buf = malloc(input_size * sizeof(int8_t));
-    size_t decompr_size = input_size;
-    size_t idx;
+    test_rle_decompress_int8();
+    test_rle_decompress_int16();
+    test_rle_decompress_int32();
+    test_rle_decompress_int64();
 
-    for (idx = 0; idx < input_size; ++idx) {
-        /* Pick a number between 0 and 9 */
-        input_buf[idx] = random() % 10;
-    }
-
-    pcomp_compress_rle_int8(compr_buf, &compr_size, input_buf,
-                            input_size);
-    pcomp_decompress_rle_int8(decompr_buf, &decompr_size, compr_buf,
-                              compr_size);
-
-    assert(decompr_size == input_size);
-    for (idx = 0; idx < input_size; ++idx) {
-        assert(decompr_buf[idx] == input_buf[idx]);
-    }
-
-    free(input_buf);
-    free(compr_buf);
-    free(decompr_buf);
+    test_rle_decompress_uint8();
+    test_rle_decompress_uint16();
+    test_rle_decompress_uint32();
+    test_rle_decompress_uint64();
 }
 
 int main(void)
 {
     test_rle_binary_format();
-    test_rle_uncompress_int8();
+    test_rle_decompression();
     return 0;
 }

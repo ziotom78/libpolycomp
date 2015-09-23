@@ -88,37 +88,49 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
  * Run-Length decompression routines
  */
 
-int pcomp_decompress_rle_int8(int8_t* output_buf, size_t* output_size,
-                              const int8_t* input_buf,
-                              size_t input_size)
-{
-    size_t input_idx = 0;
-    size_t output_idx = 0;
-
-    if (output_buf == NULL || output_size == NULL || input_buf == NULL)
-        abort();
-
-    if (input_size == 0) {
-        *output_size = 0;
-        return PCOMP_STAT_SUCCESS;
+#define IMPLEMENT_RLE_DECOMPR_FN(name, datatype_t)                     \
+    int name(datatype_t* output_buf, size_t* output_size,              \
+             const datatype_t* input_buf, size_t input_size)           \
+    {                                                                  \
+        size_t input_idx = 0;                                          \
+        size_t output_idx = 0;                                         \
+                                                                       \
+        if (output_buf == NULL || output_size == NULL                  \
+            || input_buf == NULL)                                      \
+            abort();                                                   \
+                                                                       \
+        if (input_size == 0) {                                         \
+            *output_size = 0;                                          \
+            return PCOMP_STAT_SUCCESS;                                 \
+        }                                                              \
+                                                                       \
+        if (input_size % 2 != 0) {                                     \
+            return PCOMP_STAT_INVALID_ENCODING;                        \
+        }                                                              \
+                                                                       \
+        while (output_idx < *output_size                               \
+               && input_idx < input_size - 1) {                        \
+            datatype_t count = input_buf[input_idx];                   \
+            datatype_t value = input_buf[input_idx + 1];               \
+            datatype_t idx;                                            \
+                                                                       \
+            for (idx = 0; idx < count; ++idx) {                        \
+                output_buf[output_idx++] = value;                      \
+            }                                                          \
+                                                                       \
+            input_idx += 2;                                            \
+        }                                                              \
+                                                                       \
+        *output_size = output_idx;                                     \
+        return PCOMP_STAT_SUCCESS;                                     \
     }
 
-    if (input_size % 2 != 0) {
-        return PCOMP_STAT_INVALID_ENCODING;
-    }
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_int8, int8_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_int16, int16_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_int32, int32_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_int64, int64_t)
 
-    while (output_idx < *output_size && input_idx < input_size - 1) {
-        int8_t count = input_buf[input_idx];
-        int8_t value = input_buf[input_idx + 1];
-        int8_t idx;
-
-        for (idx = 0; idx < count; ++idx) {
-            output_buf[output_idx++] = value;
-        }
-
-        input_idx += 2;
-    }
-
-    *output_size = output_idx;
-    return PCOMP_STAT_SUCCESS;
-}
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_uint8, uint8_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_uint16, uint16_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_uint32, uint32_t)
+IMPLEMENT_RLE_DECOMPR_FN(pcomp_decompress_rle_uint64, uint64_t)
