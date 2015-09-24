@@ -26,7 +26,6 @@
 #include <libpolycomp.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 /***********************************************************************
  * Check that the RLE routines encode the output sequence in the
