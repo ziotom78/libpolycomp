@@ -222,30 +222,40 @@ int pcomp_decompress_diffrle_uint64(uint64_t* output_buf,
  * saving this information somewhere during compression.
  */
 
+/* Parameters used in the quantization. */
+typedef struct {
+    size_t element_size;
+    size_t bits_per_sample;
+    double min_value;
+    double normalization;
+} pcomp_quant_params_t;
+
 /* Return the minimum number of bytes necessary for the buffer that
  * will contain the compressed data, if the input data has
- * "input_size" elements, each requiring "element_size" bytes. Return
- * zero if the input is invalid. */
-size_t pcomp_quant_bufsize(size_t input_size, size_t bits_per_sample);
+ * "input_size" elements, each requiring "element_size" bytes, and if
+ * quantization will use a number of bits per sample equal to
+ * "bits_per_sample". Return zero if the input is invalid. */
+size_t pcomp_quant_bufsize(size_t input_size,
+                           const pcomp_quant_params_t* params);
 
 int pcomp_compress_quant_float(void* output_buf, size_t* output_size,
                                const float* input_buf,
                                size_t input_size,
-                               size_t bits_per_sample);
+                               pcomp_quant_params_t* params);
 int pcomp_compress_quant_double(void* output_buf, size_t* output_size,
                                 const double* input_buf,
                                 size_t input_size,
-                                size_t bits_per_sample);
+                                pcomp_quant_params_t* params);
 
 int pcomp_decompress_quant_float(float* output_buf, size_t output_size,
                                  const void* input_buf,
                                  size_t input_size,
-                                 size_t bits_per_sample);
+                                 const pcomp_quant_params_t* params);
 int pcomp_decompress_quant_double(double* output_buf,
                                   size_t output_size,
                                   const void* input_buf,
                                   size_t input_size,
-                                  size_t bits_per_sample);
+                                  const pcomp_quant_params_t* params);
 
 /***********************************************************************
  * Polynomial compression

@@ -48,6 +48,7 @@ target_include_directories (polycomp
 function(add_pcomp_test target)
   add_executable(${target} ${ARGN})
   target_link_libraries(${target} polycomp)
+  target_link_libraries(${target} m)
 
   add_test(${target} ${target})
 endfunction()
@@ -57,3 +58,4 @@ enable_testing()
 add_pcomp_test(test_version test_version.c)
 add_pcomp_test(test_rle test_rle.c)
 add_pcomp_test(test_diff_rle test_diff_rle.c)
+add_pcomp_test(test_quant test_quant.c)
