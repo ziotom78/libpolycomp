@@ -30,6 +30,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -g")
   
 add_library (polycomp
   diff_rle.c
+  quant.c
   rle.c
   version.c)
 

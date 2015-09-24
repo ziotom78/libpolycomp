@@ -226,22 +226,26 @@ int pcomp_decompress_diffrle_uint64(uint64_t* output_buf,
  * will contain the compressed data, if the input data has
  * "input_size" elements, each requiring "element_size" bytes. Return
  * zero if the input is invalid. */
-size_t pcomp_quant_bufsize(size_t input_size, size_t element_size);
+size_t pcomp_quant_bufsize(size_t input_size, size_t bits_per_sample);
 
 int pcomp_compress_quant_float(void* output_buf, size_t* output_size,
                                const float* input_buf,
-                               size_t input_size);
+                               size_t input_size,
+                               size_t bits_per_sample);
 int pcomp_compress_quant_double(void* output_buf, size_t* output_size,
                                 const double* input_buf,
-                                size_t input_size);
+                                size_t input_size,
+                                size_t bits_per_sample);
 
 int pcomp_decompress_quant_float(float* output_buf, size_t output_size,
                                  const void* input_buf,
-                                 size_t input_size);
+                                 size_t input_size,
+                                 size_t bits_per_sample);
 int pcomp_decompress_quant_double(double* output_buf,
                                   size_t output_size,
                                   const void* input_buf,
-                                  size_t input_size);
+                                  size_t input_size,
+                                  size_t bits_per_sample);
 
 /***********************************************************************
  * Polynomial compression
