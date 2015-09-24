@@ -26,9 +26,10 @@ project (libpolycomp
   LANGUAGES C)
 
 # This works with GCC and clang
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -g")
   
 add_library (polycomp
+  diff_rle.c
   rle.c
   version.c)
 
@@ -54,3 +55,4 @@ enable_testing()
 
 add_pcomp_test(test_version test_version.c)
 add_pcomp_test(test_rle test_rle.c)
+add_pcomp_test(test_diff_rle test_diff_rle.c)
