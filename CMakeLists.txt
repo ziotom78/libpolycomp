@@ -25,9 +25,26 @@ project (libpolycomp
   VERSION 1.0
   LANGUAGES C)
 
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+#    "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    "${CMAKE_SOURCE_DIR}/cmake_modules")
+
 # This works with GCC and clang
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -g")
   
+find_package(FFTW REQUIRED)
+include_directories(${FFTW_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${FFTW_LIBRARIES})
+
+find_package(CFITSIO REQUIRED)
+include_directories(${CFITSIO_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${CFITSIO_LIBRARIES})
+
+find_package(GSL REQUIRED)
+include_directories(${GSL_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${GSL_LIBRARIES})
+
 add_library (polycomp
   diff_rle.c
   quant.c
