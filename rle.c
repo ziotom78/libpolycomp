@@ -89,18 +89,16 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
  */
 
 #define IMPLEMENT_RLE_DECOMPR_FN(name, datatype_t)                     \
-    int name(datatype_t* output_buf, size_t* output_size,              \
+    int name(datatype_t* output_buf, size_t output_size,               \
              const datatype_t* input_buf, size_t input_size)           \
     {                                                                  \
         size_t input_idx = 0;                                          \
         size_t output_idx = 0;                                         \
                                                                        \
-        if (output_buf == NULL || output_size == NULL                  \
-            || input_buf == NULL)                                      \
+        if (output_buf == NULL || input_buf == NULL)                   \
             abort();                                                   \
                                                                        \
         if (input_size == 0) {                                         \
-            *output_size = 0;                                          \
             return PCOMP_STAT_SUCCESS;                                 \
         }                                                              \
                                                                        \
@@ -108,7 +106,7 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
             return PCOMP_STAT_INVALID_ENCODING;                        \
         }                                                              \
                                                                        \
-        while (output_idx < *output_size                               \
+        while (output_idx < output_size                                \
                && input_idx < input_size - 1) {                        \
             datatype_t count = input_buf[input_idx];                   \
             datatype_t value = input_buf[input_idx + 1];               \
@@ -121,7 +119,6 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
             input_idx += 2;                                            \
         }                                                              \
                                                                        \
-        *output_size = output_idx;                                     \
         return PCOMP_STAT_SUCCESS;                                     \
     }
 

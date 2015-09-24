@@ -114,7 +114,7 @@ void test_diffrle_binary_format(void)
                                                                        \
         assert(pcomp_compr_fn(compr_buf, &compr_size, input_buf,       \
                               input_size) == PCOMP_STAT_SUCCESS);      \
-        assert(pcomp_decompr_fn(decompr_buf, &decompr_size, compr_buf, \
+        assert(pcomp_decompr_fn(decompr_buf, decompr_size, compr_buf,  \
                                 compr_size) == PCOMP_STAT_SUCCESS);    \
                                                                        \
         assert(decompr_size == input_size);                            \

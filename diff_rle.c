@@ -99,18 +99,16 @@ IMPLEMENT_DIFFRLE_COMPR_FN(pcomp_compress_diffrle_uint64,
  */
 
 #define IMPLEMENT_DIFFRLE_DECOMPR_FN(name, datatype_t)                 \
-    int name(datatype_t* output_buf, size_t* output_size,              \
+    int name(datatype_t* output_buf, size_t output_size,               \
              const datatype_t* input_buf, size_t input_size)           \
     {                                                                  \
         size_t input_idx = 0;                                          \
         size_t output_idx = 0;                                         \
                                                                        \
-        if (output_buf == NULL || output_size == NULL                  \
-            || input_buf == NULL)                                      \
+        if (output_buf == NULL || input_buf == NULL)                   \
             abort();                                                   \
                                                                        \
         if (input_size == 0) {                                         \
-            *output_size = 0;                                          \
             return PCOMP_STAT_SUCCESS;                                 \
         }                                                              \
                                                                        \
@@ -120,7 +118,7 @@ IMPLEMENT_DIFFRLE_COMPR_FN(pcomp_compress_diffrle_uint64,
                                                                        \
         output_buf[output_idx++] = input_buf[input_idx++];             \
                                                                        \
-        while (output_idx < *output_size                               \
+        while (output_idx < output_size                                \
                && input_idx < input_size - 1) {                        \
             datatype_t count = input_buf[input_idx];                   \
             datatype_t incr = input_buf[input_idx + 1];                \
