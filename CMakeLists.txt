@@ -47,6 +47,7 @@ set(LIBS ${LIBS} ${GSL_LIBRARIES})
 
 add_library (polycomp
   diff_rle.c
+  poly.c
   quant.c
   rle.c
   version.c)
@@ -66,6 +67,8 @@ function(add_pcomp_test target)
   add_executable(${target} ${ARGN})
   target_link_libraries(${target} polycomp)
   target_link_libraries(${target} m)
+  target_link_libraries(${target} ${GSL_LIBRARIES})
+  target_link_libraries(${target} ${FFTW_LIBRARIES})
 
   add_test(${target} ${target})
 endfunction()
@@ -76,3 +79,4 @@ add_pcomp_test(test_version test_version.c)
 add_pcomp_test(test_rle test_rle.c)
 add_pcomp_test(test_diff_rle test_diff_rle.c)
 add_pcomp_test(test_quant test_quant.c)
+add_pcomp_test(test_polyfit test_polyfit.c)

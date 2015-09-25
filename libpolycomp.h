@@ -36,6 +36,7 @@
 #define PCOMP_STAT_SUCCESS 0 /* All ok */
 #define PCOMP_STAT_INVALID_ENCODING 1 /* Decompression error */
 #define PCOMP_STAT_INVALID_BUFFER 2 /* Output buffer too small */
+#define PCOMP_STAT_INVALID_FIT 3 /* Least-square fit error */
 
 /***********************************************************************
  * Version information
@@ -258,7 +259,46 @@ int pcomp_decompress_quant_double(double* output_buf,
                                   const pcomp_quant_params_t* params);
 
 /***********************************************************************
- * Polynomial compression
+ * Polynomial fitting routines
+ */
+
+struct __pcomp_poly_fit_data_t;
+typedef struct __pcomp_poly_fit_data_t pcomp_poly_fit_data_t;
+
+pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_points,
+                                           size_t num_of_coeffs);
+void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit);
+int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
+                       const double* points);
+
+/***********************************************************************
+ * Chebyshev transform routines
+ */
+
+struct __pcomp_chebyshev_plan_t;
+typedef struct __pcomp_chebyshev_plan_t pcomp_chebyshev_plan_t;
+typedef enum {
+    PCOMP_TD_DIRECT,
+    PCOMP_TD_INVERSE
+} pcomp_transform_direction_t;
+
+pcomp_chebyshev_plan_t*
+pcomp_init_chebyshev_plan(size_t num_of_elements,
+                          pcomp_transform_direction_t dir);
+
+/***********************************************************************
+ * Polynomial compression (low-level functions)
+ */
+
+struct __pcomp_polycomp_data_t;
+typedef struct __pcomp_polycomp_data_t pcomp_polycomp_data_t;
+
+pcomp_polycomp_data_t* pcomp_init_polycomp_data(size_t num_of_samples,
+                                                size_t num_of_coeffs);
+void pcomp_free_polycomp_data(pcomp_polycomp_data_t* params);
+
+/***********************************************************************
+ * Polynomial compression (high-level functions)
  *
  * The following functions implement the "polynomial compression",
  * which is based on a mixture of polynomial least-square fitting and
