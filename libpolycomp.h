@@ -275,16 +275,20 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
  * Chebyshev transform routines
  */
 
-struct __pcomp_chebyshev_plan_t;
-typedef struct __pcomp_chebyshev_plan_t pcomp_chebyshev_plan_t;
+struct __pcomp_chebyshev_t;
+typedef struct __pcomp_chebyshev_t pcomp_chebyshev_t;
 typedef enum {
     PCOMP_TD_DIRECT,
     PCOMP_TD_INVERSE
 } pcomp_transform_direction_t;
 
-pcomp_chebyshev_plan_t*
-pcomp_init_chebyshev_plan(size_t num_of_elements,
-                          pcomp_transform_direction_t dir);
+pcomp_chebyshev_t*
+pcomp_init_chebyshev(size_t num_of_elements,
+                     pcomp_transform_direction_t dir);
+void pcomp_free_chebyshev(pcomp_chebyshev_t* plan);
+int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
+                        pcomp_transform_direction_t dir, double* output,
+                        const double* input);
 
 /***********************************************************************
  * Polynomial compression (low-level functions)

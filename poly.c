@@ -144,31 +144,31 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
  * Types and functions used for computing Chebyshev transforms
  */
 
-struct __pcomp_chebyshev_plan_t {
+struct __pcomp_chebyshev_t {
     double* input;
     double* output;
+    size_t num_of_elements;
     fftw_plan fftw_plan_ptr;
     pcomp_transform_direction_t dir;
 };
 
-pcomp_chebyshev_plan_t*
-pcomp_init_chebyshev_plan(size_t num_of_elements,
-                          pcomp_transform_direction_t dir)
+pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_elements,
+                                        pcomp_transform_direction_t dir)
 {
-    pcomp_chebyshev_plan_t* plan
-        = malloc(sizeof(pcomp_chebyshev_plan_t));
+    pcomp_chebyshev_t* chebyshev = malloc(sizeof(pcomp_chebyshev_t));
 
-    plan->input = malloc(num_of_elements * sizeof(double));
-    plan->output = malloc(num_of_elements * sizeof(double));
-    plan->fftw_plan_ptr
-        = fftw_plan_r2r_1d(num_of_elements, plan->input, plan->output,
-                           FFTW_REDFT00, FFTW_ESTIMATE);
-    plan->dir = dir;
+    chebyshev->input = malloc(num_of_elements * sizeof(double));
+    chebyshev->output = malloc(num_of_elements * sizeof(double));
+    chebyshev->num_of_elements = num_of_elements;
+    chebyshev->fftw_plan_ptr = fftw_plan_r2r_1d(
+        num_of_elements, chebyshev->input, chebyshev->output,
+        FFTW_REDFT00, FFTW_ESTIMATE);
+    chebyshev->dir = dir;
 
-    return plan;
+    return chebyshev;
 }
 
-void pcomp_free_chebyshev_plan(pcomp_chebyshev_plan_t* plan)
+void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
 {
     if (plan == NULL)
         return;
@@ -179,6 +179,38 @@ void pcomp_free_chebyshev_plan(pcomp_chebyshev_plan_t* plan)
     free(plan);
 }
 
+static double chebyshev_normalization(pcomp_transform_direction_t dir,
+                                      size_t num_of_elements)
+{
+    if (dir == PCOMP_TD_DIRECT)
+        return 1.0 / (((double)num_of_elements) - 1.0);
+    else
+        return 0.5;
+}
+
+int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
+                        pcomp_transform_direction_t dir, double* output,
+                        const double* input)
+{
+    double norm;
+    size_t idx;
+
+    if (plan == NULL)
+        abort();
+
+    for (idx = 0; idx < plan->num_of_elements; ++idx) {
+        plan->input[idx] = input[idx];
+    }
+
+    fftw_execute(plan->fftw_plan_ptr);
+    norm = chebyshev_normalization(dir, plan->num_of_elements);
+    for (idx = 0; idx < plan->num_of_elements; ++idx) {
+        output[idx] = plan->output[idx] * norm;
+    }
+
+    return PCOMP_STAT_SUCCESS;
+}
+
 /***********************************************************************
  * Types and functions used for applying the combined
  * fitting/Chebyshev transforms
@@ -186,8 +218,8 @@ void pcomp_free_chebyshev_plan(pcomp_chebyshev_plan_t* plan)
 
 struct __pcomp_polycomp_data_t {
     pcomp_poly_fit_data_t* poly_fit;
-    pcomp_chebyshev_plan_t* chebyshev_plan;
-    pcomp_chebyshev_plan_t* inv_plan;
+    pcomp_chebyshev_t* chebyshev;
+    pcomp_chebyshev_t* inv_chebyshev;
 };
 
 pcomp_polycomp_data_t* pcomp_init_polycomp_data(size_t num_of_samples,
@@ -198,10 +230,10 @@ pcomp_polycomp_data_t* pcomp_init_polycomp_data(size_t num_of_samples,
 
     params->poly_fit
         = pcomp_init_poly_fit(num_of_samples, num_of_coeffs);
-    params->chebyshev_plan
-        = pcomp_init_chebyshev_plan(num_of_samples, PCOMP_TD_DIRECT);
-    params->inv_plan
-        = pcomp_init_chebyshev_plan(num_of_samples, PCOMP_TD_INVERSE);
+    params->chebyshev
+        = pcomp_init_chebyshev(num_of_samples, PCOMP_TD_DIRECT);
+    params->inv_chebyshev
+        = pcomp_init_chebyshev(num_of_samples, PCOMP_TD_INVERSE);
 
     return params;
 }
@@ -212,8 +244,8 @@ void pcomp_free_polycomp_data(pcomp_polycomp_data_t* params)
         return;
 
     pcomp_free_poly_fit(params->poly_fit);
-    pcomp_free_chebyshev_plan(params->chebyshev_plan);
-    pcomp_free_chebyshev_plan(params->inv_plan);
+    pcomp_free_chebyshev(params->chebyshev);
+    pcomp_free_chebyshev(params->inv_chebyshev);
 
     free(params);
 }
