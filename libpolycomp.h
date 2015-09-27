@@ -367,29 +367,27 @@ typedef struct {
     size_t chunk_size;
     size_t num_of_poly_coeffs;
     double max_error;
+    pcomp_polycomp_algorithm_t algorithm;
 } pcomp_poly_parameters;
 
-int pcomp_compress_poly_float(pcomp_polycomp_chunk_t** output_buf,
-                              size_t* num_of_chunks,
-                              const float* input_buf, size_t input_size,
-                              const pcomp_poly_parameters* params);
-int pcomp_compress_poly_double(pcomp_polycomp_chunk_t** output_buf,
-                               size_t* num_of_chunks,
-                               const double* input_buf,
-                               size_t input_size,
-                               const pcomp_poly_parameters* params);
+int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** chunk_array[],
+                            size_t* num_of_chunks,
+                            const double* input_buf, size_t input_size,
+                            const pcomp_poly_parameters* params);
 
-int pcomp_decompress_poly_float(
-    float* output_buf, size_t* output_size,
-    const pcomp_polycomp_chunk_t* chunk_array, size_t num_of_chunks,
-    const pcomp_poly_parameters* params);
-int pcomp_decompress_poly_double(
-    double* output_buf, size_t* output_size,
-    const pcomp_polycomp_chunk_t* chunk_array, size_t num_of_chunks,
-    const pcomp_poly_parameters* params);
+size_t
+pcomp_total_num_of_samples(pcomp_polycomp_chunk_t* const chunk_array[],
+                           size_t num_of_chunks);
 
-/* Free the heap memory allocated for an array chunk */
-int pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array,
-                      size_t num_of_chunks);
+/* The buffer "output_buf" must have room for a number of "double"
+ * values which is at least the number returned by
+ * "pcomp_total_num_of_samples". */
+int pcomp_decompress_polycomp(
+    double* output_buf, pcomp_polycomp_chunk_t* const chunk_array[],
+    size_t num_of_chunks);
+
+/* Free the heap memory allocated for an array of chunks */
+void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
+                       size_t num_of_chunks);
 
 #endif /* LIBPOLYCOMP_H_GUARD */
