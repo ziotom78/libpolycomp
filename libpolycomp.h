@@ -294,24 +294,13 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
  * Polynomial compression (low-level functions)
  */
 
-struct __pcomp_polycomp_data_t;
-typedef struct __pcomp_polycomp_data_t pcomp_polycomp_data_t;
+typedef enum {
+    PCOMP_ALG_USE_CHEBYSHEV,
+    PCOMP_ALG_NO_CHEBYSHEV
+} pcomp_polycomp_algorithm_t;
 
-pcomp_polycomp_data_t* pcomp_init_polycomp_data(size_t num_of_samples,
-                                                size_t num_of_coeffs);
-void pcomp_free_polycomp_data(pcomp_polycomp_data_t* params);
-
-/***********************************************************************
- * Polynomial compression (high-level functions)
- *
- * The following functions implement the "polynomial compression",
- * which is based on a mixture of polynomial least-square fitting and
- * Chebyshev transform techniques. Unlike the other functions defined
- * above, this group handles memory allocation autonomously. This
- * means that "output_buf" must not be preallocated before calling one
- * of the *_compress_* functions, and the pre-existing value of
- * "output_size" is ignored in the call (it is only set on exit).
- */
+struct __pcomp_polycomp_t;
+typedef struct __pcomp_polycomp_t pcomp_polycomp_t;
 
 /* Structure used to hold information about a chunk of data compressed
  * using the polynomial compression */
@@ -337,7 +326,41 @@ typedef struct {
                                  * num_of_elements, as the Chebyshev
                                  * series is truncated. */
     double* cheby_coeffs;
-} pcomp_poly_chunk_t;
+} pcomp_polycomp_chunk_t;
+
+pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_elements);
+void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
+
+void pcomp_straighten(double* output, const double* input,
+                      size_t num_of_elements, double period);
+
+pcomp_polycomp_t*
+pcomp_init_polycomp(size_t num_of_samples, size_t num_of_coeffs,
+                    double max_allowable_error,
+                    pcomp_polycomp_algorithm_t algorithm);
+void pcomp_free_polycomp(pcomp_polycomp_t* params);
+
+int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
+                                const double* input,
+                                size_t num_of_elements,
+                                pcomp_polycomp_chunk_t* chunk,
+                                double* max_error);
+
+int pcomp_decompress_polycomp_chunk(double* output,
+                                    const pcomp_polycomp_chunk_t* chunk,
+                                    pcomp_chebyshev_t* inv_chebyshev);
+
+/***********************************************************************
+ * Polynomial compression (high-level functions)
+ *
+ * The following functions implement the "polynomial compression",
+ * which is based on a mixture of polynomial least-square fitting and
+ * Chebyshev transform techniques. Unlike the other functions defined
+ * above, this group handles memory allocation autonomously. This
+ * means that "output_buf" must not be preallocated before calling one
+ * of the *_compress_* functions, and the pre-existing value of
+ * "output_size" is ignored in the call (it is only set on exit).
+ */
 
 /* Parameters used for the polynomial compression */
 typedef struct {
@@ -346,31 +369,27 @@ typedef struct {
     double max_error;
 } pcomp_poly_parameters;
 
-int pcomp_compress_poly_float(pcomp_poly_chunk_t** output_buf,
+int pcomp_compress_poly_float(pcomp_polycomp_chunk_t** output_buf,
                               size_t* num_of_chunks,
                               const float* input_buf, size_t input_size,
                               const pcomp_poly_parameters* params);
-int pcomp_compress_poly_double(pcomp_poly_chunk_t** output_buf,
+int pcomp_compress_poly_double(pcomp_polycomp_chunk_t** output_buf,
                                size_t* num_of_chunks,
                                const double* input_buf,
                                size_t input_size,
                                const pcomp_poly_parameters* params);
 
-int pcomp_decompress_poly_float(float* output_buf, size_t* output_size,
-                                const pcomp_poly_chunk_t* chunk_array,
-                                size_t num_of_chunks,
-                                const pcomp_poly_parameters* params);
-int pcomp_decompress_poly_double(double* output_buf,
-                                 size_t* output_size,
-                                 const pcomp_poly_chunk_t* chunk_array,
-                                 size_t num_of_chunks,
-                                 const pcomp_poly_parameters* params);
-
-/* Free the heap memory allocated for this chunk */
-int pcomp_free_chunk(pcomp_poly_chunk_t* chunk);
+int pcomp_decompress_poly_float(
+    float* output_buf, size_t* output_size,
+    const pcomp_polycomp_chunk_t* chunk_array, size_t num_of_chunks,
+    const pcomp_poly_parameters* params);
+int pcomp_decompress_poly_double(
+    double* output_buf, size_t* output_size,
+    const pcomp_polycomp_chunk_t* chunk_array, size_t num_of_chunks,
+    const pcomp_poly_parameters* params);
 
 /* Free the heap memory allocated for an array chunk */
-int pcomp_free_chunks(pcomp_poly_chunk_t* chunk_array,
+int pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array,
                       size_t num_of_chunks);
 
 #endif /* LIBPOLYCOMP_H_GUARD */
