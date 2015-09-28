@@ -53,6 +53,9 @@ add_library (polycomp
   quant.c
   rle.c
   version.c)
+target_link_libraries(polycomp ${FFTW_LIBRARIES})
+target_link_libraries(polycomp ${CFITSIO_LIBRARIES})
+target_link_libraries(polycomp ${GSL_LIBRARIES})
 
 target_include_directories (polycomp
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
