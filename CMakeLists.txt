@@ -32,7 +32,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 # This works with GCC and clang
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -g")
-  
+
+option(BUILD_SHARED_LIBS "Build a shared library")
+
 find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${FFTW_LIBRARIES})
