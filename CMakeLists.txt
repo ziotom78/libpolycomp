@@ -57,6 +57,9 @@ add_library (polycomp
 target_include_directories (polycomp
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+install(TARGETS polycomp DESTINATION lib)
+install(FILES libpolycomp.h DESTINATION include)
+
 ########################################################################
 # Test harness
 
