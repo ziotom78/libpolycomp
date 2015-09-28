@@ -307,7 +307,8 @@ static double eval_poly(double* coeffs, size_t num_of_coeffs, double x)
 
 /***********************************************************************
  * Remove sudden jumps in the data by applying an offset equal to +/-
- * "period".
+ * "period". It is ok for "input" and "output" to point to the same
+ * memory location.
  */
 
 void pcomp_straighten(double* output, const double* input,

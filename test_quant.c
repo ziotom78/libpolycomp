@@ -41,12 +41,11 @@
         size_t output_size = 4; /* Known by manual calculation */      \
         uint8_t* output_buf = malloc(output_size);                     \
                                                                        \
-        pcomp_quant_params_t params;                                   \
-        params.element_size = sizeof(float);                           \
-        params.bits_per_sample = 5;                                    \
+        pcomp_quant_params_t* params                                   \
+            = pcomp_init_quant_params(sizeof(datatype_t), 5);          \
                                                                        \
         assert(pcomp_fn(output_buf, &output_size, input_buf,           \
-                        input_size, &params) == PCOMP_STAT_SUCCESS);   \
+                        input_size, params) == PCOMP_STAT_SUCCESS);    \
                                                                        \
         assert(output_buf[0] == 36); /* Count */                       \
         assert(output_buf[1] == 65); /* Value */                       \
@@ -54,6 +53,7 @@
         assert(output_buf[3] == 0);                                    \
                                                                        \
         free(output_buf);                                              \
+        pcomp_free_quant_params(params);                               \
     }
 
 DEFINE_QUANT_TEST(test_quant_compression_float,
@@ -77,15 +77,14 @@ DEFINE_QUANT_TEST(test_quant_compression_double,
         datatype_t decompr_buf[5];                                     \
         size_t idx;                                                    \
                                                                        \
-        pcomp_quant_params_t params;                                   \
-        params.element_size = sizeof(float);                           \
-        params.bits_per_sample = 5;                                    \
+        pcomp_quant_params_t* params                                   \
+            = pcomp_init_quant_params(sizeof(datatype_t), 5);          \
                                                                        \
         assert(compr_fn(compr_buf, &compr_size, input_buf, input_size, \
-                        &params) == PCOMP_STAT_SUCCESS);               \
+                        params) == PCOMP_STAT_SUCCESS);                \
                                                                        \
         assert(decompr_fn(&decompr_buf[0], input_size, compr_buf,      \
-                          compr_size, &params) == PCOMP_STAT_SUCCESS); \
+                          compr_size, params) == PCOMP_STAT_SUCCESS);  \
                                                                        \
         for (idx = 0; idx < input_size; ++idx) {                       \
             assert(fabs(input_buf[idx] - decompr_buf[idx]) < 0.186);   \

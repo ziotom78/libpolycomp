@@ -224,12 +224,15 @@ int pcomp_decompress_diffrle_uint64(uint64_t* output_buf,
  */
 
 /* Parameters used in the quantization. */
-typedef struct {
-    size_t element_size;
-    size_t bits_per_sample;
-    double min_value;
-    double normalization;
-} pcomp_quant_params_t;
+struct __pcomp_quant_params_t;
+typedef struct __pcomp_quant_params_t pcomp_quant_params_t;
+
+pcomp_quant_params_t* pcomp_init_quant_params(size_t element_size,
+                                              size_t bits_per_sample);
+void pcomp_free_quant_params(pcomp_quant_params_t* params);
+
+size_t pcomp_quant_element_size(const pcomp_quant_params_t* params);
+size_t pcomp_quant_bits_per_sample(const pcomp_quant_params_t* params);
 
 /* Return the minimum number of bytes necessary for the buffer that
  * will contain the compressed data, if the input data has

@@ -28,6 +28,56 @@
 #include <math.h>
 #include <stdlib.h>
 
+/***********************************************************************
+ * Creation/destruction/getter functions for "pcomp_quant_params_t"
+ */
+
+struct __pcomp_quant_params_t {
+    size_t element_size;
+    size_t bits_per_sample;
+    double min_value;
+    double normalization;
+};
+
+pcomp_quant_params_t* pcomp_init_quant_params(size_t element_size,
+                                              size_t bits_per_sample)
+{
+    pcomp_quant_params_t* params = malloc(sizeof(pcomp_quant_params_t));
+    params->element_size = element_size;
+    params->bits_per_sample = bits_per_sample;
+    params->min_value = 0.0;
+    params->normalization = 1.0;
+
+    return params;
+}
+
+void pcomp_free_quant_params(pcomp_quant_params_t* params)
+{
+    if (params == NULL)
+        return;
+    free(params);
+}
+
+size_t pcomp_quant_element_size(const pcomp_quant_params_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->element_size;
+}
+
+size_t pcomp_quant_bits_per_sample(const pcomp_quant_params_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->bits_per_sample;
+}
+
+/***********************************************************************
+ * Estimate the size of the buffer needed to store quantized data
+ */
+
 size_t pcomp_quant_bufsize(size_t input_size,
                            const pcomp_quant_params_t* params)
 {
@@ -49,7 +99,7 @@ size_t pcomp_quant_bufsize(size_t input_size,
 }
 
 /***********************************************************************
- *
+ * Quantization compression functions
  */
 
 #define DEFINE_FIND_BOUNDS_FN(name, datatype_t)                        \
@@ -151,7 +201,7 @@ DEFINE_COMPRESS_QUANT_FN(pcomp_compress_quant_double,
                          find_bounds_double, double)
 
 /***********************************************************************
- *
+ * Quantization decompression functions
  */
 
 #define DEFINE_DECOMPRESS_QUANT_FN(name, datatype_t)                   \
