@@ -281,8 +281,8 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
 struct __pcomp_chebyshev_t;
 typedef struct __pcomp_chebyshev_t pcomp_chebyshev_t;
 typedef enum {
-    PCOMP_TD_DIRECT,
-    PCOMP_TD_INVERSE
+    PCOMP_TD_DIRECT = 0,
+    PCOMP_TD_INVERSE = 1
 } pcomp_transform_direction_t;
 
 pcomp_chebyshev_t*
