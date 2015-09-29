@@ -298,41 +298,31 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
  */
 
 typedef enum {
-    PCOMP_ALG_USE_CHEBYSHEV,
-    PCOMP_ALG_NO_CHEBYSHEV
+    PCOMP_ALG_USE_CHEBYSHEV = 0,
+    PCOMP_ALG_NO_CHEBYSHEV = 1
 } pcomp_polycomp_algorithm_t;
 
 struct __pcomp_polycomp_t;
 typedef struct __pcomp_polycomp_t pcomp_polycomp_t;
 
-/* Structure used to hold information about a chunk of data compressed
- * using the polynomial compression */
-typedef struct {
-    /* Number of samples in this chunk */
-    size_t num_of_elements;
-
-    /* Is this chunk compressed using polynomial/Chebyshev
-     * coefficients? */
-    int is_compressed;
-    /* If the chunk is not compressed (is_compressed == 0), this
-     * points to a buffer which holds "num_of_elements" uncompressed
-     * samples */
-    double* uncompressed;
-
-    /* Polynomial coefficients, from the lowest-order to the
-     * highest-order */
-    size_t num_of_poly_coeffs;
-    double* poly_coeffs;
-
-    /* Chebyshev coefficients */
-    size_t num_of_cheby_coeffs; /* This is always less than
-                                 * num_of_elements, as the Chebyshev
-                                 * series is truncated. */
-    double* cheby_coeffs;
-} pcomp_polycomp_chunk_t;
+struct __pcomp_polycomp_chunk_t;
+typedef struct __pcomp_polycomp_chunk_t pcomp_polycomp_chunk_t;
 
 pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_elements);
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
+
+size_t pcomp_chunk_num_of_elements(const pcomp_polycomp_chunk_t* chunk);
+int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk);
+const double*
+pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk);
+size_t
+pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
+const double*
+pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
+size_t
+pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
+const double*
+pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
 
 void pcomp_straighten(double* output, const double* input,
                       size_t num_of_elements, double period);

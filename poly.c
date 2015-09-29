@@ -342,6 +342,32 @@ void pcomp_straighten(double* output, const double* input,
  * Chunk initialization/destruction
  */
 
+/* Structure used to hold information about a chunk of data compressed
+ * using the polynomial compression */
+struct __pcomp_polycomp_chunk_t {
+    /* Number of samples in this chunk */
+    size_t num_of_elements;
+
+    /* Is this chunk compressed using polynomial/Chebyshev
+     * coefficients? */
+    int is_compressed;
+    /* If the chunk is not compressed (is_compressed == 0), this
+     * points to a buffer which holds "num_of_elements" uncompressed
+     * samples */
+    double* uncompressed;
+
+    /* Polynomial coefficients, from the lowest-order to the
+     * highest-order */
+    size_t num_of_poly_coeffs;
+    double* poly_coeffs;
+
+    /* Chebyshev coefficients */
+    size_t num_of_cheby_coeffs; /* This is always less than
+                                 * num_of_elements, as the Chebyshev
+                                 * series is truncated. */
+    double* cheby_coeffs;
+};
+
 pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_elements)
 {
     pcomp_polycomp_chunk_t* chunk
@@ -372,6 +398,76 @@ void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
 
     if (chunk->cheby_coeffs != NULL)
         free(chunk->cheby_coeffs);
+}
+
+size_t pcomp_chunk_num_of_elements(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    return chunk->num_of_elements;
+}
+
+int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    return chunk->is_compressed;
+}
+
+const double*
+pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    if (chunk->is_compressed)
+        return NULL;
+
+    return chunk->uncompressed;
+}
+
+size_t
+pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    return chunk->num_of_poly_coeffs;
+}
+
+const double*
+pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    if (chunk->num_of_poly_coeffs == 0)
+        return NULL;
+
+    return chunk->poly_coeffs;
+}
+
+size_t
+pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    return chunk->num_of_cheby_coeffs;
+}
+
+const double*
+pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    if (chunk->num_of_cheby_coeffs == 0)
+        return NULL;
+
+    return chunk->cheby_coeffs;
 }
 
 /***********************************************************************

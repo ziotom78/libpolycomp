@@ -52,10 +52,10 @@ int test_no_compression(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(chunk->num_of_elements == 10);
-    assert(!chunk->is_compressed);
-    assert(chunk->poly_coeffs == NULL);
-    assert(chunk->cheby_coeffs == NULL);
+    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(!pcomp_chunk_is_compressed(chunk));
+    assert(pcomp_chunk_poly_coeffs(chunk) == NULL);
+    assert(pcomp_chunk_cheby_coeffs(chunk) == NULL);
 
     pcomp_decompress_polycomp_chunk(decompr, chunk, inv_chebyshev);
     for (idx = 0; idx < input_size; ++idx) {
@@ -86,11 +86,13 @@ int test_no_chebyshev(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(chunk->num_of_elements == 10);
-    assert(chunk->num_of_poly_coeffs == 2);
-    assert(fabs(chunk->poly_coeffs[0] - (0.0)) < EPSILON);
-    assert(fabs(chunk->poly_coeffs[1] - (1.0)) < EPSILON);
-    assert(chunk->cheby_coeffs == NULL);
+    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(pcomp_chunk_is_compressed(chunk));
+    assert(pcomp_chunk_num_of_poly_coeffs(chunk) == 2);
+    assert(pcomp_chunk_poly_coeffs(chunk) != NULL);
+    assert(fabs(pcomp_chunk_poly_coeffs(chunk)[0] - 0.0) < EPSILON);
+    assert(fabs(pcomp_chunk_poly_coeffs(chunk)[1] - 1.0) < EPSILON);
+    assert(pcomp_chunk_cheby_coeffs(chunk) == NULL);
 
     pcomp_decompress_polycomp_chunk(decompr, chunk, inv_chebyshev);
     for (idx = 0; idx < input_size; ++idx) {
@@ -120,10 +122,11 @@ int test_complete_compression_and_decompression(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(chunk->num_of_elements == 10);
-    assert(chunk->is_compressed);
-    assert(chunk->num_of_poly_coeffs == 2);
-    assert(chunk->num_of_cheby_coeffs < 10);
+    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(pcomp_chunk_is_compressed(chunk));
+    assert(pcomp_chunk_num_of_poly_coeffs(chunk) == 2);
+    assert(pcomp_chunk_poly_coeffs(chunk) != NULL);
+    assert(pcomp_chunk_num_of_cheby_coeffs(chunk) < 10);
 
     pcomp_decompress_polycomp_chunk(decompr, chunk, inv_chebyshev);
     for (idx = 0; idx < input_size; ++idx) {
