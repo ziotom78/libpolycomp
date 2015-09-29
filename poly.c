@@ -618,20 +618,74 @@ int pcomp_decompress_polycomp_chunk(double* output,
 }
 
 /***********************************************************************
- * Polynomial compression routines
+ *
  */
 
-int pcomp_compress_poly_float(pcomp_polycomp_chunk_t** output_buf,
-                              size_t* num_of_chunks,
-                              const float* input_buf, size_t input_size,
-                              const pcomp_poly_parameters* params)
-{
-    if (output_buf == NULL || num_of_chunks == NULL || input_buf == NULL
-        || params == NULL) {
-        abort();
-    }
+struct __pcomp_poly_parameters_t {
+    size_t chunk_size;
+    size_t num_of_poly_coeffs;
+    double max_error;
+    pcomp_polycomp_algorithm_t algorithm;
+};
 
-    return PCOMP_STAT_SUCCESS;
+pcomp_poly_parameters_t*
+pcomp_init_poly_parameters(size_t chunk_size, size_t num_of_poly_coeffs,
+                           double max_error,
+                           pcomp_polycomp_algorithm_t algorithm)
+{
+    pcomp_poly_parameters_t* result
+        = malloc(sizeof(pcomp_poly_parameters_t));
+
+    result->chunk_size = chunk_size;
+    result->num_of_poly_coeffs = num_of_poly_coeffs;
+    result->max_error = max_error;
+    result->algorithm = algorithm;
+
+    return result;
+}
+
+void pcomp_free_poly_parameters(pcomp_poly_parameters_t* params)
+{
+    if (params == NULL)
+        return;
+
+    free(params);
+}
+
+size_t
+pcomp_poly_parameters_chunk_size(const pcomp_poly_parameters_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->chunk_size;
+}
+
+size_t pcomp_poly_parameters_num_of_poly_coeffs(
+    const pcomp_poly_parameters_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->num_of_poly_coeffs;
+}
+
+double
+pcomp_poly_parameters_max_error(const pcomp_poly_parameters_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->max_error;
+}
+
+pcomp_polycomp_algorithm_t
+pcomp_poly_parameters_algorithm(const pcomp_poly_parameters_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->algorithm;
 }
 
 /***********************************************************************
@@ -641,7 +695,7 @@ int pcomp_compress_poly_float(pcomp_polycomp_chunk_t** output_buf,
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
                             size_t* num_of_chunks,
                             const double* input_buf, size_t input_size,
-                            const pcomp_poly_parameters* params)
+                            const pcomp_poly_parameters_t* params)
 {
     size_t idx;
     const double* cur_input = input_buf;
