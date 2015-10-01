@@ -271,6 +271,11 @@ typedef struct __pcomp_poly_fit_data_t pcomp_poly_fit_data_t;
 pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_points,
                                            size_t num_of_coeffs);
 void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit);
+size_t
+pcomp_poly_fit_num_of_points(const pcomp_poly_fit_data_t* poly_fit);
+size_t
+pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit);
+
 int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
                        const double* points);
 

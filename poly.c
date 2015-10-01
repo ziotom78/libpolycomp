@@ -115,6 +115,24 @@ void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
     free(poly_fit);
 }
 
+size_t
+pcomp_poly_fit_num_of_points(const pcomp_poly_fit_data_t* poly_fit)
+{
+    if (poly_fit == NULL)
+        abort();
+
+    return poly_fit->num_of_points;
+}
+
+size_t
+pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit)
+{
+    if (poly_fit == NULL)
+        abort();
+
+    return poly_fit->num_of_coeffs;
+}
+
 int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
                        const double* points)
 {
