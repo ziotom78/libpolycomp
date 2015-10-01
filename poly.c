@@ -350,18 +350,21 @@ void pcomp_straighten(double* output, const double* input,
                       size_t num_of_samples, double period)
 {
     size_t idx;
-    double half_period = period * 0.5;
-    double offset = 0.0;
 
     if (input == NULL || output == NULL)
         abort();
 
     if (period > 0) {
+        double half_period = period * 0.5;
+        double offset = 0.0;
+
+        output[0] = input[0];
+
         for (idx = 1; idx < num_of_samples; ++idx) {
             double diff_with_previous = input[idx] - input[idx - 1];
             if (diff_with_previous > half_period)
                 offset -= period;
-            else
+            else if (diff_with_previous < -half_period)
                 offset += period;
 
             output[idx] = input[idx] + offset;
