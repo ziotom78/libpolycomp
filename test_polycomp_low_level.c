@@ -52,7 +52,7 @@ int test_no_compression(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(pcomp_chunk_num_of_samples(chunk) == 10);
     assert(!pcomp_chunk_is_compressed(chunk));
     assert(pcomp_chunk_poly_coeffs(chunk) == NULL);
     assert(pcomp_chunk_cheby_coeffs(chunk) == NULL);
@@ -86,7 +86,7 @@ int test_no_chebyshev(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(pcomp_chunk_num_of_samples(chunk) == 10);
     assert(pcomp_chunk_is_compressed(chunk));
     assert(pcomp_chunk_num_of_poly_coeffs(chunk) == 2);
     assert(pcomp_chunk_poly_coeffs(chunk) != NULL);
@@ -122,7 +122,7 @@ int test_complete_compression_and_decompression(void)
 
     pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
                                 &max_error);
-    assert(pcomp_chunk_num_of_elements(chunk) == 10);
+    assert(pcomp_chunk_num_of_samples(chunk) == 10);
     assert(pcomp_chunk_is_compressed(chunk));
     assert(pcomp_chunk_num_of_poly_coeffs(chunk) == 2);
     assert(pcomp_chunk_poly_coeffs(chunk) != NULL);

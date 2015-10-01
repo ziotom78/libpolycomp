@@ -65,7 +65,7 @@ static double integer_power(int x, int y)
  */
 
 struct __pcomp_poly_fit_data_t {
-    size_t num_of_points;
+    size_t num_of_samples;
     size_t num_of_coeffs;
     gsl_multifit_linear_workspace* workspace;
     gsl_matrix* matrix;
@@ -74,24 +74,24 @@ struct __pcomp_poly_fit_data_t {
     gsl_matrix* cov_matrix;
 };
 
-pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_points,
+pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
                                            size_t num_of_coeffs)
 {
     size_t i, j;
 
     pcomp_poly_fit_data_t* poly_fit
         = malloc(sizeof(pcomp_poly_fit_data_t));
-    poly_fit->num_of_points = num_of_points;
+    poly_fit->num_of_samples = num_of_samples;
     poly_fit->num_of_coeffs = num_of_coeffs;
     poly_fit->workspace
-        = gsl_multifit_linear_alloc(num_of_points, num_of_coeffs);
-    poly_fit->matrix = gsl_matrix_alloc(num_of_points, num_of_coeffs);
-    poly_fit->y = gsl_vector_alloc(num_of_points);
+        = gsl_multifit_linear_alloc(num_of_samples, num_of_coeffs);
+    poly_fit->matrix = gsl_matrix_alloc(num_of_samples, num_of_coeffs);
+    poly_fit->y = gsl_vector_alloc(num_of_samples);
     poly_fit->c = gsl_vector_alloc(num_of_coeffs);
     poly_fit->cov_matrix
         = gsl_matrix_alloc(num_of_coeffs, num_of_coeffs);
 
-    for (i = 0; i < num_of_points; ++i) {
+    for (i = 0; i < num_of_samples; ++i) {
         for (j = 0; j < num_of_coeffs; ++j) {
             gsl_matrix_set(poly_fit->matrix, i, j,
                            integer_power(i + 1, j));
@@ -116,12 +116,12 @@ void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
 }
 
 size_t
-pcomp_poly_fit_num_of_points(const pcomp_poly_fit_data_t* poly_fit)
+pcomp_poly_fit_num_of_samples(const pcomp_poly_fit_data_t* poly_fit)
 {
     if (poly_fit == NULL)
         abort();
 
-    return poly_fit->num_of_points;
+    return poly_fit->num_of_samples;
 }
 
 size_t
@@ -142,7 +142,7 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
     if (poly_fit == NULL || coeffs == NULL || points == NULL)
         abort();
 
-    for (idx = 0; idx < poly_fit->num_of_points; ++idx) {
+    for (idx = 0; idx < poly_fit->num_of_samples; ++idx) {
         gsl_vector_set(poly_fit->y, idx, points[idx]);
     }
 
@@ -166,21 +166,21 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
 struct __pcomp_chebyshev_t {
     double* input;
     double* output;
-    size_t num_of_elements;
+    size_t num_of_samples;
     fftw_plan fftw_plan_ptr;
     pcomp_transform_direction_t dir;
 };
 
-pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_elements,
+pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
                                         pcomp_transform_direction_t dir)
 {
     pcomp_chebyshev_t* chebyshev = malloc(sizeof(pcomp_chebyshev_t));
 
-    chebyshev->input = fftw_alloc_real(num_of_elements);
-    chebyshev->output = fftw_alloc_real(num_of_elements);
-    chebyshev->num_of_elements = num_of_elements;
+    chebyshev->input = fftw_alloc_real(num_of_samples);
+    chebyshev->output = fftw_alloc_real(num_of_samples);
+    chebyshev->num_of_samples = num_of_samples;
     chebyshev->fftw_plan_ptr = fftw_plan_r2r_1d(
-        num_of_elements, chebyshev->input, chebyshev->output,
+        num_of_samples, chebyshev->input, chebyshev->output,
         FFTW_REDFT00, FFTW_ESTIMATE);
     chebyshev->dir = dir;
 
@@ -204,12 +204,12 @@ void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
     free(plan);
 }
 
-size_t pcomp_chebyshev_num_of_elements(const pcomp_chebyshev_t* plan)
+size_t pcomp_chebyshev_num_of_samples(const pcomp_chebyshev_t* plan)
 {
     if (plan == NULL)
         abort();
 
-    return plan->num_of_elements;
+    return plan->num_of_samples;
 }
 
 pcomp_transform_direction_t
@@ -222,10 +222,10 @@ pcomp_chebyshev_direction(const pcomp_chebyshev_t* plan)
 }
 
 static double chebyshev_normalization(pcomp_transform_direction_t dir,
-                                      size_t num_of_elements)
+                                      size_t num_of_samples)
 {
     if (dir == PCOMP_TD_DIRECT)
-        return 1.0 / (((double)num_of_elements) - 1.0);
+        return 1.0 / (((double)num_of_samples) - 1.0);
     else
         return 0.5;
 }
@@ -241,20 +241,20 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
         abort();
 
     if (input != NULL) {
-        for (idx = 0; idx < plan->num_of_elements; ++idx) {
+        for (idx = 0; idx < plan->num_of_samples; ++idx) {
             plan->input[idx] = input[idx];
         }
     }
 
     fftw_execute(plan->fftw_plan_ptr);
-    norm = chebyshev_normalization(dir, plan->num_of_elements);
+    norm = chebyshev_normalization(dir, plan->num_of_samples);
 
-    for (idx = 0; idx < plan->num_of_elements; ++idx) {
+    for (idx = 0; idx < plan->num_of_samples; ++idx) {
         plan->output[idx] *= norm;
     }
 
     if (output != NULL && output != plan->output) {
-        for (idx = 0; idx < plan->num_of_elements; ++idx) {
+        for (idx = 0; idx < plan->num_of_samples; ++idx) {
             output[idx] = plan->output[idx];
         }
     }
@@ -347,7 +347,7 @@ static double eval_poly(double* coeffs, size_t num_of_coeffs, double x)
  */
 
 void pcomp_straighten(double* output, const double* input,
-                      size_t num_of_elements, double period)
+                      size_t num_of_samples, double period)
 {
     size_t idx;
     double half_period = period * 0.5;
@@ -357,7 +357,7 @@ void pcomp_straighten(double* output, const double* input,
         abort();
 
     if (period > 0) {
-        for (idx = 1; idx < num_of_elements; ++idx) {
+        for (idx = 1; idx < num_of_samples; ++idx) {
             double diff_with_previous = input[idx] - input[idx - 1];
             if (diff_with_previous > half_period)
                 offset -= period;
@@ -368,7 +368,7 @@ void pcomp_straighten(double* output, const double* input,
         }
     }
     else {
-        for (idx = 0; idx < num_of_elements; ++idx)
+        for (idx = 0; idx < num_of_samples; ++idx)
             output[idx] = input[idx];
     }
 }
@@ -381,13 +381,13 @@ void pcomp_straighten(double* output, const double* input,
  * using the polynomial compression */
 struct __pcomp_polycomp_chunk_t {
     /* Number of samples in this chunk */
-    size_t num_of_elements;
+    size_t num_of_samples;
 
     /* Is this chunk compressed using polynomial/Chebyshev
      * coefficients? */
     int is_compressed;
     /* If the chunk is not compressed (is_compressed == 0), this
-     * points to a buffer which holds "num_of_elements" uncompressed
+     * points to a buffer which holds "num_of_samples" uncompressed
      * samples */
     double* uncompressed;
 
@@ -398,21 +398,21 @@ struct __pcomp_polycomp_chunk_t {
 
     /* Chebyshev coefficients */
     size_t num_of_cheby_coeffs; /* This is always less than
-                                 * num_of_elements, as the Chebyshev
+                                 * num_of_samples, as the Chebyshev
                                  * series is truncated. */
     double* cheby_coeffs;
 };
 
-pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_elements)
+pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_samples)
 {
     pcomp_polycomp_chunk_t* chunk
         = malloc(sizeof(pcomp_polycomp_chunk_t));
 
-    chunk->num_of_elements = num_of_elements;
+    chunk->num_of_samples = num_of_samples;
 
     chunk->is_compressed = 0;
     chunk->uncompressed
-        = malloc(sizeof(double) * sizeof(chunk->num_of_elements));
+        = malloc(sizeof(double) * sizeof(chunk->num_of_samples));
 
     chunk->num_of_poly_coeffs = 0;
     chunk->poly_coeffs = NULL;
@@ -435,12 +435,12 @@ void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
         free(chunk->cheby_coeffs);
 }
 
-size_t pcomp_chunk_num_of_elements(const pcomp_polycomp_chunk_t* chunk)
+size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
         abort();
 
-    return chunk->num_of_elements;
+    return chunk->num_of_samples;
 }
 
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
@@ -564,19 +564,19 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
         return 0;
 
     /* Start by setting all the coefficients to zero */
-    for (idx = 0; idx < chebyshev->num_of_elements; ++idx) {
+    for (idx = 0; idx < chebyshev->num_of_samples; ++idx) {
         inv_chebyshev->input[idx] = 0.0;
     }
 
     /* Add the coefficients one by one until the error is below
      * "max_allowable_error" */
-    while (result < chebyshev->num_of_elements) {
+    while (result < chebyshev->num_of_samples) {
         err = 0.0;
 
         pcomp_run_chebyshev(inv_chebyshev, inv_chebyshev->dir, NULL,
                             NULL);
 
-        for (idx = 0; idx < chebyshev->num_of_elements; ++idx) {
+        for (idx = 0; idx < chebyshev->num_of_samples; ++idx) {
             double cur_err = fabs(chebyshev->input[idx]
                                   - inv_chebyshev->output[idx]);
             if (cur_err > err)
@@ -593,8 +593,8 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
     if (max_error != NULL)
         *max_error = err;
 
-    if (result >= chebyshev->num_of_elements)
-        result = chebyshev->num_of_elements;
+    if (result >= chebyshev->num_of_samples)
+        result = chebyshev->num_of_samples;
 
     return result;
 }
@@ -617,7 +617,7 @@ static void clear_chunk(pcomp_polycomp_chunk_t* chunk)
 
 int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
                                 const double* input,
-                                size_t num_of_elements,
+                                size_t num_of_samples,
                                 pcomp_polycomp_chunk_t* chunk,
                                 double* max_error)
 {
@@ -633,10 +633,10 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
     clear_chunk(chunk);
 
-    if (num_of_elements != params->num_of_samples)
+    if (num_of_samples != params->num_of_samples)
         return PCOMP_STAT_INVALID_BUFFER;
 
-    if (num_of_elements <= params->poly_fit->num_of_coeffs) {
+    if (num_of_samples <= params->poly_fit->num_of_coeffs) {
         /* The number of element is so small that is better to store
          * them uncompressed */
         chunk->is_compressed = 0;
@@ -656,15 +656,15 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
             chunk->is_compressed = (cheby_coeffs_to_retain
                                     + params->poly_fit->num_of_coeffs)
-                                   < num_of_elements;
+                                   < num_of_samples;
         }
         else {
-            /* Assume that num_of_elements > deg(p) + 1 */
+            /* Assume that num_of_samples > deg(p) + 1 */
             chunk->is_compressed = 1;
         }
     }
 
-    chunk->num_of_elements = num_of_elements;
+    chunk->num_of_samples = num_of_samples;
     if (chunk->is_compressed) {
         size_t idx;
 
@@ -690,8 +690,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
         if (coeffs != NULL)
             free(coeffs);
 
-        chunk->uncompressed = malloc(sizeof(double) * num_of_elements);
-        for (idx = 0; idx < num_of_elements; ++idx)
+        chunk->uncompressed = malloc(sizeof(double) * num_of_samples);
+        for (idx = 0; idx < num_of_samples; ++idx)
             chunk->uncompressed[idx] = input[idx];
 
         if (max_error != NULL)
@@ -713,7 +713,7 @@ int pcomp_decompress_polycomp_chunk(double* output,
 
         /* Compute the values of the polynomial at the points 1, 2, ...
          */
-        for (idx = 0; idx < chunk->num_of_elements; ++idx) {
+        for (idx = 0; idx < chunk->num_of_samples; ++idx) {
             output[idx] = eval_poly(chunk->poly_coeffs,
                                     chunk->num_of_poly_coeffs, idx + 1);
         }
@@ -728,21 +728,21 @@ int pcomp_decompress_polycomp_chunk(double* output,
                 inv_chebyshev->input[idx] = chunk->cheby_coeffs[idx];
             }
             for (idx = chunk->num_of_cheby_coeffs;
-                 idx < chunk->num_of_elements; ++idx) {
+                 idx < chunk->num_of_samples; ++idx) {
                 inv_chebyshev->input[idx] = 0.0;
             }
 
             pcomp_run_chebyshev(inv_chebyshev, inv_chebyshev->dir, NULL,
                                 NULL);
 
-            for (idx = 0; idx < chunk->num_of_elements; ++idx) {
+            for (idx = 0; idx < chunk->num_of_samples; ++idx) {
                 output[idx] += inv_chebyshev->output[idx];
             }
         }
     }
     else {
         memcpy(output, chunk->uncompressed,
-               sizeof(chunk->uncompressed[0]) * chunk->num_of_elements);
+               sizeof(chunk->uncompressed[0]) * chunk->num_of_samples);
     }
 
     return PCOMP_STAT_SUCCESS;
@@ -889,7 +889,7 @@ pcomp_total_num_of_samples(pcomp_polycomp_chunk_t* const chunk_array[],
         if (chunk_array[idx] == NULL)
             abort();
 
-        total += chunk_array[idx]->num_of_elements;
+        total += chunk_array[idx]->num_of_samples;
     }
 
     return total;
@@ -911,20 +911,20 @@ int pcomp_decompress_polycomp(
             abort();
 
         if (inv_chebyshev == NULL
-            || inv_chebyshev->num_of_elements
-                   != chunk_array[idx]->num_of_elements) {
+            || inv_chebyshev->num_of_samples
+                   != chunk_array[idx]->num_of_samples) {
 
             /* This does no harm if inv_chebyshev==NULL */
             pcomp_free_chebyshev(inv_chebyshev);
 
             inv_chebyshev = pcomp_init_chebyshev(
-                chunk_array[idx]->num_of_elements, PCOMP_TD_INVERSE);
+                chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
         }
 
         pcomp_decompress_polycomp_chunk(
             cur_output_pos, chunk_array[idx], inv_chebyshev);
 
-        cur_output_pos += chunk_array[idx]->num_of_elements;
+        cur_output_pos += chunk_array[idx]->num_of_samples;
     }
 
     pcomp_free_chebyshev(inv_chebyshev);
