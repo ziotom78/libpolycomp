@@ -294,6 +294,9 @@ pcomp_chebyshev_t*
 pcomp_init_chebyshev(size_t num_of_elements,
                      pcomp_transform_direction_t dir);
 void pcomp_free_chebyshev(pcomp_chebyshev_t* plan);
+size_t pcomp_chebyshev_num_of_elements(const pcomp_chebyshev_t* plan);
+pcomp_transform_direction_t
+pcomp_chebyshev_direction(const pcomp_chebyshev_t* plan);
 int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
                         pcomp_transform_direction_t dir, double* output,
                         const double* input);

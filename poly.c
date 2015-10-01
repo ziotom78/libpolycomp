@@ -204,6 +204,23 @@ void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
     free(plan);
 }
 
+size_t pcomp_chebyshev_num_of_elements(const pcomp_chebyshev_t* plan)
+{
+    if (plan == NULL)
+        abort();
+
+    return plan->num_of_elements;
+}
+
+pcomp_transform_direction_t
+pcomp_chebyshev_direction(const pcomp_chebyshev_t* plan)
+{
+    if (plan == NULL)
+        abort();
+
+    return plan->dir;
+}
+
 static double chebyshev_normalization(pcomp_transform_direction_t dir,
                                       size_t num_of_elements)
 {
