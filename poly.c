@@ -461,6 +461,9 @@ pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_samples)
 
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
 {
+    if (chunk == NULL)
+        return;
+
     if (chunk->uncompressed != NULL)
         free(chunk->uncompressed);
 
