@@ -42,8 +42,8 @@ int main(void)
     size_t decompr_size;
     pcomp_polycomp_chunk_t** chunks;
     size_t num_of_chunks;
-    pcomp_poly_parameters_t* params = pcomp_init_poly_parameters(
-        4, 2, MAX_ERROR, PCOMP_ALG_USE_CHEBYSHEV);
+    pcomp_polycomp_t* params
+        = pcomp_init_polycomp(4, 2, MAX_ERROR, PCOMP_ALG_USE_CHEBYSHEV);
     size_t idx;
 
     pcomp_compress_polycomp(&chunks, &num_of_chunks, input, input_size,
@@ -60,7 +60,7 @@ int main(void)
         assert(fabs(input[idx] - decompr[idx]) <= MAX_ERROR);
     }
 
-    pcomp_free_poly_parameters(params);
+    pcomp_free_polycomp(params);
     pcomp_free_chunks(chunks, num_of_chunks);
 
     return 0;

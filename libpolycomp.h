@@ -336,7 +336,7 @@ void pcomp_straighten(double* output, const double* input,
                       size_t num_of_samples, double period);
 
 pcomp_polycomp_t*
-pcomp_init_polycomp(size_t num_of_samples, size_t num_of_coeffs,
+pcomp_init_polycomp(size_t samples_per_chunk, size_t num_of_coeffs,
                     double max_allowable_error,
                     pcomp_polycomp_algorithm_t algorithm);
 void pcomp_free_polycomp(pcomp_polycomp_t* params);
@@ -363,29 +363,17 @@ int pcomp_decompress_polycomp_chunk(double* output,
  * "output_size" is ignored in the call (it is only set on exit).
  */
 
-/* Parameters used for the polynomial compression */
-struct __pcomp_poly_parameters_t;
-typedef struct __pcomp_poly_parameters_t pcomp_poly_parameters_t;
-
-pcomp_poly_parameters_t*
-pcomp_init_poly_parameters(size_t chunk_size, size_t num_of_poly_coeffs,
-                           double max_error,
-                           pcomp_polycomp_algorithm_t algorithm);
-void pcomp_free_poly_parameters(pcomp_poly_parameters_t* params);
-
+size_t pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params);
 size_t
-pcomp_poly_parameters_chunk_size(const pcomp_poly_parameters_t* params);
-size_t pcomp_poly_parameters_num_of_poly_coeffs(
-    const pcomp_poly_parameters_t* params);
-double
-pcomp_poly_parameters_max_error(const pcomp_poly_parameters_t* params);
+pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params);
+double pcomp_polycomp_max_error(const pcomp_polycomp_t* params);
 pcomp_polycomp_algorithm_t
-pcomp_poly_parameters_algorithm(const pcomp_poly_parameters_t* params);
+pcomp_polycomp_algorithm(const pcomp_polycomp_t* params);
 
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** chunk_array[],
                             size_t* num_of_chunks,
                             const double* input_buf, size_t input_size,
-                            const pcomp_poly_parameters_t* params);
+                            const pcomp_polycomp_t* params);
 
 size_t
 pcomp_total_num_of_samples(pcomp_polycomp_chunk_t* const chunk_array[],

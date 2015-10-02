@@ -268,7 +268,7 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
  */
 
 struct __pcomp_polycomp_t {
-    size_t num_of_samples;
+    size_t samples_per_chunk;
     pcomp_poly_fit_data_t* poly_fit;
     pcomp_chebyshev_t* chebyshev;
     pcomp_chebyshev_t* inv_chebyshev;
@@ -277,19 +277,19 @@ struct __pcomp_polycomp_t {
 };
 
 pcomp_polycomp_t*
-pcomp_init_polycomp(size_t num_of_samples, size_t num_of_coeffs,
+pcomp_init_polycomp(size_t samples_per_chunk, size_t num_of_coeffs,
                     double max_allowable_error,
                     pcomp_polycomp_algorithm_t algorithm)
 {
     pcomp_polycomp_t* params = malloc(sizeof(pcomp_polycomp_t));
 
-    params->num_of_samples = num_of_samples;
+    params->samples_per_chunk = samples_per_chunk;
     params->poly_fit
-        = pcomp_init_poly_fit(num_of_samples, num_of_coeffs);
+        = pcomp_init_poly_fit(samples_per_chunk, num_of_coeffs);
     params->chebyshev
-        = pcomp_init_chebyshev(num_of_samples, PCOMP_TD_DIRECT);
+        = pcomp_init_chebyshev(samples_per_chunk, PCOMP_TD_DIRECT);
     params->inv_chebyshev
-        = pcomp_init_chebyshev(num_of_samples, PCOMP_TD_INVERSE);
+        = pcomp_init_chebyshev(samples_per_chunk, PCOMP_TD_INVERSE);
     params->max_allowable_error = max_allowable_error;
     params->algorithm = algorithm;
 
@@ -306,6 +306,39 @@ void pcomp_free_polycomp(pcomp_polycomp_t* params)
     pcomp_free_chebyshev(params->inv_chebyshev);
 
     free(params);
+}
+
+size_t pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->samples_per_chunk;
+}
+
+size_t pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params)
+{
+    if (params == NULL || params->poly_fit == NULL)
+        abort();
+
+    return params->poly_fit->num_of_coeffs;
+}
+
+double pcomp_polycomp_max_error(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->max_allowable_error;
+}
+
+pcomp_polycomp_algorithm_t
+pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->algorithm;
 }
 
 /***********************************************************************
@@ -521,13 +554,13 @@ static int polyfit_and_chebyshev(pcomp_polycomp_t* params,
 {
     size_t idx;
     int status;
-    double running_max;
+    double running_max = -1.0; /* Negative stands for "uninitialized" */
 
     status = pcomp_run_poly_fit(params->poly_fit, coeffs, input);
     if (status != PCOMP_STAT_SUCCESS)
         return status;
 
-    for (idx = 0; idx < params->num_of_samples; ++idx) {
+    for (idx = 0; idx < params->samples_per_chunk; ++idx) {
         double abs_residual;
 
         params->chebyshev->input[idx]
@@ -536,7 +569,7 @@ static int polyfit_and_chebyshev(pcomp_polycomp_t* params,
                           idx + 1.0);
 
         abs_residual = fabs(params->chebyshev->input[idx]);
-        if (abs_residual > running_max)
+        if (abs_residual > running_max || running_max < 0.0)
             running_max = abs_residual;
     }
 
@@ -560,7 +593,8 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
     size_t result = 0;
     double err;
 
-    if (chebyshev == NULL || inv_chebyshev == NULL)
+    if (chebyshev == NULL || inv_chebyshev == NULL
+        || chebyshev->num_of_samples != inv_chebyshev->num_of_samples)
         abort();
 
     if (max_allowable_error <= 0.0)
@@ -586,11 +620,11 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
                 err = cur_err;
         }
 
-        ++result;
-        inv_chebyshev->input[result] = chebyshev->output[result];
-
         if (err < max_allowable_error)
             break;
+
+        inv_chebyshev->input[result] = chebyshev->output[result];
+        ++result;
     }
 
     if (max_error != NULL)
@@ -636,7 +670,7 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
     clear_chunk(chunk);
 
-    if (num_of_samples != params->num_of_samples)
+    if (num_of_samples != params->samples_per_chunk)
         return PCOMP_STAT_INVALID_BUFFER;
 
     if (num_of_samples <= params->poly_fit->num_of_coeffs) {
@@ -755,117 +789,46 @@ int pcomp_decompress_polycomp_chunk(double* output,
  *
  */
 
-struct __pcomp_poly_parameters_t {
-    size_t chunk_size;
-    size_t num_of_poly_coeffs;
-    double max_error;
-    pcomp_polycomp_algorithm_t algorithm;
-};
-
-pcomp_poly_parameters_t*
-pcomp_init_poly_parameters(size_t chunk_size, size_t num_of_poly_coeffs,
-                           double max_error,
-                           pcomp_polycomp_algorithm_t algorithm)
-{
-    pcomp_poly_parameters_t* result
-        = malloc(sizeof(pcomp_poly_parameters_t));
-
-    result->chunk_size = chunk_size;
-    result->num_of_poly_coeffs = num_of_poly_coeffs;
-    result->max_error = max_error;
-    result->algorithm = algorithm;
-
-    return result;
-}
-
-void pcomp_free_poly_parameters(pcomp_poly_parameters_t* params)
-{
-    if (params == NULL)
-        return;
-
-    free(params);
-}
-
-size_t
-pcomp_poly_parameters_chunk_size(const pcomp_poly_parameters_t* params)
-{
-    if (params == NULL)
-        abort();
-
-    return params->chunk_size;
-}
-
-size_t pcomp_poly_parameters_num_of_poly_coeffs(
-    const pcomp_poly_parameters_t* params)
-{
-    if (params == NULL)
-        abort();
-
-    return params->num_of_poly_coeffs;
-}
-
-double
-pcomp_poly_parameters_max_error(const pcomp_poly_parameters_t* params)
-{
-    if (params == NULL)
-        abort();
-
-    return params->max_error;
-}
-
-pcomp_polycomp_algorithm_t
-pcomp_poly_parameters_algorithm(const pcomp_poly_parameters_t* params)
-{
-    if (params == NULL)
-        abort();
-
-    return params->algorithm;
-}
-
-/***********************************************************************
- *
- */
-
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
                             size_t* num_of_chunks,
                             const double* input_buf, size_t input_size,
-                            const pcomp_poly_parameters_t* params)
+                            const pcomp_polycomp_t* params)
 {
     size_t idx;
     const double* cur_input = input_buf;
     pcomp_polycomp_t* chunk_params;
 
     if (output_buf == NULL || num_of_chunks == NULL || input_buf == NULL
-        || params == NULL)
+        || params == NULL || params->poly_fit == NULL)
         abort();
 
     /* Calculate how many chunks we'll create */
-    *num_of_chunks = input_size / params->chunk_size;
-    if (input_size % params->chunk_size != 0)
+    *num_of_chunks = input_size / params->samples_per_chunk;
+    if (input_size % params->samples_per_chunk != 0)
         ++(*num_of_chunks);
 
     *output_buf
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
 
     chunk_params = pcomp_init_polycomp(
-        params->chunk_size, params->num_of_poly_coeffs,
-        params->max_error, params->algorithm);
+        params->samples_per_chunk, params->poly_fit->num_of_coeffs,
+        params->max_allowable_error, params->algorithm);
 
     /* Loop over the chunks and call "pcomp_run_polycomp_on_chunk" for
      * each of them */
     for (idx = 0; idx < *num_of_chunks; ++idx) {
-        size_t cur_chunk_size = params->chunk_size;
+        size_t cur_chunk_size = params->samples_per_chunk;
 
         if ((cur_input - input_buf) + cur_chunk_size > input_size)
             cur_chunk_size
                 = (size_t)(input_size - (cur_input - input_buf));
 
-        if (cur_chunk_size != chunk_params->num_of_samples) {
+        if (cur_chunk_size != chunk_params->samples_per_chunk) {
             pcomp_free_polycomp(chunk_params);
 
             chunk_params = pcomp_init_polycomp(
-                cur_chunk_size, params->num_of_poly_coeffs,
-                params->max_error, params->algorithm);
+                cur_chunk_size, params->poly_fit->num_of_coeffs,
+                params->max_allowable_error, params->algorithm);
         }
 
         (*output_buf)[idx] = pcomp_init_chunk(cur_chunk_size);
