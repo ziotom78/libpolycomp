@@ -45,6 +45,9 @@ int test_chunk_creation(void)
     const double cheby[] = { -1.0, -2.0, -3.0, -4.0 };
     const size_t num_of_cheby = sizeof(cheby) / sizeof(cheby[0]);
 
+    const double* values;
+    size_t idx;
+
     pcomp_polycomp_chunk_t* chunk = NULL;
 
     chunk = pcomp_init_uncompressed_chunk(num_of_samples, &samples[0]);
@@ -57,8 +60,19 @@ int test_chunk_creation(void)
         num_of_samples, num_of_poly, &poly[0], num_of_cheby, &cheby[0]);
     assert(chunk != NULL);
     assert(pcomp_chunk_is_compressed(chunk));
+
     assert(pcomp_chunk_num_of_poly_coeffs(chunk) == num_of_poly);
+    values = pcomp_chunk_poly_coeffs(chunk);
+    for (idx = 0; idx < pcomp_chunk_num_of_poly_coeffs(chunk); ++idx) {
+        assert(values[idx] == poly[idx]);
+    }
+
     assert(pcomp_chunk_num_of_cheby_coeffs(chunk) == num_of_cheby);
+    values = pcomp_chunk_cheby_coeffs(chunk);
+    for (idx = 0; idx < pcomp_chunk_num_of_cheby_coeffs(chunk); ++idx) {
+        assert(values[idx] == cheby[idx]);
+    }
+
     pcomp_free_chunk(chunk);
 
     return 0;
@@ -94,6 +108,7 @@ int test_no_compression(void)
 
     free(decompr);
     pcomp_free_chunk(chunk);
+    pcomp_free_chebyshev(inv_chebyshev);
     pcomp_free_polycomp(polycomp);
 
     return 0;
@@ -131,6 +146,7 @@ int test_no_chebyshev(void)
 
     free(decompr);
     pcomp_free_chunk(chunk);
+    pcomp_free_chebyshev(inv_chebyshev);
     pcomp_free_polycomp(polycomp);
 
     return 0;
@@ -165,6 +181,7 @@ int test_complete_compression_and_decompression(void)
 
     free(decompr);
     pcomp_free_chunk(chunk);
+    pcomp_free_chebyshev(inv_chebyshev);
     pcomp_free_polycomp(polycomp);
 
     return 0;

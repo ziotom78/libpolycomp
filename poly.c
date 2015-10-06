@@ -522,6 +522,8 @@ void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
 
     if (chunk->cheby_coeffs != NULL)
         free(chunk->cheby_coeffs);
+
+    free(chunk);
 }
 
 size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
