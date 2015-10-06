@@ -459,6 +459,56 @@ pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_samples)
     return chunk;
 }
 
+pcomp_polycomp_chunk_t*
+pcomp_init_uncompressed_chunk(size_t num_of_samples,
+                              const double* samples)
+{
+    pcomp_polycomp_chunk_t* chunk
+        = malloc(sizeof(pcomp_polycomp_chunk_t));
+
+    chunk->num_of_samples = num_of_samples;
+
+    chunk->is_compressed = 0;
+    chunk->uncompressed
+        = malloc(sizeof(double) * sizeof(chunk->num_of_samples));
+    memcpy(chunk->uncompressed, samples,
+           sizeof(double) * num_of_samples);
+
+    chunk->num_of_poly_coeffs = 0;
+    chunk->poly_coeffs = NULL;
+
+    chunk->num_of_cheby_coeffs = 0;
+    chunk->cheby_coeffs = NULL;
+
+    return chunk;
+}
+
+pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
+    size_t num_of_samples, size_t num_of_poly_coeffs,
+    const double* poly_coeffs, size_t num_of_cheby_coeffs,
+    const double* cheby_coeffs)
+{
+    pcomp_polycomp_chunk_t* chunk
+        = malloc(sizeof(pcomp_polycomp_chunk_t));
+
+    chunk->num_of_samples = num_of_samples;
+
+    chunk->is_compressed = 1;
+    chunk->uncompressed = NULL;
+
+    chunk->num_of_poly_coeffs = num_of_poly_coeffs;
+    chunk->poly_coeffs = malloc(num_of_poly_coeffs * sizeof(double));
+    memcpy(chunk->poly_coeffs, poly_coeffs,
+           num_of_poly_coeffs * sizeof(double));
+
+    chunk->num_of_cheby_coeffs = num_of_cheby_coeffs;
+    chunk->cheby_coeffs = malloc(num_of_cheby_coeffs * sizeof(double));
+    memcpy(chunk->cheby_coeffs, cheby_coeffs,
+           num_of_cheby_coeffs * sizeof(double));
+
+    return chunk;
+}
+
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)

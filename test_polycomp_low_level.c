@@ -34,6 +34,36 @@
 #define EPSILON 1.0e-7
 #define MAX_ALLOWABLE_ERROR 0.3
 
+int test_chunk_creation(void)
+{
+    const double samples[] = { 1.0, 2.0, 3.0 };
+    const size_t num_of_samples = sizeof(samples) / sizeof(samples[0]);
+
+    const double poly[] = { 3.0, 2.0 };
+    const size_t num_of_poly = sizeof(poly) / sizeof(poly[0]);
+
+    const double cheby[] = { -1.0, -2.0, -3.0, -4.0 };
+    const size_t num_of_cheby = sizeof(cheby) / sizeof(cheby[0]);
+
+    pcomp_polycomp_chunk_t* chunk = NULL;
+
+    chunk = pcomp_init_uncompressed_chunk(num_of_samples, &samples[0]);
+    assert(chunk != NULL);
+    assert(!pcomp_chunk_is_compressed(chunk));
+    assert(pcomp_chunk_num_of_samples(chunk) == num_of_samples);
+    pcomp_free_chunk(chunk);
+
+    chunk = pcomp_init_compressed_chunk(
+        num_of_samples, num_of_poly, &poly[0], num_of_cheby, &cheby[0]);
+    assert(chunk != NULL);
+    assert(pcomp_chunk_is_compressed(chunk));
+    assert(pcomp_chunk_num_of_poly_coeffs(chunk) == num_of_poly);
+    assert(pcomp_chunk_num_of_cheby_coeffs(chunk) == num_of_cheby);
+    pcomp_free_chunk(chunk);
+
+    return 0;
+}
+
 int test_no_compression(void)
 {
     /* It is impossible to compress these data using the polynomial
@@ -143,6 +173,10 @@ int test_complete_compression_and_decompression(void)
 int main(void)
 {
     int result;
+
+    result = test_chunk_creation();
+    if (result != 0)
+        return result;
 
     result = test_no_compression();
     if (result != 0)

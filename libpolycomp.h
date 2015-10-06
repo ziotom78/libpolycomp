@@ -317,6 +317,14 @@ struct __pcomp_polycomp_chunk_t;
 typedef struct __pcomp_polycomp_chunk_t pcomp_polycomp_chunk_t;
 
 pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_samples);
+pcomp_polycomp_chunk_t*
+pcomp_init_uncompressed_chunk(size_t num_of_samples,
+                              const double* samples);
+pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
+    size_t num_of_samples, size_t num_of_poly_coeffs,
+    const double* poly_coeffs, size_t num_of_cheby_coeffs,
+    const double* cheby_coeffs);
+
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
 
 size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk);
