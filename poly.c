@@ -465,14 +465,13 @@ pcomp_init_uncompressed_chunk(size_t num_of_samples,
 {
     pcomp_polycomp_chunk_t* chunk
         = malloc(sizeof(pcomp_polycomp_chunk_t));
+    const size_t num_of_bytes = sizeof(double) * num_of_samples;
 
     chunk->num_of_samples = num_of_samples;
 
     chunk->is_compressed = 0;
-    chunk->uncompressed
-        = malloc(sizeof(double) * sizeof(chunk->num_of_samples));
-    memcpy(chunk->uncompressed, samples,
-           sizeof(double) * num_of_samples);
+    chunk->uncompressed = malloc(num_of_bytes);
+    memcpy(chunk->uncompressed, samples, num_of_bytes);
 
     chunk->num_of_poly_coeffs = 0;
     chunk->poly_coeffs = NULL;
