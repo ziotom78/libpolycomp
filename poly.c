@@ -533,6 +533,33 @@ size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
     return chunk->num_of_samples;
 }
 
+size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
+{
+    if (chunk == NULL)
+        abort();
+
+    if (chunk->is_compressed) {
+        /* The size is calculated as follows:
+         * - 1 byte for the "compressed" flag
+         * - 2x4 bytes for the number of polynomial/Chebyshev
+         *   coefficients
+         * - Nx8 bytes for the coefficients
+         */
+        return sizeof(int8_t) + sizeof(size_t) * 2
+               + (chunk->num_of_poly_coeffs
+                  + chunk->num_of_cheby_coeffs) * sizeof(double);
+    }
+    else {
+        /* The size is calculated as follows:
+         * - 1 byte for the "uncompressed flag
+         * - 4 bytes for the number of samples
+         * - Nx8 bytes for the samples
+         */
+        return sizeof(int8_t) + sizeof(size_t)
+               + chunk->num_of_samples * sizeof(double);
+    }
+}
+
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
@@ -690,12 +717,15 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
     return result;
 }
 
-/* This function is used internally by "pcomp_run_polycomp_on_chunk"
- * and "pcomp_decompress_poly_chunk" to make sure there is no memory
+/* This function is used internally by
+ * "pcomp_run_polycomp_on_chunk"
+ * and "pcomp_decompress_poly_chunk" to make sure there is no
+ * memory
  * leak on the chunk passed as argument. */
 static void clear_chunk(pcomp_polycomp_chunk_t* chunk)
 {
-    /* Leave chunk->uncompressed as it is, as it never changes */
+    /* Leave chunk->uncompressed as it is, as it never changes
+     */
 
     chunk->num_of_poly_coeffs = 0;
     if (chunk->poly_coeffs != NULL)
@@ -728,7 +758,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
         return PCOMP_STAT_INVALID_BUFFER;
 
     if (num_of_samples <= params->poly_fit->num_of_coeffs) {
-        /* The number of element is so small that is better to store
+        /* The number of element is so small that is better to
+         * store
          * them uncompressed */
         chunk->is_compressed = 0;
     }
@@ -802,14 +833,16 @@ int pcomp_decompress_polycomp_chunk(double* output,
     if (chunk->is_compressed) {
         size_t idx;
 
-        /* Compute the values of the polynomial at the points 1, 2, ...
+        /* Compute the values of the polynomial at the points 1,
+         * 2, ...
          */
         for (idx = 0; idx < chunk->num_of_samples; ++idx) {
             output[idx] = eval_poly(chunk->poly_coeffs,
                                     chunk->num_of_poly_coeffs, idx + 1);
         }
 
-        /* If present, add the contribution of the Chebyshev transform
+        /* If present, add the contribution of the Chebyshev
+         * transform
          */
         if (chunk->num_of_cheby_coeffs > 0) {
             if (chunk->cheby_coeffs == NULL)
@@ -868,7 +901,8 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
         params->samples_per_chunk, params->poly_fit->num_of_coeffs,
         params->max_allowable_error, params->algorithm);
 
-    /* Loop over the chunks and call "pcomp_run_polycomp_on_chunk" for
+    /* Loop over the chunks and call
+     * "pcomp_run_polycomp_on_chunk" for
      * each of them */
     for (idx = 0; idx < *num_of_chunks; ++idx) {
         size_t cur_chunk_size = params->samples_per_chunk;
@@ -965,4 +999,17 @@ void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
     }
 
     free(chunk_array);
+}
+
+size_t pcomp_chunks_num_of_bytes(const pcomp_polycomp_chunk_t* chunks[],
+                                 size_t num_of_chunks)
+{
+    size_t result = 0;
+    size_t idx;
+
+    for (idx = 0; idx < num_of_chunks; ++idx) {
+        result += pcomp_chunk_num_of_bytes(chunks[idx]);
+    }
+
+    return result;
 }

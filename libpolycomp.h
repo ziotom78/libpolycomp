@@ -233,6 +233,11 @@ void pcomp_free_quant_params(pcomp_quant_params_t* params);
 
 size_t pcomp_quant_element_size(const pcomp_quant_params_t* params);
 size_t pcomp_quant_bits_per_sample(const pcomp_quant_params_t* params);
+double pcomp_quant_normalization(const pcomp_quant_params_t* params);
+double pcomp_quant_offset(const pcomp_quant_params_t* params);
+
+void pcomp_quant_set_normalization(pcomp_quant_params_t* params,
+                                   double normalization, double offset);
 
 /* Return the minimum number of bytes necessary for the buffer that
  * will contain the compressed data, if the input data has
@@ -328,6 +333,7 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
 
 size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk);
+size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk);
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk);
@@ -397,5 +403,8 @@ int pcomp_decompress_polycomp(
 /* Free the heap memory allocated for an array of chunks */
 void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
                        size_t num_of_chunks);
+
+size_t pcomp_chunks_num_of_bytes(const pcomp_polycomp_chunk_t* chunks[],
+                                 size_t num_of_chunks);
 
 #endif /* LIBPOLYCOMP_H_GUARD */

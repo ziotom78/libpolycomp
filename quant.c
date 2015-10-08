@@ -74,6 +74,32 @@ size_t pcomp_quant_bits_per_sample(const pcomp_quant_params_t* params)
     return params->bits_per_sample;
 }
 
+double pcomp_quant_normalization(const pcomp_quant_params_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->normalization;
+}
+
+double pcomp_quant_offset(const pcomp_quant_params_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->min_value;
+}
+
+void pcomp_quant_set_normalization(pcomp_quant_params_t* params,
+                                   double normalization, double offset)
+{
+    if (params == NULL)
+        abort();
+
+    params->normalization = normalization;
+    params->min_value = offset;
+}
+
 /***********************************************************************
  * Estimate the size of the buffer needed to store quantized data
  */
