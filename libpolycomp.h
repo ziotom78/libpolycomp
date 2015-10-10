@@ -407,4 +407,10 @@ void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
 size_t pcomp_chunks_num_of_bytes(const pcomp_polycomp_chunk_t* chunks[],
                                  size_t num_of_chunks);
 
+void* pcomp_encode_chunks(const pcomp_polycomp_chunk_t* chunk_array[],
+                          size_t num_of_chunks);
+
+int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
+                        size_t* num_of_chunks, const void* buf);
+
 #endif /* LIBPOLYCOMP_H_GUARD */

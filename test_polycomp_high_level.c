@@ -33,7 +33,7 @@
 
 #define MAX_ERROR 0.1
 
-int main(void)
+void test_compression(void)
 {
     double input[]
         = { 1.0, 2.0, 3.0, 4.0, 3.0, 2.0, 1.0, 2.0, 6.0, 7.0, 9.0 };
@@ -62,6 +62,49 @@ int main(void)
 
     pcomp_free_polycomp(params);
     pcomp_free_chunks(chunks, num_of_chunks);
+}
 
+void test_encoding(void)
+{
+    double input[]
+        = { 1.0, 2.0, 3.0, 4.0, 3.0, 2.0, 1.0, 2.0, 6.0, 7.0, 9.0 };
+    size_t input_size = sizeof(input) / sizeof(input[0]);
+    double* decompr;
+    size_t decompr_size;
+    pcomp_polycomp_chunk_t** chunks;
+    void* buf;
+    size_t num_of_chunks;
+    pcomp_polycomp_t* params
+        = pcomp_init_polycomp(4, 2, MAX_ERROR, PCOMP_ALG_USE_CHEBYSHEV);
+    size_t idx;
+
+    pcomp_compress_polycomp(&chunks, &num_of_chunks, input, input_size,
+                            params);
+
+    buf = pcomp_encode_chunks(chunks, num_of_chunks);
+    pcomp_free_chunks(chunks, num_of_chunks);
+
+    assert(pcomp_decode_chunks(&chunks, &num_of_chunks, buf)
+           == PCOMP_STAT_SUCCESS);
+    free(buf);
+
+    decompr_size = pcomp_total_num_of_samples(chunks, num_of_chunks);
+    assert(decompr_size == input_size);
+
+    decompr = malloc(decompr_size * sizeof(double));
+    pcomp_decompress_polycomp(decompr, chunks, num_of_chunks);
+
+    for (idx = 0; idx < decompr_size; ++idx) {
+        assert(fabs(input[idx] - decompr[idx]) <= MAX_ERROR);
+    }
+
+    pcomp_free_polycomp(params);
+    pcomp_free_chunks(chunks, num_of_chunks);
+}
+
+int main(void)
+{
+    test_compression();
+    test_encoding();
     return 0;
 }
