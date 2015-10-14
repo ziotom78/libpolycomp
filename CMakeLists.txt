@@ -39,22 +39,20 @@ find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${FFTW_LIBRARIES})
 
-find_package(CFITSIO REQUIRED)
-include_directories(${CFITSIO_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${CFITSIO_LIBRARIES})
-
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES})
 
-add_library (polycomp
+set(SOURCE_FILE_LIST
   diff_rle.c
   poly.c
   quant.c
   rle.c
   version.c)
+
+add_library (polycomp ${SOURCE_FILE_LIST})
+
 target_link_libraries(polycomp ${FFTW_LIBRARIES})
-target_link_libraries(polycomp ${CFITSIO_LIBRARIES})
 target_link_libraries(polycomp ${GSL_LIBRARIES})
 
 target_include_directories (polycomp
