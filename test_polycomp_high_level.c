@@ -73,6 +73,7 @@ void test_encoding(void)
     size_t decompr_size;
     pcomp_polycomp_chunk_t** chunks;
     void* buf;
+    size_t buf_size;
     size_t num_of_chunks;
     pcomp_polycomp_t* params
         = pcomp_init_polycomp(4, 2, MAX_ERROR, PCOMP_ALG_USE_CHEBYSHEV);
@@ -81,7 +82,9 @@ void test_encoding(void)
     pcomp_compress_polycomp(&chunks, &num_of_chunks, input, input_size,
                             params);
 
-    buf = pcomp_encode_chunks(chunks, num_of_chunks);
+    buf = malloc(pcomp_chunks_num_of_bytes(chunks, num_of_chunks));
+    assert(pcomp_encode_chunks(buf, &buf_size, chunks, num_of_chunks)
+           == PCOMP_STAT_SUCCESS);
     pcomp_free_chunks(chunks, num_of_chunks);
 
     assert(pcomp_decode_chunks(&chunks, &num_of_chunks, buf)

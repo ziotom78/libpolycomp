@@ -541,17 +541,18 @@ size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
     if (chunk->is_compressed) {
         /* The size is calculated as follows:
          * - 1 byte for the "compressed" flag
+         * - 4 bytes for the number of samples
          * - 2x4 bytes for the number of polynomial/Chebyshev
          *   coefficients
          * - Nx8 bytes for the coefficients
          */
-        return sizeof(int8_t) + sizeof(size_t) * 2
+        return sizeof(int8_t) + sizeof(size_t) * 3
                + (chunk->num_of_poly_coeffs
                   + chunk->num_of_cheby_coeffs) * sizeof(double);
     }
     else {
         /* The size is calculated as follows:
-         * - 1 byte for the "uncompressed flag
+         * - 1 byte for the "uncompressed" flag
          * - 4 bytes for the number of samples
          * - Nx8 bytes for the samples
          */
@@ -1001,7 +1002,7 @@ void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
     free(chunk_array);
 }
 
-size_t pcomp_chunks_num_of_bytes(const pcomp_polycomp_chunk_t* chunks[],
+size_t pcomp_chunks_num_of_bytes(pcomp_polycomp_chunk_t* const chunks[],
                                  size_t num_of_chunks)
 {
     size_t result = sizeof(size_t); /* Room for the number of chunks */
@@ -1019,94 +1020,62 @@ size_t pcomp_chunks_num_of_bytes(const pcomp_polycomp_chunk_t* chunks[],
  * for I/O).
  */
 
-typedef struct {
-    void* buf_ptr;
-    size_t overall_space;
-    size_t cur_buf_size;
-} buffer_t;
-
-static void append_uint8(buffer_t* buf, uint8_t value)
-{
-    if (buf == NULL)
-        abort();
-
-    if (buf->overall_space == buf->cur_buf_size) {
-        buf->overall_space += buf->overall_space / 2;
-        buf->buf_ptr = realloc(buf->buf_ptr, buf->overall_space);
+#define SAVE_TO_PTR_AND_INCREMENT(buf, value, type)                    \
+    {                                                                  \
+        *((type*)buf) = value;                                         \
+        buf = ((type*)buf) + 1;                                        \
     }
 
-    ((uint8_t*)buf->buf_ptr)[buf->cur_buf_size++] = value;
-}
-
-static void append_size_t(buffer_t* buf, size_t value)
+int pcomp_encode_chunks(void* buf, size_t* buf_size,
+                        pcomp_polycomp_chunk_t* const chunk_array[],
+                        size_t num_of_chunks)
 {
-    size_t idx;
-    uint8_t* ptr = (uint8_t*)&value;
-
-    for (idx = 0; idx < sizeof(value); ++idx) {
-        append_uint8(buf, ptr[idx]);
-    }
-}
-
-static void append_double(buffer_t* buf, double value)
-{
-    size_t idx;
-    uint8_t* ptr = (uint8_t*)&value;
-
-    for (idx = 0; idx < sizeof(value); ++idx) {
-        append_uint8(buf, ptr[idx]);
-    }
-}
-
-void* pcomp_encode_chunks(const pcomp_polycomp_chunk_t* chunk_array[],
-                          size_t num_of_chunks)
-{
-    buffer_t buf;
+    void* buf_ptr = buf;
     size_t chunk_idx;
 
     if (chunk_array == NULL || num_of_chunks == 0)
         abort();
 
-    /* Start from a reasonable estimate, to avoid too many
-     * reallocations */
-    buf.overall_space = num_of_chunks * sizeof(double)
-                        * chunk_array[0]->num_of_poly_coeffs;
-    buf.cur_buf_size = 0;
-    buf.buf_ptr = malloc(buf.overall_space);
-
-    append_size_t(&buf, num_of_chunks);
+    SAVE_TO_PTR_AND_INCREMENT(buf_ptr, num_of_chunks, size_t);
 
     for (chunk_idx = 0; chunk_idx < num_of_chunks; ++chunk_idx) {
         const pcomp_polycomp_chunk_t* cur_chunk
             = chunk_array[chunk_idx];
         size_t idx; /* Used for inner loops */
 
-        append_uint8(&buf, cur_chunk->is_compressed);
-        append_size_t(&buf, cur_chunk->num_of_samples);
+        SAVE_TO_PTR_AND_INCREMENT(buf_ptr, cur_chunk->is_compressed,
+                                  uint8_t);
+        SAVE_TO_PTR_AND_INCREMENT(buf_ptr, cur_chunk->num_of_samples,
+                                  size_t);
 
         if (cur_chunk->is_compressed) {
-            append_size_t(&buf, cur_chunk->num_of_poly_coeffs);
+            SAVE_TO_PTR_AND_INCREMENT(
+                buf_ptr, cur_chunk->num_of_poly_coeffs, size_t);
             for (idx = 0; idx < cur_chunk->num_of_poly_coeffs; idx++) {
-                append_double(&buf, cur_chunk->poly_coeffs[idx]);
+                SAVE_TO_PTR_AND_INCREMENT(
+                    buf_ptr, cur_chunk->poly_coeffs[idx], double);
             }
 
-            append_size_t(&buf, cur_chunk->num_of_cheby_coeffs);
+            SAVE_TO_PTR_AND_INCREMENT(
+                buf_ptr, cur_chunk->num_of_cheby_coeffs, size_t);
             for (idx = 0; idx < cur_chunk->num_of_cheby_coeffs; idx++) {
-                append_double(&buf, cur_chunk->cheby_coeffs[idx]);
+                SAVE_TO_PTR_AND_INCREMENT(
+                    buf_ptr, cur_chunk->cheby_coeffs[idx], double);
             }
         }
         else {
             for (idx = 0; idx < cur_chunk->num_of_samples; idx++) {
-                append_double(&buf, cur_chunk->uncompressed[idx]);
+                SAVE_TO_PTR_AND_INCREMENT(
+                    buf_ptr, cur_chunk->uncompressed[idx], double);
             }
         }
     }
 
-    buf.buf_ptr = realloc(buf.buf_ptr, buf.cur_buf_size);
-    return buf.buf_ptr;
+    *buf_size = ((uint8_t*)buf_ptr) - ((uint8_t*)buf);
+    return PCOMP_STAT_SUCCESS;
 }
 
-#define ASSIGN_AND_INCREMENT(var, pointer, type)                       \
+#define READ_FROM_PTR_AND_INCREMENT(var, pointer, type)                \
     {                                                                  \
         var = *((type*)(pointer));                                     \
         pointer = ((type*)(pointer)) + 1;                              \
@@ -1127,7 +1096,7 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
     if (buf == NULL || chunk_array == NULL || num_of_chunks == NULL)
         abort();
 
-    ASSIGN_AND_INCREMENT(*num_of_chunks, cur_ptr, size_t);
+    READ_FROM_PTR_AND_INCREMENT(*num_of_chunks, cur_ptr, size_t);
     *chunk_array
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
 
@@ -1136,31 +1105,35 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
         size_t num_of_samples;
         size_t idx; /* Used for inner loops */
 
-        ASSIGN_AND_INCREMENT(is_compressed, cur_ptr, uint8_t);
-        ASSIGN_AND_INCREMENT(num_of_samples, cur_ptr, size_t);
+        READ_FROM_PTR_AND_INCREMENT(is_compressed, cur_ptr, uint8_t);
+        READ_FROM_PTR_AND_INCREMENT(num_of_samples, cur_ptr, size_t);
 
         if (is_compressed) {
             size_t num_of_poly_coeffs;
             size_t num_of_cheby_coeffs;
 
-            ASSIGN_AND_INCREMENT(num_of_poly_coeffs, cur_ptr, size_t);
+            READ_FROM_PTR_AND_INCREMENT(num_of_poly_coeffs, cur_ptr,
+                                        size_t);
             if (num_of_poly_coeffs > poly_buf_size) {
                 poly_buf_size = num_of_poly_coeffs;
                 poly_buf
                     = realloc(poly_buf, poly_buf_size * sizeof(double));
             }
             for (idx = 0; idx < num_of_poly_coeffs; ++idx) {
-                ASSIGN_AND_INCREMENT(poly_buf[idx], cur_ptr, double);
+                READ_FROM_PTR_AND_INCREMENT(poly_buf[idx], cur_ptr,
+                                            double);
             }
 
-            ASSIGN_AND_INCREMENT(num_of_cheby_coeffs, cur_ptr, size_t);
+            READ_FROM_PTR_AND_INCREMENT(num_of_cheby_coeffs, cur_ptr,
+                                        size_t);
             if (num_of_cheby_coeffs > cheby_buf_size) {
                 cheby_buf_size = num_of_cheby_coeffs;
                 cheby_buf = realloc(cheby_buf,
                                     cheby_buf_size * sizeof(double));
             }
             for (idx = 0; idx < num_of_cheby_coeffs; ++idx) {
-                ASSIGN_AND_INCREMENT(cheby_buf[idx], cur_ptr, double);
+                READ_FROM_PTR_AND_INCREMENT(cheby_buf[idx], cur_ptr,
+                                            double);
             }
 
             (*chunk_array)[chunk_idx] = pcomp_init_compressed_chunk(
@@ -1174,7 +1147,8 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
                     uncompr_buf, uncompr_buf_size * sizeof(double));
             }
             for (idx = 0; idx < num_of_samples; ++idx) {
-                ASSIGN_AND_INCREMENT(uncompr_buf[idx], cur_ptr, double);
+                READ_FROM_PTR_AND_INCREMENT(uncompr_buf[idx], cur_ptr,
+                                            double);
             }
 
             (*chunk_array)[chunk_idx] = pcomp_init_uncompressed_chunk(
