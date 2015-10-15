@@ -24,6 +24,25 @@
  * SOFTWARE.
  */
 
+/** \file libpolycomp.h
+ * \brief Header file for Libpolycomp
+ *
+ * This file is the only header the user has to include in order to
+ * use all the facilities offered by the library. Just use
+ * \code
+ * #include <libpolycomp.h>
+ * \endcode
+ * at the beginning of your source files to have the functions and the
+ * types implemented by Libpolycomp available.
+ *
+ * There are several groups of compression functions available;
+ * currently, they are:
+ *   - Run-Length Encoding (RLE);
+ *   - Differenced Run-Length Encoding (diffRLE);
+ *   - Quantization;
+ *   - Polynomial compression.
+ */
+
 #ifndef LIBPOLYCOMP_H_GUARD
 #define LIBPOLYCOMP_H_GUARD
 

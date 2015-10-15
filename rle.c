@@ -23,9 +23,41 @@
  * SOFTWARE.
  */
 
+/** \defgroup RLE Run-Length Encoding
+ *
+ * Libpolycomp implements routines for compressing and decompressing
+ * streams of data using the Run-Length Encoding (RLE) scheme. This
+ * kind of compression is perfect for data streams which contain long
+ * sequences of repeated data, e.g.,
+ * \verbatim 1041 1041 1041 1041 1280 1280 1041 1041 1041 1041
+ \endverbatim
+ *
+ * The RLE scheme works by encoding each sample together with the
+ * number of consecutive repeats found. Therefore, for the previous
+ * example the encoding would be
+ * \verbatim 1041 4 1280 2 1041 4 \endverbatim
+ *
+ * In certain cases, RLE can outperform other well-known compression
+ * schemes like gzip and bzip2.
+ */
+
 #include "libpolycomp.h"
 #include <stdlib.h>
 
+/** \ingroup RLE
+ *
+ *\brief Calculate an upper limit for the size of a buffer holding
+ * RLE-encoded streams.
+ *
+ * Return the number of elements required for a buffer used to hold
+ * the RLE-compressed version of a datastream. It is typically used
+ * together with functions like pcomp_compress_rle_int8 to
+ * pre-allocate the buffer that will contain the result.
+ *
+ * \param[in] input_size Number of elements of the data stream to
+ *compress
+ * \returns The number of *elements* (not bytes) of the buffer
+ */
 size_t pcomp_rle_bufsize(size_t input_size) { return 2 * input_size; }
 
 /***********************************************************************
@@ -83,6 +115,151 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint8, uint8_t, UINT8_MAX)
 IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint16, uint16_t, UINT16_MAX)
 IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint32, uint32_t, UINT32_MAX)
 IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_int8(int8_t* output_buf,
+ *                                 size_t* output_size,
+ *                                 const int8_t* input_buf,
+ *                                 size_t input_size)
+ *
+ * \brief Compress an array of int8_t values using the RLE
+ * compression
+ *
+ * The size of the output buffer is typically guessed using \ref
+ * pcomp_rle_bufsize. After the call to the function, the buffer
+ * should be resized to claim unused space at the end. Here is an
+ * example:
+ *
+ * \code{.c}
+ * int8_t input_buf[] = { 10, 10, 20, 30, 30, 30 };
+ * size_t input_size = sizeof(input_buf) / sizeof(input_buf[0]);
+ * size_t output_size = pcomp_rle_bufsize(input_size) *
+ *                      sizeof(int8_t);
+ * int8_t* output_buf = malloc(output_size);
+ *
+ * pcomp_compress_rle_int8(output_buf, &output_size, input_buf,
+ *                         input_size);
+ *
+ * output_buf = realloc(output_buf, output_size * sizeof(int8_t));
+ * \endcode
+ *
+ * \param[out] output_buf The buffer that will hold the compressed
+ * stream. It must have space for a number of elements at least equal
+ * to the value returned by pcomp_rle_bufsize.
+ *
+ * \param[inout] output_size On entering the function, this must
+ * specify the number of *elements* (not bytes) that can be written in
+ * \a output_buf. On exit, it will contain the actual number of
+ * elements written.
+ *
+ * \param[in] input_buf The array of values to compress
+ *
+ * \param[in] input_size Number of *elements* (not bytes) in the array
+ * \a input_buf
+ *
+ * \returns PCOMP_STAT_SUCCESS if the encoding completed successfully.
+ * Otherwise, the error code specifies the kind of error occurred
+ * during the call.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_int16(int16_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const int16_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of int16_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_int32(int32_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const int32_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of int32_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_int64(int64_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const int64_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of int64_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_uint8(uint8_t* output_buf,
+ *                                 size_t* output_size,
+ *                                 const uint8_t* input_buf,
+ *                                 size_t input_size)
+ *
+ * \brief Compress an array of uint8_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_uint16(uint16_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const uint16_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of uint16_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_uint32(uint32_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const uint32_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of uint32_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for more
+ * information.
+ */
+
+/** \ingroup RLE
+ *
+ * \fn int pcomp_compress_rle_uint64(uint64_t* output_buf,
+ *                                  size_t* output_size,
+ *                                  const uint64_t* input_buf,
+ *                                  size_t input_size)
+ *
+ * \brief Compress an array of uint64_t values using the RLE
+ * compression
+ *
+ * Refer to the documentation for \ref pcomp_compress_rle_int8 for
+ * more information.
+ */
 
 /***********************************************************************
  * Run-Length decompression routines
