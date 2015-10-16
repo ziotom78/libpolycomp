@@ -329,6 +329,9 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
  * Polynomial compression (low-level functions)
  */
 
+typedef uint8_t pcomp_poly_size_t;
+typedef uint16_t pcomp_chunk_size_t;
+
 typedef enum {
     PCOMP_ALG_USE_CHEBYSHEV = 0,
     PCOMP_ALG_NO_CHEBYSHEV = 1
@@ -340,27 +343,29 @@ typedef struct __pcomp_polycomp_t pcomp_polycomp_t;
 struct __pcomp_polycomp_chunk_t;
 typedef struct __pcomp_polycomp_chunk_t pcomp_polycomp_chunk_t;
 
-pcomp_polycomp_chunk_t* pcomp_init_chunk(size_t num_of_samples);
 pcomp_polycomp_chunk_t*
-pcomp_init_uncompressed_chunk(size_t num_of_samples,
+pcomp_init_chunk(pcomp_chunk_size_t num_of_samples);
+pcomp_polycomp_chunk_t*
+pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
                               const double* samples);
 pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
-    size_t num_of_samples, size_t num_of_poly_coeffs,
-    const double* poly_coeffs, size_t num_of_cheby_coeffs,
-    const double* cheby_coeffs);
+    pcomp_chunk_size_t num_of_samples,
+    pcomp_poly_size_t num_of_poly_coeffs, const double* poly_coeffs,
+    pcomp_chunk_size_t num_of_cheby_coeffs, const double* cheby_coeffs);
 
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
 
-size_t pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk);
+pcomp_chunk_size_t
+pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk);
 size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk);
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk);
-size_t
+pcomp_poly_size_t
 pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
-size_t
+pcomp_chunk_size_t
 pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
@@ -369,14 +374,15 @@ void pcomp_straighten(double* output, const double* input,
                       size_t num_of_samples, double period);
 
 pcomp_polycomp_t*
-pcomp_init_polycomp(size_t samples_per_chunk, size_t num_of_coeffs,
+pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
+                    pcomp_poly_size_t num_of_coeffs,
                     double max_allowable_error,
                     pcomp_polycomp_algorithm_t algorithm);
 void pcomp_free_polycomp(pcomp_polycomp_t* params);
 
 int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
                                 const double* input,
-                                size_t num_of_samples,
+                                pcomp_chunk_size_t num_of_samples,
                                 pcomp_polycomp_chunk_t* chunk,
                                 double* max_error);
 
@@ -396,8 +402,9 @@ int pcomp_decompress_polycomp_chunk(double* output,
  * "output_size" is ignored in the call (it is only set on exit).
  */
 
-size_t pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params);
-size_t
+pcomp_chunk_size_t
+pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params);
+pcomp_poly_size_t
 pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params);
 double pcomp_polycomp_max_error(const pcomp_polycomp_t* params);
 pcomp_polycomp_algorithm_t
