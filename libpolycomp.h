@@ -351,7 +351,8 @@ pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
 pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     pcomp_chunk_size_t num_of_samples,
     pcomp_poly_size_t num_of_poly_coeffs, const double* poly_coeffs,
-    pcomp_chunk_size_t num_of_cheby_coeffs, const double* cheby_coeffs);
+    pcomp_chunk_size_t num_of_cheby_coeffs,
+    const uint8_t* chebyshev_mask, const double* cheby_coeffs);
 
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk);
 
@@ -361,14 +362,19 @@ size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk);
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk);
+
 pcomp_poly_size_t
 pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk);
+
 pcomp_chunk_size_t
 pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
 const double*
 pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk);
+size_t pcomp_chunk_cheby_mask_size(pcomp_chunk_size_t chunk_size);
+const uint8_t*
+pcomp_chunk_cheby_mask(const pcomp_polycomp_chunk_t* chunk);
 
 void pcomp_straighten(double* output, const double* input,
                       size_t num_of_samples, double period);

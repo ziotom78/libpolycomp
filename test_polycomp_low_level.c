@@ -36,11 +36,13 @@
 
 int test_chunk_creation(void)
 {
-    const double samples[] = { 1.0, 2.0, 3.0 };
+    const double samples[] = { 1.0, 2.0, 3.0, 4.0 };
     const size_t num_of_samples = sizeof(samples) / sizeof(samples[0]);
 
     const double poly[] = { 3.0, 2.0 };
     const size_t num_of_poly = sizeof(poly) / sizeof(poly[0]);
+
+    const uint8_t cheby_mask[] = { 0xFF };
 
     const double cheby[] = { -1.0, -2.0, -3.0, -4.0 };
     const size_t num_of_cheby = sizeof(cheby) / sizeof(cheby[0]);
@@ -56,8 +58,10 @@ int test_chunk_creation(void)
     assert(pcomp_chunk_num_of_samples(chunk) == num_of_samples);
     pcomp_free_chunk(chunk);
 
-    chunk = pcomp_init_compressed_chunk(
-        num_of_samples, num_of_poly, &poly[0], num_of_cheby, &cheby[0]);
+    assert(pcomp_chunk_cheby_mask_size(num_of_samples) == 1);
+    chunk = pcomp_init_compressed_chunk(num_of_samples, num_of_poly,
+                                        &poly[0], num_of_cheby,
+                                        &cheby_mask[0], &cheby[0]);
     assert(chunk != NULL);
     assert(pcomp_chunk_is_compressed(chunk));
 
@@ -83,7 +87,7 @@ int test_no_compression(void)
     /* It is impossible to compress these data using the polynomial
      * compression algorithm, as they contain too many jumps */
     double input[]
-        = { 1.0, -2.0, 3.0, -4.0, 5.0, -6.0, 7.0, -8.0, 9.0, -10.0 };
+        = { 1.0, -2.0, 3.0, -4.0, 5.0, 6.0, 7.0, -8.0, 9.0, -10.0 };
     size_t input_size = sizeof(input) / sizeof(input[0]);
     double* decompr = malloc(sizeof(double) * input_size);
     pcomp_polycomp_chunk_t* chunk = pcomp_init_chunk(input_size);
