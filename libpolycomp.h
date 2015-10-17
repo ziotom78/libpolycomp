@@ -415,6 +415,9 @@ pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params);
 double pcomp_polycomp_max_error(const pcomp_polycomp_t* params);
 pcomp_polycomp_algorithm_t
 pcomp_polycomp_algorithm(const pcomp_polycomp_t* params);
+double pcomp_polycomp_period(const pcomp_polycomp_t* params);
+
+void pcomp_polycomp_set_period(pcomp_polycomp_t* params, double period);
 
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** chunk_array[],
                             size_t* num_of_chunks,

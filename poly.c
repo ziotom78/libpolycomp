@@ -276,6 +276,7 @@ struct __pcomp_polycomp_t {
     pcomp_chebyshev_t* inv_chebyshev;
     double max_allowable_error;
     pcomp_polycomp_algorithm_t algorithm;
+    double period;
 };
 
 pcomp_polycomp_t*
@@ -295,6 +296,7 @@ pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
         = pcomp_init_chebyshev(samples_per_chunk, PCOMP_TD_INVERSE);
     params->max_allowable_error = max_allowable_error;
     params->algorithm = algorithm;
+    params->period = 0.0;
 
     return params;
 }
@@ -344,6 +346,22 @@ pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
         abort();
 
     return params->algorithm;
+}
+
+double pcomp_polycomp_period(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->period;
+}
+
+void pcomp_polycomp_set_period(pcomp_polycomp_t* params, double period)
+{
+    if (params == NULL)
+        abort();
+
+    params->period = period;
 }
 
 /***********************************************************************
@@ -886,6 +904,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
     size_t cheby_coeffs_to_retain = 0;
     double max_residual;
     int apply_chebyshev = 1;
+    double* buf = NULL;
+    const double* straightened_input;
 
     if (chunk == NULL || input == NULL || params == NULL
         || params->poly_fit == NULL || params->chebyshev == NULL
@@ -896,6 +916,15 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
     if (num_of_samples != params->samples_per_chunk)
         return PCOMP_STAT_INVALID_BUFFER;
+
+    if (params->period > 0.0) {
+        buf = malloc(num_of_samples * sizeof(input[0]));
+        pcomp_straighten(buf, input, num_of_samples, params->period);
+        straightened_input = buf; /* This preserve const-correctness */
+    }
+    else {
+        straightened_input = input;
+    }
 
     if (num_of_samples <= params->poly_fit->num_of_coeffs) {
         /* The number of element is so small that is better to
@@ -908,7 +937,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
          * transform */
         coeffs
             = malloc(sizeof(double) * params->poly_fit->num_of_coeffs);
-        polyfit_and_chebyshev(params, coeffs, input, &max_residual);
+        polyfit_and_chebyshev(params, coeffs, straightened_input,
+                              &max_residual);
         apply_chebyshev
             = (max_residual >= params->max_allowable_error)
               && (params->algorithm != PCOMP_ALG_NO_CHEBYSHEV);
@@ -975,6 +1005,10 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
         if (max_error != NULL)
             *max_error = 0.0;
+    }
+
+    if (buf != NULL) {
+        free(buf);
     }
 
     return PCOMP_STAT_SUCCESS;
