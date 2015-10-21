@@ -902,7 +902,6 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
     uint8_t* mask = NULL;
     double* coeffs = NULL;
     size_t cheby_coeffs_to_retain = 0;
-    double max_residual;
     int apply_chebyshev = 1;
     double* buf = NULL;
     const double* straightened_input;
@@ -933,6 +932,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
         chunk->is_compressed = 0;
     }
     else {
+        double max_residual;
+
         /* Compute the polynomial fit and the full Chebyshev
          * transform */
         coeffs
@@ -961,7 +962,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
         }
         else {
             /* Assume that num_of_samples > deg(p) + 1 */
-            chunk->is_compressed = 1;
+            chunk->is_compressed
+                = (max_residual <= params->max_allowable_error);
         }
     }
 
