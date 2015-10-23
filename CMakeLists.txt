@@ -50,7 +50,8 @@ set(SOURCE_FILE_LIST
   rle.c
   version.c)
 
-add_library (polycomp ${SOURCE_FILE_LIST})
+add_library (polycomp SHARED ${SOURCE_FILE_LIST})
+add_library (polycomp_static STATIC ${SOURCE_FILE_LIST})
 
 target_link_libraries(polycomp ${FFTW_LIBRARIES})
 target_link_libraries(polycomp ${GSL_LIBRARIES})
