@@ -1,0 +1,15 @@
+<map id="libpolycomp.h" name="libpolycomp.h">
+<area shape="rect" id="node2" href="$diff__rle_8c_source.html" title="diff_rle.c" alt="" coords="5,87,77,114"/>
+<area shape="rect" id="node3" href="$poly_8c_source.html" title="poly.c" alt="" coords="102,87,159,114"/>
+<area shape="rect" id="node4" href="$quant_8c_source.html" title="quant.c" alt="" coords="183,87,249,114"/>
+<area shape="rect" id="node5" href="$rle_8c_source.html" title="rle.c" alt="" coords="273,87,319,114"/>
+<area shape="rect" id="node6" href="$test__chebyshev_8c_source.html" title="test_chebyshev.c" alt="" coords="344,87,469,114"/>
+<area shape="rect" id="node7" href="$test__diff__rle_8c_source.html" title="test_diff_rle.c" alt="" coords="493,87,595,114"/>
+<area shape="rect" id="node8" href="$test__polycomp__high__level_8c_source.html" title="test_polycomp_high\l_level.c" alt="" coords="619,80,757,121"/>
+<area shape="rect" id="node9" href="$test__polycomp__low__level_8c_source.html" title="test_polycomp_low_level.c" alt="" coords="781,87,960,114"/>
+<area shape="rect" id="node10" href="$test__polyfit_8c_source.html" title="test_polyfit.c" alt="" coords="985,87,1082,114"/>
+<area shape="rect" id="node11" href="$test__quant_8c_source.html" title="test_quant.c" alt="" coords="1106,87,1201,114"/>
+<area shape="rect" id="node12" href="$test__rle_8c_source.html" title="test_rle.c" alt="" coords="1225,87,1301,114"/>
+<area shape="rect" id="node13" href="$test__version_8c_source.html" title="test_version.c" alt="" coords="1325,87,1429,114"/>
+<area shape="rect" id="node14" href="$version_8c_source.html" title="version.c" alt="" coords="1453,87,1528,114"/>
+</map>

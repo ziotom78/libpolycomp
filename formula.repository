@@ -1,0 +1,16 @@
+\form#0:$x_i$
+\form#1:$i=1\ldots N$
+\form#2:$(i, x_i)$
+\form#3:$N$
+\form#4:$p(x)$
+\form#5:$\deg p(x) + 1$
+\form#6:$\deg p(x)$
+\form#7:$p(x) = a x^2 + b x + c$
+\form#8:$i = 1 \ldots N$
+\form#9:$(i, x_i)_{i=1}^N$
+\form#10:$q^2/12$
+\form#11:$q$
+\form#12:$q = 2^{-N}$
+\form#13:$S$
+\form#14:$\Delta$
+\form#15:\[x_\mathrm{out} = [S \times x_\mathrm{in} + \Delta]\]
