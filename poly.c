@@ -36,6 +36,98 @@
 
 #include <fftw3.h>
 
+/**********************************************************************/
+
+/** \defgroup poly Polynomial compression
+ *
+ * ### The algorithm and its applicability
+ *
+ * Polynomial compression relies on a simple idea, that is to divide
+ * the input data stream into subsets of consecutive samples (called
+ * "chunks"), and to approximate each chunk by means of a polynomial.
+ * Such compression is inherently lossy, as the residuals of the
+ * fitting procedure are usually discarded.
+ *
+ * This idea has been widely applied in the literature. Libpolycomp
+ * implements a significant improvement over it, because in case the
+ * polynomial used for the fitting is not good enough (i.e., the
+ * magnitude of the residuals is larger than the desired error
+ * threshold) it saves selected components of the Chebyshev transform
+ * of the residuals together with the polynomial.
+ *
+ * It is possible to avoid the usage of Chebyshev transforms. In this
+ * case, if no polynomial of the desired degree are able to fit the
+ * data with the given error threshold, the data for that chunk is
+ * saved uncompressed.
+ *
+ * This works quite well for smooth data series, where changes between
+ * consecutive samples are well described by slowly varying continuous
+ * functions. It is not suitable if the signal contains noise, unless
+ * this noise is significantly smaller than the signal and than the
+ * error threshold.
+ *
+ * ### Implementation details
+ *
+ * The Libpolycomp library implements two families of functions which
+ * implement polynomial compression:
+ *
+ * - Low-level functions are useful to work with each chunk
+ *   separately, or when one needs to optimize the compression
+ *   parameters.
+ *
+ * - High-level functions are used for compressing/decompressing long
+ *   streams when no particular needs are required.
+ *
+ * Moreover, the function implements a number of facilities to compute
+ * polynomial fits and Chebyshev transforms of discrete data.
+ * Libpolycomp uses the GNU Scientific Library (GSL) to implement the
+ * former, and the FFTW library for the latter.
+ *
+ * ### Low-level functions
+ *
+ * ### High-level functions
+ *
+ * ### Mathematical routines
+ *
+ * The following set of Libpolycomp routines allows to compute the
+ * least squares best fit between a set of floating-point numbers
+ * \f$x_i\f$ (with \f$i=1\ldots N\f$) and a polynomial, through the
+ * points \f$(i, x_i)\f$:
+ *
+ * - \ref pcomp_init_poly_fit and \ref pcomp_free_poly_fit are used to
+ *   initialize and free a \ref pcomp_poly_fit_data_t structure. Such
+ *   structure can be used to apply repeatedly a fitting process to
+ *   different sets of data, provided that the number of points
+ *   \f$N\f$ and the degree of the fitting polynomial stay constant.
+ *
+ * - \ref pcomp_poly_fit_num_of_samples and \ref
+ *   pcomp_poly_fit_num_of_coeffs are used to retrieve the fields of
+ *   an instance of the opaque structure \ref pcomp_poly_fit_data_t.
+ *
+ * - \ref pcomp_run_poly_fit calculates the least-squares best fit
+ *   between a set of points and a polynomial.
+ *
+ * The following set of routines compute the Chebyshev transform of a
+ * set of floating-point numbers. They are a tiny wrapper around
+ * analogous functions of the FFTW library, with the main purpose of
+ * using the correct normalization constants in the forward and
+ * inverse transforms:
+ *
+ * - \ref pcomp_init_chebyshev and \ref pcomp_free_chebyshev are used
+ *   to allocate and free a \ref pcomp_chebyshev_t structure, which
+ *   describes how to compute a Chebyshev transform for a set of
+ *   \f$N\f$ numbers.
+ *
+ * - \ref pcomp_chebyshev_num_of_samples and \ref
+ *   pcomp_chebyshev_direction are used to query the parameters of an
+ *   instance of the opaque structure \ref pcomp_chebyshev_t.
+ *
+ * - \ref pcomp_run_chebyshev applies the Chebyshev transform (either in
+ *   the forward or inverse direction) to a dataset.
+ */
+
+/**********************************************************************/
+
 static double integer_power(int x, int y)
 {
     double dbl_x = (double)x;
@@ -76,6 +168,24 @@ struct __pcomp_poly_fit_data_t {
     gsl_matrix* cov_matrix;
 };
 
+/** \ingroup poly
+ *
+ * \brief Allocate a new instance of the \ref pcomp_poly_fit_data_t
+ * structure on the heap
+ *
+ * \params[in] num_of_samples Number of floating-point numbers that
+ * must fit the polynomial
+ *
+ * \params[in] num_of_coeffs Number of coefficients of the
+ * least-squares fitting polynomial \f$p(x)\f$. This is equal to
+ * \f$\deg p(x) + 1\f$, where \f$\deg p(x)\f$ is the degree of the
+ * polynomial. Thus, for a parabolic polynomial of the form \f$p(x) =
+ * a x^2 + b x + c\f$, \a num_of_coeffs = 3.
+ *
+ * \returns A newly created instance of \ref pcomp_poly_fit_data_t
+ * structure. This must be freed using \ref pcomp_free_poly_fit, once
+ * it is no longer used.
+ */
 pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
                                            size_t num_of_coeffs)
 {
@@ -103,6 +213,13 @@ pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
     return poly_fit;
 }
 
+/** \ingroup poly
+ *
+ * \brief Free an instance of the \ref pcomp_poly_fit_data_t that has
+ * been allocated via a call to \ref pcomp_init_poly_fit.
+ *
+ * \params[in] poly_fit Pointer to the structure to be freed
+ */
 void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
 {
     if (poly_fit == NULL)
@@ -117,6 +234,15 @@ void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
     free(poly_fit);
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of samples to be used in a polynomial fit
+ *
+ * \params[in] poly_fit Pointer to the structure detailing the fit
+ *
+ * \returns The number of samples that should be passed to a call to
+ * \ref pcomp_run_poly_fit.
+ */
 size_t
 pcomp_poly_fit_num_of_samples(const pcomp_poly_fit_data_t* poly_fit)
 {
@@ -126,6 +252,16 @@ pcomp_poly_fit_num_of_samples(const pcomp_poly_fit_data_t* poly_fit)
     return poly_fit->num_of_samples;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of coefficients of the least-squares
+ * fitting polynomial
+ *
+ * \params[in] poly_fit Pointer to the structure detailing the fit
+ *
+ * \returns The number of coefficients for the fitting polynomial (one
+ * plus the polynomial degree)
+ */
 size_t
 pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit)
 {
@@ -135,6 +271,46 @@ pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit)
     return poly_fit->num_of_coeffs;
 }
 
+/** \ingroup poly
+ *
+ * \brief Calculates a polynomial least-squares fit.
+ *
+ * Compute a least-squares fit between the numbers \f$x_i\f$ (with
+ * \f$i = 1 \ldots N\f$) and the polynomial \f$p(x)\f$ through the
+ * points \f$(i, x_i)_{i=1}^N\f$. The coefficients of \f$p(x)\f$ are
+ * saved in \a coeffs, from the least to the greatest degree.
+ *
+ * Here is an example of the usage of this function:
+ *
+ * \code{.c}
+ * double points[] = { 1.0, 3.0, 5.0 };
+ * double coeffs[2];
+ * const size_t num_of_points = sizeof(points) / sizeof(points[0]);
+ * const size_t num_of_coeffs = sizeof(coeffs) / sizeof(coeffs[0]);
+ * pcomp_poly_fit_data_t* poly_fit;
+ *
+ * poly_fit = pcomp_init_poly_fit(num_of_points, num_of_coeffs);
+ * pcomp_run_poly_fit(poly_fit, coeffs, points);
+ * printf("The data are fitted by the polynomial y = %f + %f x\n",
+ *        coeffs[0], coeffs[1]);
+ * \endcode
+ *
+ * \param[in] poly_fit Pointer to a \ref pcomp_poly_fit_data_t
+ * structure, created using the \ref pcomp_init_poly_fit function.
+ *
+ * \param[out] coeffs Pointer to an array where the coefficients of
+ * the polynomial will be stored on exit. The array must have room for
+ * a number of elements greater or equal than the value returned by
+ * \ref pcomp_poly_fit_num_of_coeffs.
+ *
+ * \param[in] points Array of numbers \f$x_i\f$ to use in the fit. The
+ * number of elements considered in the fit is equal to the return
+ * value of \ref pcomp_poly_fit_num_of_samples.
+ *
+ * \returns PCOMP_STAT_SUCCESS if the fit was computed successfully,
+ * PCOMP_STAT_INVALID_FIT if the data are incorrect (e.g., there are
+ * fewer samples than unknowns).
+ */
 int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
                        const double* points)
 {

@@ -2021,7 +2021,11 @@ PREDEFINED             =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 EXPAND_AS_DEFINED      = IMPLEMENT_RLE_COMPR_FN \
-                         IMPLEMENT_RLE_DECOMPR_FN
+                         IMPLEMENT_RLE_DECOMPR_FN \
+                         IMPLEMENT_DIFFRLE_COMPR_FN \
+                         IMPLEMENT_DIFFRLE_DECOMPR_FN \
+                         DEFINE_COMPRESS_QUANT_FN \
+                         DEFINE_DECOMPRESS_QUANT_FN
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES then doxygen's preprocessor will
 # remove all references to function-like macros that are alone on a line, have

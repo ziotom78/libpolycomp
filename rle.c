@@ -25,6 +25,8 @@
 
 /** \defgroup RLE Run-Length Encoding
  *
+ * ### The algorithm and its applicability
+ *
  * Libpolycomp implements routines for compressing and decompressing
  * streams of data using the Run-Length Encoding (RLE) scheme. This
  * kind of compression is perfect for data streams which contain long
@@ -35,10 +37,35 @@
  * The RLE scheme works by encoding each sample together with the
  * number of consecutive repeats found. Therefore, for the previous
  * example the encoding would be
- * \verbatim 1041 4 1280 2 1041 4 \endverbatim
- *
+ * \verbatim 1041 4  1280 2  1041 4 \endverbatim
  * In certain cases, RLE can outperform other well-known compression
  * schemes like gzip and bzip2.
+ *
+ * The RLE scheme can be applied reliably only on sequences of integer
+ * data. The algorithm involves the comparison between consecutive
+ * values, and this cannot be done reliably with floating-point
+ * numbers because of round-off errors. The Libpolycomp library
+ * implements many similar functions (e.g., \ref
+ * pcomp_compress_rle_int8) for signed and unsigned integers, with
+ * sizes of 1, 2, 4, and 8 bytes.
+ *
+ * Libpolycomp correctly takes into account possible overflows.
+ * Suppose for instance that the input datastream contains 1000
+ * repetitions of the 8-bit value "152". In this case, Libpolycomp
+ * produces the following output:
+ * \verbatim 152 256  152 256  152 256  152 232 \endverbatim
+ * as 1000 = 256 * 3 + 232.
+ *
+ * ### Implementation details
+ *
+ * The compression and decompression routines require the caller to
+ * pre-allocate the memory which will contain the output. For
+ * compression routines, one typically uses the function \ref
+ * pcomp_rle_bufsize to get an upper estimate to the size of the
+ * output buffer, and after the compression resizes the buffer (is
+ * needed) in order to free the unused memory. See the documentation
+ * for \ref pcomp_compress_rle_int8 and \ref pcomp_decompress_rle_int8
+ * for examples.
  */
 
 #include "libpolycomp.h"
@@ -51,8 +78,15 @@
  *
  * Return the number of elements required for a buffer used to hold
  * the RLE-compressed version of a datastream. It is typically used
- * together with functions like pcomp_compress_rle_int8 to
+ * together with functions like \ref pcomp_compress_rle_int8 to
  * pre-allocate the buffer that will contain the result.
+ *
+ * The number returned by this function might be severely
+ * overestimated. Therefore, when using this function to allocate a
+ * buffer for functions like \ref pcomp_compress_rle_int8, it is
+ * recommended to claim any unused space at the end of the buffer.
+ * (Functions like \ref pcomp_compress_rle_int8 inform the caller
+ * about the number of elements actually written in the buffer.)
  *
  * \param[in] input_size Number of elements of the data stream to
  *compress
