@@ -1,0 +1,23 @@
+/* -*- mode: c -*- */
+
+/** \mainpage Libpolycomp user's manual
+ *
+ * This is the documentation for the Libpolycomp library
+ * (https://github.com/ziotom78/libpolycomp), a C library for
+ * compressing one-dimensional numerical data series.
+ *
+ * Libpolycomp has been written on a Linux 64-bit system, but it
+ * should be fairly straightforward to port it to other operating
+ * systems/architectures, as it is written using a portable sub-set of
+ * C89.
+ *
+ * The API has been designed with the purpose of easing its call from
+ * other languages; a Python interface and a stand-alone program are
+ * available at the site https://github.com/ziotom78/polycomp .
+ *
+ * The library offers the following compression schemes:
+ * - \ref RLE
+ * - \ref diffRLE
+ * - \ref quant
+ * - \ref poly
+ */
