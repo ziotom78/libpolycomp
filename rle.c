@@ -192,9 +192,9 @@ IMPLEMENT_RLE_COMPR_FN(pcomp_compress_rle_uint64, uint64_t, UINT64_MAX)
  * \param[in] input_size Number of *elements* (not bytes) in the array
  * \a input_buf
  *
- * \returns PCOMP_STAT_SUCCESS if the encoding completed successfully.
- * Otherwise, the error code specifies the kind of error occurred
- * during the call.
+ * \returns \ref PCOMP_STAT_SUCCESS if the encoding completed
+ * successfully. Otherwise, the error code specifies the kind of error
+ * occurred during the call.
  */
 
 /** \ingroup RLE

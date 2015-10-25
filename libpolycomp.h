@@ -52,10 +52,12 @@
 /***********************************************************************
  * Error codes
  */
-#define PCOMP_STAT_SUCCESS 0 /* All ok */
-#define PCOMP_STAT_INVALID_ENCODING 1 /* Decompression error */
-#define PCOMP_STAT_INVALID_BUFFER 2 /* Output buffer too small */
-#define PCOMP_STAT_INVALID_FIT 3 /* Least-square fit error */
+#define PCOMP_STAT_SUCCESS 0 /** \brief All ok */
+#define PCOMP_STAT_INVALID_ENCODING 1 /** \brief Decompression error   \
+                                         */
+#define PCOMP_STAT_INVALID_BUFFER                                      \
+    2 /** \brief Output buffer too small */
+#define PCOMP_STAT_INVALID_FIT 3 /** \brief Least-square fit error */
 
 /***********************************************************************
  * Version information
@@ -309,8 +311,17 @@ int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
 
 struct __pcomp_chebyshev_t;
 typedef struct __pcomp_chebyshev_t pcomp_chebyshev_t;
+
+/** \ingroup poly
+ *
+ * \brief Direction of a Chebyshev transform
+ */
 typedef enum {
+    /** \brief Compute a forward Chebyshev transform, with a
+     * normalization factor 1/(N + 1) */
     PCOMP_TD_DIRECT = 0,
+    /** \brief Compute a backward Chebyshev transform, with a
+        normalization factor equal to one. */
     PCOMP_TD_INVERSE = 1
 } pcomp_transform_direction_t;
 
@@ -332,8 +343,18 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
 typedef uint8_t pcomp_poly_size_t;
 typedef uint16_t pcomp_chunk_size_t;
 
+/** \ingroup poly
+ *
+ * \brief Kind of algorithm used for the polynomial compression
+ *
+ * See the discussion in the section \ref poly for more information.
+ */
 typedef enum {
+    /** \brief When needed, apply the Chebyshev transform to the
+     * residuals of the polynomial fit */
     PCOMP_ALG_USE_CHEBYSHEV = 0,
+    /** \brief If the absolute value of the residuals of a polynomial
+     * fit are too large, store the data in uncompressed form */
     PCOMP_ALG_NO_CHEBYSHEV = 1
 } pcomp_polycomp_algorithm_t;
 

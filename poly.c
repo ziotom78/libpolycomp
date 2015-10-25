@@ -78,6 +78,20 @@
  * - High-level functions are used for compressing/decompressing long
  *   streams when no particular needs are required.
  *
+ * Both the low-level and high-level functions use the \ref
+ * pcomp_polycomp_t structure to determine which parameters to use for
+ * the compression. The functions that allow to allocate/free/manage
+ * this structure are the following:
+ *
+ * - \ref pcomp_init_polycomp
+ * - \ref pcomp_free_polycomp
+ * - \ref pcomp_polycomp_samples_per_chunk
+ * - \ref pcomp_polycomp_num_of_poly_coeffs
+ * - \ref pcomp_polycomp_max_error
+ * - \ref pcomp_polycomp_algorithm
+ * - \ref pcomp_polycomp_period
+ * - \ref pcomp_polycomp_set_period
+ *
  * Moreover, the function implements a number of facilities to compute
  * polynomial fits and Chebyshev transforms of discrete data.
  * Libpolycomp uses the GNU Scientific Library (GSL) to implement the
@@ -173,10 +187,10 @@ struct __pcomp_poly_fit_data_t {
  * \brief Allocate a new instance of the \ref pcomp_poly_fit_data_t
  * structure on the heap
  *
- * \params[in] num_of_samples Number of floating-point numbers that
+ * \param[in] num_of_samples Number of floating-point numbers that
  * must fit the polynomial
  *
- * \params[in] num_of_coeffs Number of coefficients of the
+ * \param[in] num_of_coeffs Number of coefficients of the
  * least-squares fitting polynomial \f$p(x)\f$. This is equal to
  * \f$\deg p(x) + 1\f$, where \f$\deg p(x)\f$ is the degree of the
  * polynomial. Thus, for a parabolic polynomial of the form \f$p(x) =
@@ -218,7 +232,7 @@ pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
  * \brief Free an instance of the \ref pcomp_poly_fit_data_t that has
  * been allocated via a call to \ref pcomp_init_poly_fit.
  *
- * \params[in] poly_fit Pointer to the structure to be freed
+ * \param[in] poly_fit Pointer to the structure to be freed
  */
 void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
 {
@@ -238,7 +252,7 @@ void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
  *
  * \brief Return the number of samples to be used in a polynomial fit
  *
- * \params[in] poly_fit Pointer to the structure detailing the fit
+ * \param[in] poly_fit Pointer to the structure detailing the fit
  *
  * \returns The number of samples that should be passed to a call to
  * \ref pcomp_run_poly_fit.
@@ -257,7 +271,7 @@ pcomp_poly_fit_num_of_samples(const pcomp_poly_fit_data_t* poly_fit)
  * \brief Return the number of coefficients of the least-squares
  * fitting polynomial
  *
- * \params[in] poly_fit Pointer to the structure detailing the fit
+ * \param[in] poly_fit Pointer to the structure detailing the fit
  *
  * \returns The number of coefficients for the fitting polynomial (one
  * plus the polynomial degree)
@@ -307,9 +321,9 @@ pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit)
  * number of elements considered in the fit is equal to the return
  * value of \ref pcomp_poly_fit_num_of_samples.
  *
- * \returns PCOMP_STAT_SUCCESS if the fit was computed successfully,
- * PCOMP_STAT_INVALID_FIT if the data are incorrect (e.g., there are
- * fewer samples than unknowns).
+ * \returns \ref PCOMP_STAT_SUCCESS if the fit was computed
+ * successfully, \ref PCOMP_STAT_INVALID_FIT if the data are incorrect
+ * (e.g., there are fewer samples than unknowns).
  */
 int pcomp_run_poly_fit(pcomp_poly_fit_data_t* poly_fit, double* coeffs,
                        const double* points)
@@ -349,6 +363,32 @@ struct __pcomp_chebyshev_t {
     pcomp_transform_direction_t dir;
 };
 
+/** \ingroup poly
+ *
+ * \brief Allocate a new instance of the \ref pcomp_chebyshev_t
+ * structure on the heap
+ *
+ * Despite the fact that this function takes the parameter \a dir, the
+ * function which actually computes the Chebyshev transform (\ref
+ * pcomp_run_chebyshev) allow to specify the desired direction. The
+ * purpose of having \a dir encoded in \ref pcomp_chebyshev_t is that
+ * sometimes it is useful to keep it memorized in the structure
+ * itself.
+ *
+ * \param[in] num_of_samples Number of floating-point numbers that
+ * will be transformed
+ *
+ * \param[in] dir Direction of the transform (either forward or
+ * backward). This is used to determine the normalization constant of
+ * the transform:
+ * - If computing a forward transform, the normalization is \f$1 / (N
+ *   - 1)\f$, with \f$N\f$ the number of samples.
+ * - If computing a backward transform, the normalization is 1.
+ *
+ * \returns A newly created instance of \ref pcomp_poly_fit_data_t
+ * structure. This must be freed using \ref pcomp_free_poly_fit, once
+ * it is no longer used.
+ */
 pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
                                         pcomp_transform_direction_t dir)
 {
@@ -365,6 +405,13 @@ pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
     return chebyshev;
 }
 
+/** \ingroup poly
+ *
+ * \brief Free the memory allocated by a previous call to \ref
+ * pcomp_init_chebyshev.
+ *
+ * \param[in] plan Pointer to the structure to be freed.
+ */
 void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
 {
     if (plan == NULL)
@@ -382,6 +429,15 @@ void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
     free(plan);
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of samples in a Chebyshev transform
+ *
+ * \param[in] plan Pointer to the Chebyshev plan.
+ *
+ * \returns The number of elements that are used in the Chebyshev
+ * transform specified by \a plan.
+ */
 size_t pcomp_chebyshev_num_of_samples(const pcomp_chebyshev_t* plan)
 {
     if (plan == NULL)
@@ -390,6 +446,16 @@ size_t pcomp_chebyshev_num_of_samples(const pcomp_chebyshev_t* plan)
     return plan->num_of_samples;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the direction of a Chebyshev transform
+ *
+ * \param[in] plan Pointer to the Chebyshev plan.
+ *
+ * \returns A \ref pcomp_transform_direction_t value specifying the
+ * normalization used for the Chebyshev transform specified by \a
+ * plan.
+ */
 pcomp_transform_direction_t
 pcomp_chebyshev_direction(const pcomp_chebyshev_t* plan)
 {
@@ -408,6 +474,28 @@ static double chebyshev_normalization(pcomp_transform_direction_t dir,
         return 0.5;
 }
 
+/** \ingroup poly
+ *
+ * \brief Compute a forward/backward Chebyshev discrete transform
+ *
+ * \param[in] plan Pointer to a Chebyshev plan created by \ref
+ * pcomp_init_chebyshev
+ *
+ * \param[in] dir Direction of the transform. This parameter overrides
+ * the internal direction of \a plan (returned by \ref
+ * pcomp_chebyshev_direction).
+ *
+ * \param[out] output Pointer to an array of \c double values that will
+ * contain the Chebyshev transform of \a input. It must have room for
+ * a number of elements at least equal to the return value of \ref
+ * pcomp_num_of_samples.
+ *
+ * \param[in] input Array of \c double values to be transformed. The
+ * function will use the first N elements, where N is the return value
+ * of \ref pcomp_num_of_samples.
+ *
+ * \returns \ref PCOMP_STAT_SUCCESS when successful.
+ */
 int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
                         pcomp_transform_direction_t dir, double* output,
                         const double* input)
@@ -455,6 +543,23 @@ struct __pcomp_polycomp_t {
     double period;
 };
 
+/** \ingroup poly
+ *
+ * \brief Allocate space for a \ref pcomp_polycomp_t structure
+ *
+ * \param[in] samples_per_chunk Number of samples in each chunk
+ *
+ * \param[in] num_of_coeffs Number of polynomial coefficients to use
+ *
+ * \param[in] max_allowable_error Upper bound for the compression
+ * error (positive value)
+ *
+ * \param[in] algorithm Kind of compression algorithm to use
+ *
+ * \returns A pointer to the newly allocate \ref pcomp_polycomp_t
+ * structure. This must be freed using \ref pcomp_free_polycomp, once
+ * it is no longer used.
+ */
 pcomp_polycomp_t*
 pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
                     pcomp_poly_size_t num_of_coeffs,
@@ -477,6 +582,13 @@ pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
     return params;
 }
 
+/** \ingroup poly
+ *
+ * \brief Free the memory allocated by \ref pcomp_init_polycomp for a
+ * \ref pcomp_polycomp_t structure.
+ *
+ * \param[in] params Pointer to the structure to be freed
+ */
 void pcomp_free_polycomp(pcomp_polycomp_t* params)
 {
     if (params == NULL)
@@ -489,6 +601,20 @@ void pcomp_free_polycomp(pcomp_polycomp_t* params)
     free(params);
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of samples per chunk
+ *
+ * This function returns the size of each chunk but the last one in
+ * the input data for a polynomial compression. Such chunks contain a
+ * set of consecutive values in the input array passed to routines as
+ * \ref pcomp_compress_polycomp.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The number of samples in each chunk.
+ */
 pcomp_chunk_size_t
 pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params)
 {
@@ -498,6 +624,19 @@ pcomp_polycomp_samples_per_chunk(const pcomp_polycomp_t* params)
     return params->samples_per_chunk;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of coefficients for the fitting polynomial
+ * used in the polynomial compression.
+ *
+ * The return value has the same meaning as the value returned by the
+ * \ref pcomp_poly_fit_num_of_coeffs.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The number of coefficients of the fitting polynomial.
+ */
 pcomp_poly_size_t
 pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params)
 {
@@ -507,6 +646,16 @@ pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params)
     return params->poly_fit->num_of_coeffs;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the upper bound on the error of the polynomial
+ *compression.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The maximum allowable error for the polynomial compression.
+ */
 double pcomp_polycomp_max_error(const pcomp_polycomp_t* params)
 {
     if (params == NULL)
@@ -515,6 +664,16 @@ double pcomp_polycomp_max_error(const pcomp_polycomp_t* params)
     return params->max_allowable_error;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the kind of algorithm used for a polynomial
+ *compression.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The algorithm to be used by the compressor.
+ */
 pcomp_polycomp_algorithm_t
 pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
 {
@@ -524,6 +683,19 @@ pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
     return params->algorithm;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the period of the input data, or a number
+ * less than or equal to 0 if the data have no periodicity.
+ *
+ * See also \ref pcomp_polycomp_set_period.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The periodicity. If zero or negative, no periodicity is
+ * assumed in the data to be compressed.
+ */
 double pcomp_polycomp_period(const pcomp_polycomp_t* params)
 {
     if (params == NULL)
@@ -532,6 +704,24 @@ double pcomp_polycomp_period(const pcomp_polycomp_t* params)
     return params->period;
 }
 
+/** \ingroup poly
+ *
+ * \brief Set the periodicity of the data to be compressed
+ *
+ * If \a period is a value greater than zero, this is assumed to be
+ * the periodicity of the input data: the value \a x is therefore
+ * assumed equivalent to \a x + \a period and to \a x - \a period. It
+ * is typically a multiple of Pi = 3.14159...
+ *
+ * The polynomial compressor can improve the compression ratio for
+ * data if they have some form of periodicity.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \param[in] period The periodicity of the data, or a zero/negative
+ * value if no periodicity should be assumed by the compressor.
+ */
 void pcomp_polycomp_set_period(pcomp_polycomp_t* params, double period)
 {
     if (params == NULL)
@@ -572,10 +762,29 @@ static double eval_poly(double* coeffs, size_t num_of_coeffs, double x)
         return 0.0;
 }
 
-/***********************************************************************
- * Remove sudden jumps in the data by applying an offset equal to +/-
- * "period". It is ok for "input" and "output" to point to the same
- * memory location.
+/***********************************************************************/
+
+/** \ingroup poly
+ *
+ * \brief Remove sudden jumps from \a input
+ *
+ * Assuming that the data in the array \a input have a periodicity
+ * equal to \a period, the function copies them to \a output while
+ * applying a positive/negative offset equal to a multiple of \a
+ * period.
+ *
+ * It is ok for \a input and \a output to point to the same memory
+ * location.
+ *
+ * \param[out] output Pointer to the array that will contain the
+ * result. It must have room for at least \a num_of_samples values.
+ *
+ * \param[in] input Array of \a num_of_samples values to process.
+ *
+ * \param[in] num_of_samples Number of samples to process in \a input
+ *
+ * \param[in] period Periodicity of the data. If less or equal to
+ * zero, \a input is copied verbatim to \a output.
  */
 
 void pcomp_straighten(double* output, const double* input,
@@ -612,8 +821,8 @@ void pcomp_straighten(double* output, const double* input,
  * Chunk initialization/destruction
  */
 
-/* Structure used to hold information about a chunk of data compressed
- * using the polynomial compression */
+/* Information about a chunk of data compressed using the polynomial
+ * compression */
 struct __pcomp_polycomp_chunk_t {
     /* Number of samples in this chunk */
     size_t num_of_samples;

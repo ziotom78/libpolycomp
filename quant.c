@@ -314,9 +314,9 @@ size_t pcomp_quant_bufsize(size_t input_size,
  * quantization. It should be created via a call to \ref
  * pcomp_init_quant_params.
  *
- * \returns PCOMP_STAT_SUCCESS if the encoding completed successfully.
- * Otherwise, the error code specifies the kind of error occurred
- * during the call.
+ * \returns \ref PCOMP_STAT_SUCCESS if the encoding completed
+ * successfully. Otherwise, the error code specifies the kind of error
+ * occurred during the call.
  */
 
 /** \ingroup quant
@@ -348,9 +348,9 @@ size_t pcomp_quant_bufsize(size_t input_size,
  * quantization. It should be created via a call to \ref
  * pcomp_init_quant_params.
  *
- * \returns PCOMP_STAT_SUCCESS if the encoding completed successfully.
- * Otherwise, the error code specifies the kind of error occurred
- * during the call.
+ * \returns \ref PCOMP_STAT_SUCCESS if the encoding completed
+ * successfully. Otherwise, the error code specifies the kind of error
+ * occurred during the call.
  */
 
 #define DEFINE_FIND_BOUNDS_FN(name, datatype_t)                        \

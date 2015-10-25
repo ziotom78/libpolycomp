@@ -122,9 +122,9 @@ size_t pcomp_diffrle_bufsize(size_t input_size)
  * \param[in] input_size Number of *elements* (not bytes) in the array
  * \a input_buf
  *
- * \returns PCOMP_STAT_SUCCESS if the encoding completed successfully.
- * Otherwise, the error code specifies the kind of error occurred
- * during the call.
+ * \returns \ref PCOMP_STAT_SUCCESS if the encoding completed
+ * successfully. Otherwise, the error code specifies the kind of error
+ * occurred during the call.
  */
 
 /** \ingroup diffRLE
@@ -252,9 +252,9 @@ size_t pcomp_diffrle_bufsize(size_t input_size)
  * \param[in] input_size Number of *elements* (not bytes) in the array
  * \a input_buf
  *
- * \returns PCOMP_STAT_SUCCESS if the decoding completed successfully.
- * Otherwise, the error code specifies the kind of error occurred
- * during the call.
+ * \returns \ref PCOMP_STAT_SUCCESS if the decoding completed
+ * successfully. Otherwise, the error code specifies the kind of error
+ * occurred during the call.
  */
 
 /** \ingroup diffRLE
