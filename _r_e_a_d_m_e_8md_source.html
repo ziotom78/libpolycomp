@@ -119,9 +119,9 @@ $(document).ready(function(){initNavTree('_r_e_a_d_m_e_8md.html','');});
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;You need the following dependencies:</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;1. CMake</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;2. GNU GSL</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;3. FFTW</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;1. CMake (https://cmake.org/)</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;2. GNU Scientific Library (http://www.gnu.org/software/gsl/)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;3. FFTW (http://www.fftw.org/)</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;Enter the directory containing the `libpolycomp` sources and run the</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;following commands:</div>
@@ -131,15 +131,26 @@ $(document).ready(function(){initNavTree('_r_e_a_d_m_e_8md.html','');});
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    cmake ..</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    make</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;The source code is written using C98, so it should compile almost</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;everywhere.</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;By default, both a static and dynamic library will be compiled, with</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;names &quot;libpolycomp_static.a&quot; and &quot;libpolycomp.so&quot;. To install them</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;system-wide, run the following command as root:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    make install</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;The source code is written using C98, so it should compile almost</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;everywhere.</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;## Documentation</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;The documentation is kept using Doxygen, an online copy is available</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;at the site http://ziotom78.github.io/libpolycomp .</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>README.md</b></li>
-    <li class="footer">Generated on Fri Oct 23 2015 12:43:43 for Libpolycomp by
+    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

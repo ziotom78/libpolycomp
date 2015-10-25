@@ -205,9 +205,9 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a>* chunk = pcomp_init_chunk(input_size);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">double</span> max_error;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* inv_chebyshev</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        = pcomp_init_chebyshev(input_size, PCOMP_TD_INVERSE);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = pcomp_init_polycomp(</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, PCOMP_ALG_USE_CHEBYSHEV);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        = <a class="code" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>(input_size, <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = <a class="code" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>(</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, <a class="code" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a>);</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">size_t</span> idx;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,</div>
@@ -224,8 +224,8 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    free(decompr);</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    pcomp_free_chunk(chunk);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    pcomp_free_chebyshev(inv_chebyshev);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    pcomp_free_polycomp(polycomp);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a>(inv_chebyshev);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a>(polycomp);</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
@@ -240,9 +240,9 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a>* chunk = pcomp_init_chunk(input_size);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">double</span> max_error;</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* inv_chebyshev</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        = pcomp_init_chebyshev(input_size, PCOMP_TD_INVERSE);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = pcomp_init_polycomp(</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, PCOMP_ALG_USE_CHEBYSHEV);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        = <a class="code" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>(input_size, <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = <a class="code" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>(</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, <a class="code" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a>);</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">size_t</span> idx;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,</div>
@@ -262,8 +262,8 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    free(decompr);</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    pcomp_free_chunk(chunk);</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    pcomp_free_chebyshev(inv_chebyshev);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    pcomp_free_polycomp(polycomp);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <a class="code" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a>(inv_chebyshev);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a>(polycomp);</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;}</div>
@@ -277,9 +277,9 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a>* chunk = pcomp_init_chunk(input_size);</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">double</span> max_error;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* inv_chebyshev</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        = pcomp_init_chebyshev(input_size, PCOMP_TD_INVERSE);</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = pcomp_init_polycomp(</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, PCOMP_ALG_USE_CHEBYSHEV);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        = <a class="code" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>(input_size, <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a>);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* polycomp = <a class="code" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>(</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        input_size, 2, MAX_ALLOWABLE_ERROR, <a class="code" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a>);</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordtype">size_t</span> idx;</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,</div>
@@ -297,8 +297,8 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    free(decompr);</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    pcomp_free_chunk(chunk);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    pcomp_free_chebyshev(inv_chebyshev);</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    pcomp_free_polycomp(polycomp);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <a class="code" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a>(inv_chebyshev);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <a class="code" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a>(polycomp);</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;}</div>
@@ -325,9 +325,15 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;}</div>
-<div class="ttc" id="struct____pcomp__polycomp__chunk__t_html"><div class="ttname"><a href="struct____pcomp__polycomp__chunk__t.html">__pcomp_polycomp_chunk_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00617">poly.c:617</a></div></div>
-<div class="ttc" id="struct____pcomp__polycomp__t_html"><div class="ttname"><a href="struct____pcomp__polycomp__t.html">__pcomp_polycomp_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00448">poly.c:448</a></div></div>
-<div class="ttc" id="struct____pcomp__chebyshev__t_html"><div class="ttname"><a href="struct____pcomp__chebyshev__t.html">__pcomp_chebyshev_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00344">poly.c:344</a></div></div>
+<div class="ttc" id="group__poly_html_gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9"><div class="ttname"><a href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a></div><div class="ttdoc">Compute a backward Chebyshev transform, with a normalization factor equal to one. ...</div><div class="ttdef"><b>Definition:</b> <a href="libpolycomp_8h_source.html#l00325">libpolycomp.h:325</a></div></div>
+<div class="ttc" id="group__poly_html_gaa3d0118144149874c40c65d275d8052a"><div class="ttname"><a href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a></div><div class="ttdeci">void pcomp_free_chebyshev(pcomp_chebyshev_t *plan)</div><div class="ttdoc">Free the memory allocated by a previous call to pcomp_init_chebyshev. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00415">poly.c:415</a></div></div>
+<div class="ttc" id="group__poly_html_ga5abae32ef61a1a8a0f73b2ccdb0667a7"><div class="ttname"><a href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a></div><div class="ttdeci">void pcomp_free_polycomp(pcomp_polycomp_t *params)</div><div class="ttdoc">Free the memory allocated by pcomp_init_polycomp for a pcomp_polycomp_t structure. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00592">poly.c:592</a></div></div>
+<div class="ttc" id="group__poly_html_gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff"><div class="ttname"><a href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a></div><div class="ttdoc">When needed, apply the Chebyshev transform to the residuals of the polynomial fit. </div><div class="ttdef"><b>Definition:</b> <a href="libpolycomp_8h_source.html#l00355">libpolycomp.h:355</a></div></div>
+<div class="ttc" id="group__poly_html_ga4b7e004c7b6735e6b026cfd81d30c993"><div class="ttname"><a href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a></div><div class="ttdeci">pcomp_chebyshev_t * pcomp_init_chebyshev(size_t num_of_samples, pcomp_transform_direction_t dir)</div><div class="ttdoc">Allocate a new instance of the pcomp_chebyshev_t structure on the heap. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00392">poly.c:392</a></div></div>
+<div class="ttc" id="group__poly_html_ga3192eb47cac9f94936f283fcc2dccf74"><div class="ttname"><a href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a></div><div class="ttdeci">pcomp_polycomp_t * pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk, pcomp_poly_size_t num_of_coeffs, double max_allowable_error, pcomp_polycomp_algorithm_t algorithm)</div><div class="ttdoc">Allocate space for a pcomp_polycomp_t structure. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00564">poly.c:564</a></div></div>
+<div class="ttc" id="struct____pcomp__polycomp__chunk__t_html"><div class="ttname"><a href="struct____pcomp__polycomp__chunk__t.html">__pcomp_polycomp_chunk_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00826">poly.c:826</a></div></div>
+<div class="ttc" id="struct____pcomp__polycomp__t_html"><div class="ttname"><a href="struct____pcomp__polycomp__t.html">__pcomp_polycomp_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00536">poly.c:536</a></div></div>
+<div class="ttc" id="struct____pcomp__chebyshev__t_html"><div class="ttname"><a href="struct____pcomp__chebyshev__t.html">__pcomp_chebyshev_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00358">poly.c:358</a></div></div>
 <div class="ttc" id="libpolycomp_8h_html"><div class="ttname"><a href="libpolycomp_8h.html">libpolycomp.h</a></div><div class="ttdoc">Header file for Libpolycomp. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -335,7 +341,7 @@ $(document).ready(function(){initNavTree('test__polycomp__low__level_8c_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>test_polycomp_low_level.c</b></li>
-    <li class="footer">Generated on Fri Oct 23 2015 12:43:43 for Libpolycomp by
+    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

@@ -108,21 +108,24 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html','');});
 <h2>Building the library</h2>
 <p>You need the following dependencies:</p>
 <ol type="1">
-<li>CMake</li>
-<li>GNU GSL</li>
-<li>FFTW</li>
+<li>CMake (<a href="https://cmake.org/">https://cmake.org/</a>)</li>
+<li>GNU Scientific Library (<a href="http://www.gnu.org/software/gsl/">http://www.gnu.org/software/gsl/</a>)</li>
+<li>FFTW (<a href="http://www.fftw.org/">http://www.fftw.org/</a>)</li>
 </ol>
 <p>Enter the directory containing the <code>libpolycomp</code> sources and run the following commands: </p><pre class="fragment">mkdir build
 cd build
 cmake ..
 make
-</pre><p>The source code is written using C98, so it should compile almost everywhere. </p>
+</pre><p>By default, both a static and dynamic library will be compiled, with names "libpolycomp_static.a" and "libpolycomp.so". To install them system-wide, run the following command as root: </p><pre class="fragment">make install
+</pre><p>The source code is written using C98, so it should compile almost everywhere.</p>
+<h2>Documentation</h2>
+<p>The documentation is kept using Doxygen, an online copy is available at the site <a href="http://ziotom78.github.io/libpolycomp">http://ziotom78.github.io/libpolycomp</a> . </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 23 2015 12:43:43 for Libpolycomp by
+    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

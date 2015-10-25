@@ -147,9 +147,9 @@ $(document).ready(function(){initNavTree('test__chebyshev_8c_source.html','');})
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">double</span> coeffs[3];</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">double</span> inv_coeffs[3];</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* chebyshev = pcomp_init_chebyshev(</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">sizeof</span>(points) / <span class="keyword">sizeof</span>(points[0]), PCOMP_TD_DIRECT);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    assert(pcomp_run_chebyshev(chebyshev, PCOMP_TD_DIRECT, coeffs,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* chebyshev = <a class="code" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>(</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">sizeof</span>(points) / <span class="keyword">sizeof</span>(points[0]), <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaaf8dce6961ca63dc3a46dc81b99be0d5d">PCOMP_TD_DIRECT</a>);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    assert(<a class="code" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a>(chebyshev, <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaaf8dce6961ca63dc3a46dc81b99be0d5d">PCOMP_TD_DIRECT</a>, coeffs,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                               points) == PCOMP_STAT_SUCCESS);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">/* These values have been calculated by hand */</span></div>
@@ -159,17 +159,22 @@ $(document).ready(function(){initNavTree('test__chebyshev_8c_source.html','');})
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">/* Now check that the inverse transform reconstructs the points</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">     * correctly */</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    assert(pcomp_run_chebyshev(chebyshev, PCOMP_TD_INVERSE, inv_coeffs,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    assert(<a class="code" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a>(chebyshev, <a class="code" href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a>, inv_coeffs,</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                               coeffs) == PCOMP_STAT_SUCCESS);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    assert(fabs(points[0] - inv_coeffs[0]) &lt; EPSILON);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    assert(fabs(points[1] - inv_coeffs[1]) &lt; EPSILON);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    assert(fabs(points[2] - inv_coeffs[2]) &lt; EPSILON);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    pcomp_free_chebyshev(chebyshev);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a>(chebyshev);</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="ttc" id="struct____pcomp__chebyshev__t_html"><div class="ttname"><a href="struct____pcomp__chebyshev__t.html">__pcomp_chebyshev_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00344">poly.c:344</a></div></div>
+<div class="ttc" id="group__poly_html_gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9"><div class="ttname"><a href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a></div><div class="ttdoc">Compute a backward Chebyshev transform, with a normalization factor equal to one. ...</div><div class="ttdef"><b>Definition:</b> <a href="libpolycomp_8h_source.html#l00325">libpolycomp.h:325</a></div></div>
+<div class="ttc" id="group__poly_html_gga916be96db23ae0292046887134631acaaf8dce6961ca63dc3a46dc81b99be0d5d"><div class="ttname"><a href="group__poly.html#gga916be96db23ae0292046887134631acaaf8dce6961ca63dc3a46dc81b99be0d5d">PCOMP_TD_DIRECT</a></div><div class="ttdoc">Compute a forward Chebyshev transform, with a normalization factor 1/(N + 1) </div><div class="ttdef"><b>Definition:</b> <a href="libpolycomp_8h_source.html#l00322">libpolycomp.h:322</a></div></div>
+<div class="ttc" id="group__poly_html_gaa3d0118144149874c40c65d275d8052a"><div class="ttname"><a href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a></div><div class="ttdeci">void pcomp_free_chebyshev(pcomp_chebyshev_t *plan)</div><div class="ttdoc">Free the memory allocated by a previous call to pcomp_init_chebyshev. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00415">poly.c:415</a></div></div>
+<div class="ttc" id="group__poly_html_ga76b1fdcbb1b1dba4191db3a9a0fe91be"><div class="ttname"><a href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a></div><div class="ttdeci">int pcomp_run_chebyshev(pcomp_chebyshev_t *plan, pcomp_transform_direction_t dir, double *output, const double *input)</div><div class="ttdoc">Compute a forward/backward Chebyshev discrete transform. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00499">poly.c:499</a></div></div>
+<div class="ttc" id="group__poly_html_ga4b7e004c7b6735e6b026cfd81d30c993"><div class="ttname"><a href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a></div><div class="ttdeci">pcomp_chebyshev_t * pcomp_init_chebyshev(size_t num_of_samples, pcomp_transform_direction_t dir)</div><div class="ttdoc">Allocate a new instance of the pcomp_chebyshev_t structure on the heap. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00392">poly.c:392</a></div></div>
+<div class="ttc" id="struct____pcomp__chebyshev__t_html"><div class="ttname"><a href="struct____pcomp__chebyshev__t.html">__pcomp_chebyshev_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00358">poly.c:358</a></div></div>
 <div class="ttc" id="libpolycomp_8h_html"><div class="ttname"><a href="libpolycomp_8h.html">libpolycomp.h</a></div><div class="ttdoc">Header file for Libpolycomp. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -177,7 +182,7 @@ $(document).ready(function(){initNavTree('test__chebyshev_8c_source.html','');})
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>test_chebyshev.c</b></li>
-    <li class="footer">Generated on Fri Oct 23 2015 12:43:43 for Libpolycomp by
+    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

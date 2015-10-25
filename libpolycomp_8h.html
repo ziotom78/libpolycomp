@@ -124,8 +124,6 @@ $(document).ready(function(){initNavTree('libpolycomp_8h.html','');});
 Include dependency graph for libpolycomp.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="libpolycomp_8h__incl.png" border="0" usemap="#libpolycomp_8h" alt=""/></div>
-<map name="libpolycomp_8h" id="libpolycomp_8h">
-</map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -140,16 +138,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ab4a6d4e5863cf0fce06ee6f3f08792b8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4a6d4e5863cf0fce06ee6f3f08792b8"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_SUCCESS</b>&#160;&#160;&#160;0 /* All ok */</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_SUCCESS</b>&#160;&#160;&#160;0 /** \brief All ok */</td></tr>
 <tr class="separator:ab4a6d4e5863cf0fce06ee6f3f08792b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae62edbee727bde49b23bbbfd933ac6e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae62edbee727bde49b23bbbfd933ac6e3"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_ENCODING</b>&#160;&#160;&#160;1 /* Decompression error */</td></tr>
+<tr class="memitem:ae62edbee727bde49b23bbbfd933ac6e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_ENCODING</b></td></tr>
 <tr class="separator:ae62edbee727bde49b23bbbfd933ac6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af79151523060b2fce8dccf230496b711"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af79151523060b2fce8dccf230496b711"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_BUFFER</b>&#160;&#160;&#160;2 /* Output buffer too small */</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_BUFFER</b>&#160;&#160;&#160;2 /** \brief Output buffer too small */</td></tr>
 <tr class="separator:af79151523060b2fce8dccf230496b711"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42f898d40fa57b1ebcb74aca7a505bb4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42f898d40fa57b1ebcb74aca7a505bb4"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_FIT</b>&#160;&#160;&#160;3 /* Least-square fit error */</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PCOMP_STAT_INVALID_FIT</b>&#160;&#160;&#160;3 /** \brief Least-square fit error */</td></tr>
 <tr class="separator:a42f898d40fa57b1ebcb74aca7a505bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -178,14 +175,16 @@ typedef struct <a class="el" href="struct____pcomp__polycomp__chunk__t.html">__p
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a916be96db23ae0292046887134631aca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a916be96db23ae0292046887134631aca"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_transform_direction_t</b> { <b>PCOMP_TD_DIRECT</b> = 0, 
-<b>PCOMP_TD_INVERSE</b> = 1
+<tr class="memitem:ga916be96db23ae0292046887134631aca"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> { <a class="el" href="group__poly.html#gga916be96db23ae0292046887134631acaaf8dce6961ca63dc3a46dc81b99be0d5d">PCOMP_TD_DIRECT</a> = 0, 
+<a class="el" href="group__poly.html#gga916be96db23ae0292046887134631acaa78888ceb661c6d947c9df1b7b16830a9">PCOMP_TD_INVERSE</a> = 1
  }</td></tr>
-<tr class="separator:a916be96db23ae0292046887134631aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bc63ccaec65919ae95887c08e83eb6b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1bc63ccaec65919ae95887c08e83eb6b"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_algorithm_t</b> { <b>PCOMP_ALG_USE_CHEBYSHEV</b> = 0, 
-<b>PCOMP_ALG_NO_CHEBYSHEV</b> = 1
+<tr class="memdesc:ga916be96db23ae0292046887134631aca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Direction of a Chebyshev transform.  <a href="group__poly.html#ga916be96db23ae0292046887134631aca">More...</a><br /></td></tr>
+<tr class="separator:ga916be96db23ae0292046887134631aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bc63ccaec65919ae95887c08e83eb6b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga1bc63ccaec65919ae95887c08e83eb6b">pcomp_polycomp_algorithm_t</a> { <a class="el" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a> = 0, 
+<a class="el" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba7fdc02ed16c84d1da93721e5c4c0fc0a">PCOMP_ALG_NO_CHEBYSHEV</a> = 1
  }</td></tr>
-<tr class="separator:a1bc63ccaec65919ae95887c08e83eb6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:ga1bc63ccaec65919ae95887c08e83eb6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kind of algorithm used for the polynomial compression.  <a href="group__poly.html#ga1bc63ccaec65919ae95887c08e83eb6b">More...</a><br /></td></tr>
+<tr class="separator:ga1bc63ccaec65919ae95887c08e83eb6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -346,21 +345,21 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_decompress_quant
 <tr class="memitem:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a> (<a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *poly_fit, double *coeffs, const double *points)</td></tr>
 <tr class="memdesc:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates a polynomial least-squares fit.  <a href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">More...</a><br /></td></tr>
 <tr class="separator:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b7e004c7b6735e6b026cfd81d30c993"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b7e004c7b6735e6b026cfd81d30c993"></a>
-<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_init_chebyshev</b> (size_t num_of_samples, pcomp_transform_direction_t dir)</td></tr>
-<tr class="separator:a4b7e004c7b6735e6b026cfd81d30c993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3d0118144149874c40c65d275d8052a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3d0118144149874c40c65d275d8052a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_free_chebyshev</b> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="separator:aa3d0118144149874c40c65d275d8052a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ecdba8b5b837800fceed690f421d15f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ecdba8b5b837800fceed690f421d15f"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_chebyshev_num_of_samples</b> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="separator:a8ecdba8b5b837800fceed690f421d15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06c796c90a77f5af0a7248e8082b4bdb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06c796c90a77f5af0a7248e8082b4bdb"></a>
-pcomp_transform_direction_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_chebyshev_direction</b> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="separator:a06c796c90a77f5af0a7248e8082b4bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a76b1fdcbb1b1dba4191db3a9a0fe91be"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_run_chebyshev</b> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan, pcomp_transform_direction_t dir, double *output, const double *input)</td></tr>
-<tr class="separator:a76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a> (size_t num_of_samples, <a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> dir)</td></tr>
+<tr class="memdesc:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a new instance of the pcomp_chebyshev_t structure on the heap.  <a href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">More...</a><br /></td></tr>
+<tr class="separator:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3d0118144149874c40c65d275d8052a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
+<tr class="memdesc:gaa3d0118144149874c40c65d275d8052a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the memory allocated by a previous call to <a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>.  <a href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">More...</a><br /></td></tr>
+<tr class="separator:gaa3d0118144149874c40c65d275d8052a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8ecdba8b5b837800fceed690f421d15f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga8ecdba8b5b837800fceed690f421d15f">pcomp_chebyshev_num_of_samples</a> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
+<tr class="memdesc:ga8ecdba8b5b837800fceed690f421d15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of samples in a Chebyshev transform.  <a href="group__poly.html#ga8ecdba8b5b837800fceed690f421d15f">More...</a><br /></td></tr>
+<tr class="separator:ga8ecdba8b5b837800fceed690f421d15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga06c796c90a77f5af0a7248e8082b4bdb">pcomp_chebyshev_direction</a> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
+<tr class="memdesc:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the direction of a Chebyshev transform.  <a href="group__poly.html#ga06c796c90a77f5af0a7248e8082b4bdb">More...</a><br /></td></tr>
+<tr class="separator:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan, <a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> dir, double *output, const double *input)</td></tr>
+<tr class="memdesc:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute a forward/backward Chebyshev discrete transform.  <a href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">More...</a><br /></td></tr>
+<tr class="separator:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43fbe9e5919993793a6d6bc21052db0a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43fbe9e5919993793a6d6bc21052db0a"></a>
 <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_init_chunk</b> (pcomp_chunk_size_t num_of_samples)</td></tr>
 <tr class="separator:a43fbe9e5919993793a6d6bc21052db0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -403,39 +402,39 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_chunk_cheby_m
 <tr class="memitem:a8874e60b925bcd6720b87f35bf1e667d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8874e60b925bcd6720b87f35bf1e667d"></a>
 const uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_chunk_cheby_mask</b> (const <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *chunk)</td></tr>
 <tr class="separator:a8874e60b925bcd6720b87f35bf1e667d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af29ad7a7a070d4e13bc7ab2788b914a9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af29ad7a7a070d4e13bc7ab2788b914a9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_straighten</b> (double *output, const double *input, size_t num_of_samples, double period)</td></tr>
-<tr class="separator:af29ad7a7a070d4e13bc7ab2788b914a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3192eb47cac9f94936f283fcc2dccf74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3192eb47cac9f94936f283fcc2dccf74"></a>
-<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_init_polycomp</b> (pcomp_chunk_size_t samples_per_chunk, pcomp_poly_size_t num_of_coeffs, double max_allowable_error, pcomp_polycomp_algorithm_t algorithm)</td></tr>
-<tr class="separator:a3192eb47cac9f94936f283fcc2dccf74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5abae32ef61a1a8a0f73b2ccdb0667a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5abae32ef61a1a8a0f73b2ccdb0667a7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_free_polycomp</b> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:a5abae32ef61a1a8a0f73b2ccdb0667a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaf29ad7a7a070d4e13bc7ab2788b914a9">pcomp_straighten</a> (double *output, const double *input, size_t num_of_samples, double period)</td></tr>
+<tr class="memdesc:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove sudden jumps from <em>input</em>.  <a href="group__poly.html#gaf29ad7a7a070d4e13bc7ab2788b914a9">More...</a><br /></td></tr>
+<tr class="separator:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3192eb47cac9f94936f283fcc2dccf74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a> (pcomp_chunk_size_t samples_per_chunk, pcomp_poly_size_t num_of_coeffs, double max_allowable_error, <a class="el" href="group__poly.html#ga1bc63ccaec65919ae95887c08e83eb6b">pcomp_polycomp_algorithm_t</a> algorithm)</td></tr>
+<tr class="memdesc:ga3192eb47cac9f94936f283fcc2dccf74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate space for a pcomp_polycomp_t structure.  <a href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">More...</a><br /></td></tr>
+<tr class="separator:ga3192eb47cac9f94936f283fcc2dccf74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5abae32ef61a1a8a0f73b2ccdb0667a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:ga5abae32ef61a1a8a0f73b2ccdb0667a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the memory allocated by <a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a> for a pcomp_polycomp_t structure.  <a href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">More...</a><br /></td></tr>
+<tr class="separator:ga5abae32ef61a1a8a0f73b2ccdb0667a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16fd7dc37524f6a0ba57d29ca766a54d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16fd7dc37524f6a0ba57d29ca766a54d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_run_polycomp_on_chunk</b> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params, const double *input, pcomp_chunk_size_t num_of_samples, <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *chunk, double *max_error)</td></tr>
 <tr class="separator:a16fd7dc37524f6a0ba57d29ca766a54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2227fe2823fe2ce04d9c1a1d99dc294"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae2227fe2823fe2ce04d9c1a1d99dc294"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_decompress_polycomp_chunk</b> (double *output, const <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *chunk, <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *inv_chebyshev)</td></tr>
 <tr class="separator:ae2227fe2823fe2ce04d9c1a1d99dc294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab78e51afbc007f4a5e941cd4911ac190"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab78e51afbc007f4a5e941cd4911ac190"></a>
-pcomp_chunk_size_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_samples_per_chunk</b> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:ab78e51afbc007f4a5e941cd4911ac190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa7c47c8c364e21792c92e70c7b13f95"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa7c47c8c364e21792c92e70c7b13f95"></a>
-pcomp_poly_size_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_num_of_poly_coeffs</b> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:afa7c47c8c364e21792c92e70c7b13f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8672475e686bc31189cb096234f6737"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8672475e686bc31189cb096234f6737"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_max_error</b> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:ad8672475e686bc31189cb096234f6737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a348ae5dd69b4c9fac6ed7b16df414b07"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a348ae5dd69b4c9fac6ed7b16df414b07"></a>
-pcomp_polycomp_algorithm_t&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_algorithm</b> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:a348ae5dd69b4c9fac6ed7b16df414b07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18c17d9420262cdb765aa07554dcd13a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a18c17d9420262cdb765aa07554dcd13a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_period</b> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
-<tr class="separator:a18c17d9420262cdb765aa07554dcd13a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8ca2f9b0748609a25ff8b9016093a88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8ca2f9b0748609a25ff8b9016093a88"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_polycomp_set_period</b> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params, double period)</td></tr>
-<tr class="separator:ac8ca2f9b0748609a25ff8b9016093a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab78e51afbc007f4a5e941cd4911ac190"><td class="memItemLeft" align="right" valign="top">pcomp_chunk_size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gab78e51afbc007f4a5e941cd4911ac190">pcomp_polycomp_samples_per_chunk</a> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:gab78e51afbc007f4a5e941cd4911ac190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of samples per chunk.  <a href="group__poly.html#gab78e51afbc007f4a5e941cd4911ac190">More...</a><br /></td></tr>
+<tr class="separator:gab78e51afbc007f4a5e941cd4911ac190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa7c47c8c364e21792c92e70c7b13f95"><td class="memItemLeft" align="right" valign="top">pcomp_poly_size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gafa7c47c8c364e21792c92e70c7b13f95">pcomp_polycomp_num_of_poly_coeffs</a> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:gafa7c47c8c364e21792c92e70c7b13f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of coefficients for the fitting polynomial used in the polynomial compression.  <a href="group__poly.html#gafa7c47c8c364e21792c92e70c7b13f95">More...</a><br /></td></tr>
+<tr class="separator:gafa7c47c8c364e21792c92e70c7b13f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad8672475e686bc31189cb096234f6737"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gad8672475e686bc31189cb096234f6737">pcomp_polycomp_max_error</a> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:gad8672475e686bc31189cb096234f6737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the upper bound on the error of the polynomial compression.  <a href="group__poly.html#gad8672475e686bc31189cb096234f6737">More...</a><br /></td></tr>
+<tr class="separator:gad8672475e686bc31189cb096234f6737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga348ae5dd69b4c9fac6ed7b16df414b07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__poly.html#ga1bc63ccaec65919ae95887c08e83eb6b">pcomp_polycomp_algorithm_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga348ae5dd69b4c9fac6ed7b16df414b07">pcomp_polycomp_algorithm</a> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:ga348ae5dd69b4c9fac6ed7b16df414b07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the kind of algorithm used for a polynomial compression.  <a href="group__poly.html#ga348ae5dd69b4c9fac6ed7b16df414b07">More...</a><br /></td></tr>
+<tr class="separator:ga348ae5dd69b4c9fac6ed7b16df414b07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga18c17d9420262cdb765aa07554dcd13a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga18c17d9420262cdb765aa07554dcd13a">pcomp_polycomp_period</a> (const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:ga18c17d9420262cdb765aa07554dcd13a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the period of the input data, or a number less than or equal to 0 if the data have no periodicity.  <a href="group__poly.html#ga18c17d9420262cdb765aa07554dcd13a">More...</a><br /></td></tr>
+<tr class="separator:ga18c17d9420262cdb765aa07554dcd13a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac8ca2f9b0748609a25ff8b9016093a88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gac8ca2f9b0748609a25ff8b9016093a88">pcomp_polycomp_set_period</a> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params, double period)</td></tr>
+<tr class="memdesc:gac8ca2f9b0748609a25ff8b9016093a88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the periodicity of the data to be compressed.  <a href="group__poly.html#gac8ca2f9b0748609a25ff8b9016093a88">More...</a><br /></td></tr>
+<tr class="separator:gac8ca2f9b0748609a25ff8b9016093a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e06163c67e83088cff10afd6ccd6763"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e06163c67e83088cff10afd6ccd6763"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_compress_polycomp</b> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> **chunk_array[], size_t *num_of_chunks, const double *input_buf, size_t input_size, const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
 <tr class="separator:a9e06163c67e83088cff10afd6ccd6763"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -470,13 +469,29 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>pcomp_decode_chunks</b
 </ul>
 
 <p>Definition in file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="ae62edbee727bde49b23bbbfd933ac6e3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PCOMP_STAT_INVALID_ENCODING</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">1 </div>
+</div><!-- fragment -->
+<p>Definition at line <a class="el" href="libpolycomp_8h_source.html#l00056">56</a> of file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="libpolycomp_8h.html">libpolycomp.h</a></li>
-    <li class="footer">Generated on Fri Oct 23 2015 12:43:43 for Libpolycomp by
+    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
