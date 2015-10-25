@@ -207,6 +207,9 @@ pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
 
     pcomp_poly_fit_data_t* poly_fit
         = malloc(sizeof(pcomp_poly_fit_data_t));
+    if (poly_fit == NULL)
+        abort();
+
     poly_fit->num_of_samples = num_of_samples;
     poly_fit->num_of_coeffs = num_of_coeffs;
     poly_fit->workspace
@@ -393,6 +396,8 @@ pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
                                         pcomp_transform_direction_t dir)
 {
     pcomp_chebyshev_t* chebyshev = malloc(sizeof(pcomp_chebyshev_t));
+    if (chebyshev == NULL)
+        abort();
 
     chebyshev->input = fftw_alloc_real(num_of_samples);
     chebyshev->output = fftw_alloc_real(num_of_samples);
@@ -567,6 +572,8 @@ pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
                     pcomp_polycomp_algorithm_t algorithm)
 {
     pcomp_polycomp_t* params = malloc(sizeof(pcomp_polycomp_t));
+    if (params == NULL)
+	abort();
 
     params->samples_per_chunk = samples_per_chunk;
     params->poly_fit
@@ -853,6 +860,8 @@ pcomp_init_chunk(pcomp_chunk_size_t num_of_samples)
 {
     pcomp_polycomp_chunk_t* chunk
         = malloc(sizeof(pcomp_polycomp_chunk_t));
+    if (chunk == NULL)
+	abort();
 
     chunk->num_of_samples = num_of_samples;
 
@@ -877,11 +886,15 @@ pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
     pcomp_polycomp_chunk_t* chunk
         = malloc(sizeof(pcomp_polycomp_chunk_t));
     const size_t num_of_bytes = sizeof(double) * num_of_samples;
+    if (chunk == NULL)
+	abort();
 
     chunk->num_of_samples = num_of_samples;
 
     chunk->is_compressed = 0;
     chunk->uncompressed = malloc(num_of_bytes);
+    if (chunk->uncompressed == NULL)
+	abort();
     memcpy(chunk->uncompressed, samples, num_of_bytes);
 
     chunk->num_of_poly_coeffs = 0;
@@ -907,6 +920,8 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
         abort();
 
     chunk = malloc(sizeof(pcomp_polycomp_chunk_t));
+    if (chunk == NULL)
+	abort();
 
     chunk->num_of_samples = num_of_samples;
     chunk->is_compressed = 1;
@@ -915,17 +930,23 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     chunk->num_of_poly_coeffs = num_of_poly_coeffs;
     size = num_of_poly_coeffs * sizeof(double);
     chunk->poly_coeffs = malloc(size);
+    if (chunk->poly_coeffs == NULL)
+	abort();
     memcpy(chunk->poly_coeffs, poly_coeffs, size);
 
     chunk->num_of_cheby_coeffs = num_of_cheby_coeffs;
     if (num_of_cheby_coeffs > 0) {
         size = num_of_cheby_coeffs * sizeof(double);
         chunk->cheby_coeffs = malloc(size);
+	if (chunk->cheby_coeffs == NULL)
+	    abort();
         memcpy(chunk->cheby_coeffs, cheby_coeffs, size);
 
         size = pcomp_chunk_cheby_mask_size(num_of_samples)
                * sizeof(uint8_t);
         chunk->cheby_mask = malloc(size);
+	if (chunk->cheby_mask == NULL)
+	    abort();
         memcpy(chunk->cheby_mask, cheby_mask, size);
     }
     else {
@@ -1221,6 +1242,8 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
      */
     positions = malloc(chebyshev->num_of_samples
                        * sizeof(pcomp_chunk_size_t));
+    if (positions == NULL)
+	abort();
     for (idx = 0; idx < chebyshev->num_of_samples; ++idx) {
         positions[idx] = idx;
     }
@@ -1303,6 +1326,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
     if (params->period > 0.0) {
         buf = malloc(num_of_samples * sizeof(input[0]));
+	if (buf == NULL)
+	    abort();
         pcomp_straighten(buf, input, num_of_samples, params->period);
         straightened_input = buf; /* This preserve const-correctness */
     }
@@ -1323,6 +1348,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
          * transform */
         coeffs
             = malloc(sizeof(double) * params->poly_fit->num_of_coeffs);
+	if (coeffs == NULL)
+	    abort();
         polyfit_and_chebyshev(params, coeffs, straightened_input,
                               &max_residual);
         apply_chebyshev
@@ -1333,6 +1360,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
          * as possible */
         if (apply_chebyshev) {
             mask = malloc(pcomp_chunk_cheby_mask_size(num_of_samples));
+	    if (mask == NULL)
+		abort();
             cheby_coeffs_to_retain = trunc_chebyshev(
                 params->chebyshev, params->inv_chebyshev,
                 params->max_allowable_error, mask, max_error);
@@ -1365,6 +1394,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
             chunk->cheby_mask = mask;
             chunk->cheby_coeffs
                 = malloc(sizeof(double) * cheby_coeffs_to_retain);
+	    if (chunk->cheby_coeffs == NULL)
+		abort();
             cheby_idx = 0;
             for (idx = 0; idx < params->chebyshev->num_of_samples;
                  ++idx) {
@@ -1387,6 +1418,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
             free(coeffs);
 
         chunk->uncompressed = malloc(sizeof(double) * num_of_samples);
+	if (chunk->uncompressed == NULL)
+	    abort();
         for (idx = 0; idx < num_of_samples; ++idx)
             chunk->uncompressed[idx] = input[idx];
 
@@ -1480,6 +1513,8 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
 
     *output_buf
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
+    if (*output_buf == NULL)
+	abort();
 
     chunk_params = pcomp_init_polycomp(
         params->samples_per_chunk, params->poly_fit->num_of_coeffs,
@@ -1698,6 +1733,8 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
     READ_FROM_PTR_AND_INCREMENT(*num_of_chunks, cur_ptr, size_t);
     *chunk_array
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
+    if (*chunk_array == NULL)
+	abort();
 
     for (chunk_idx = 0; chunk_idx < *num_of_chunks; ++chunk_idx) {
         uint8_t is_compressed;
