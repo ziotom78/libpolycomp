@@ -935,10 +935,20 @@ struct __pcomp_polycomp_chunk_t {
     uint8_t* cheby_mask;
     size_t num_of_cheby_coeffs; /* This is always less than
                                  * num_of_samples, as the Chebyshev
-                                 * series is truncated. */
+                                 * series is chopped. */
     double* cheby_coeffs;
 };
 
+/** \ingroup poly
+ *
+ * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object
+ *
+ * \param[in] num_of_samples Number of samples that the chunk will be
+ * capable to hold.
+ *
+ * \return A pointer to the newly allocated object. Use \ref
+ * pcomp_free_chunk to free the memory once is no longer needed.
+ */
 pcomp_polycomp_chunk_t*
 pcomp_init_chunk(pcomp_chunk_size_t num_of_samples)
 {
@@ -963,6 +973,21 @@ pcomp_init_chunk(pcomp_chunk_size_t num_of_samples)
     return chunk;
 }
 
+/** \ingroup poly
+ *
+ * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object and
+ * fill it with data in uncompressed form.
+ *
+ * \param[in] num_of_samples Number of samples that the chunk will be
+ * capable to hold.
+ *
+ * \param[in] samples The (uncompressed) samples to copy into the
+ * chunk. After the call, \a input is no longer needed and can be
+ * freed without invalidating the pointer returned by the function.
+ *
+ * \return A pointer to the newly allocated object. Use \ref
+ * pcomp_free_chunk to free the memory once is no longer needed.
+ */
 pcomp_polycomp_chunk_t*
 pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
                               const double* samples)
@@ -991,6 +1016,37 @@ pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
     return chunk;
 }
 
+/** \ingroup poly
+ *
+ * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object and
+ * fill it with data compressed using the polynomial compression
+ * algorithm.
+ *
+ * \param[in] num_of_samples Number of samples that the chunk will be
+ * capable to hold.
+ *
+ * \param[in] num_of_poly_coeffs Number of coefficients of the
+ * interpolating polynomial.
+ *
+ * \param[in] poly_coeffs Pointer to the coefficients of the
+ * interpolating polynomial. Their number must be equal to the
+ * parameter \a num_of_poly_coeffs.
+ *
+ * \param[in] num_of_cheby_coeffs Number of nonzero Chebyshev
+ * coefficients associated with the polynomial fit. This number is
+ * always less than \a num_of_samples. Zero is allowed.
+ *
+ * \param[in] cheby_mask Bitmask representing the position of the
+ * nonzero coefficients in \a cheby_coeffs within the full sequence.
+ * (Use \ref pcomp_mask_get_bit and \ref pcomp_mask_set_bit to
+ * read/write bits in the sequence.)
+ *
+ * \param[in] cheby_coeffs Array of nonzero Chebyshev coefficients.
+ * Their number must be equal to \a num_of_cheby_coeffs.
+ *
+ * \return A pointer to the newly allocated object. Use \ref
+ * pcomp_free_chunk to free the memory once is no longer needed.
+ */
 pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     pcomp_chunk_size_t num_of_samples,
     pcomp_poly_size_t num_of_poly_coeffs, const double* poly_coeffs,
@@ -1041,6 +1097,18 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     return chunk;
 }
 
+/** \ingroup poly
+ *
+ * \brief Free memory associated with a \ref pcomp_poly_chunk_t
+ *
+ * This function releases the memory allocated by one of the following
+ * functions:
+ * - \ref pcomp_init_chunk
+ * - \ref pcomp_init_uncompressed_chunk
+ * - \ref pcomp_init_compressed_chunk
+ *
+ * \param[in] chunk Pointer to the object to be freed.
+ */
 void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
@@ -1061,6 +1129,14 @@ void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
     free(chunk);
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of samples in a chunk
+ *
+ * \param[in] chunk Pointer to the chunk data
+ *
+ * \returns The number of samples
+ */
 pcomp_chunk_size_t
 pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
 {
@@ -1070,6 +1146,17 @@ pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
     return chunk->num_of_samples;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the number of bytes necessary to encode a chunk
+ *
+ * Refer to \ref pcomp_encode_chunks and \ref pcomp_decode_chunks for
+ * further details.
+ *
+ * \param[in] chunk Pointer to the chunk data
+ *
+ * \returns The number of bytes
+ */
 size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
@@ -1103,6 +1190,10 @@ size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
     }
 }
 
+/** \ingroup poly
+ *
+ * \brief Return nonzero if the chunk holds data in uncompressed form.
+ */
 int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
@@ -1111,6 +1202,11 @@ int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
     return chunk->is_compressed;
 }
 
+/** \ingroup poly
+ *
+ * \brief If the chunks contain uncompressed data, returns a pointer
+ * to the first element. Otherwise, return \c NULL.
+ */
 const double*
 pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk)
 {
@@ -1123,56 +1219,112 @@ pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk)
     return chunk->uncompressed;
 }
 
+/** \ingroup poly
+ *
+ * \brief If the chunks contain compressed data, returns the number of
+ * polynomial coefficients used in the compression. Otherwise, return
+ * zero.
+ */
 pcomp_poly_size_t
 pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
         abort();
 
+    if (!chunk->is_compressed)
+        return 0;
+
     return chunk->num_of_poly_coeffs;
 }
 
+/** \ingroup poly
+ *
+ * \brief If the chunks contain compressed data, returns a pointer to
+ * the first element of the array of coefficients of the interpolating
+ * polynomial. Otherwise, return \c NULL.
+ */
 const double*
 pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
         abort();
 
-    if (chunk->num_of_poly_coeffs == 0)
+    if (!chunk->is_compressed || chunk->num_of_poly_coeffs == 0)
         return NULL;
 
     return chunk->poly_coeffs;
 }
 
+/** \ingroup poly
+ *
+ * \brief If the chunks contain compressed data, returns the number of
+ * nonzero Chebyshev coefficients held in the chunk. Otherwise, return
+ * zero.
+ */
 pcomp_chunk_size_t
 pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
         abort();
 
+    if (!chunk->is_compressed)
+        return 0;
+
     return chunk->num_of_cheby_coeffs;
 }
 
+/** \ingroup poly
+ *
+ * \brief If the chunks contain compressed data, returns a pointer to
+ * the first element of the Chebyshev transform of the fit residuals.
+ * Otherwise, return \c NULL.
+ */
 const double*
 pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
 {
     if (chunk == NULL)
         abort();
 
-    if (chunk->num_of_cheby_coeffs == 0)
+    if (!chunk->is_compressed || chunk->num_of_cheby_coeffs == 0)
         return NULL;
 
     return chunk->cheby_coeffs;
 }
 
-/* Return the number of bytes needed to store the mask of Chebyshev
- * coefficients */
+/** \ingroup poly
+ *
+ * \brief Return the number of bytes required for the bitmask of
+ * nonzero Chebyshev coefficients.
+ *
+ * The polynomial compression compresses Chebyshev transforms by
+ * saving only those coefficients that are significantly different
+ * from zero. In order to keep track of the position of such
+ * coefficients in the full array, a bit mask is used. This function
+ * determines how many bytes are required for such mask, which is
+ * internally represented by Libpolycomp as an array of \c uint8_t
+ * values.
+ *
+ * \param[in] chunk_size Number of samples in the chunk
+ *
+ * \returns The number of bytes (\c uint8_t values) required for the
+ * mask.
+ */
 size_t pcomp_chunk_cheby_mask_size(pcomp_chunk_size_t chunk_size)
 {
     return chunk_size / CHAR_BIT
            + ((chunk_size % CHAR_BIT) > 0 ? 1 : 0);
 }
 
+/** \ingroup poly
+ *
+ * \brief Return a pointer to the bitmask of nonzero Chebyshev
+ * coefficients for a chunk
+ *
+ * \param[in] chunk Pointer to the chunk
+ *
+ * \returns A pointer to the array of bytes which make up the mask.
+ * Use \ref pcomp_mask_get_bit to access the values of each bit.
+ */
 const uint8_t*
 pcomp_chunk_cheby_mask(const pcomp_polycomp_chunk_t* chunk)
 {
@@ -1188,6 +1340,10 @@ pcomp_chunk_cheby_mask(const pcomp_polycomp_chunk_t* chunk)
  *
  * \brief Compute a polynomial fit of the data in \a input and a
  * Chebyshev transform of the residuals
+ *
+ * Note that this function *always* computes the Chebyshev transform
+ * of the data, even if there is a perfect fit between the polynomial
+ * and the input data.
  *
  * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
  * initialized by \ref pcomp_init_polycomp.
@@ -1297,18 +1453,41 @@ static void sort_positions(pcomp_chunk_size_t positions[],
     sort_positions(positions + front, coeffs, num - front);
 }
 
-/** \ingrou poly
+/** \ingroup poly
+ *
+ * \brief Return the value of the bit at the position \a pos in the
+ * bitmask \a mask.
+ *
+ * \param[in] mask Pointer to the first byte of the mask
+ *
+ * \param[in] pos Zero-based index of the bit in the mask
+ *
+ * \returns Either 0 or 1, depending on the value of the bit.
  */
-int pcomp_mask_get_bit(uint8_t* mask, size_t pos)
+int pcomp_mask_get_bit(const uint8_t* mask, size_t pos)
 {
     return (mask[pos / CHAR_BIT] & (1 << (pos % CHAR_BIT))) != 0;
 }
 
-/** \ingrou poly
+/** \ingroup poly
+ *
+ * \brief Set the value of the bit at position \a pos in the bitmask \a
+ *
+ * \param[inout] mask The bitmask to modify
+ *
+ * \param[in] pos Zero-based index of the byte to set
+ *
+ * \param[in] value Value of the bit (either 0 or 1; any value
+ * different from zero is treated as equal to 1)
  */
-void pcomp_mask_set_bit(uint8_t* mask, size_t pos)
+void pcomp_mask_set_bit(uint8_t* mask, size_t pos, int value)
 {
-    mask[pos / CHAR_BIT] |= (1 << (pos % CHAR_BIT));
+    if (value != 0) {
+        mask[pos / CHAR_BIT] |= (1 << (pos % CHAR_BIT));
+    }
+    else {
+        mask[pos / CHAR_BIT] &= ~(((uint8_t)1) << (pos % CHAR_BIT));
+    }
 }
 
 static double compute_discrepancy(double a[], double b[], size_t num)
@@ -1330,10 +1509,33 @@ static double compute_discrepancy(double a[], double b[], size_t num)
  * approximate a Chebyshev transform with an error less than \a
  * max_allowable_error.
  *
- * On exit, the bits in "bitmask" will be set to 1 in correspondence
+ * On exit, the bits in \a bitmask will be set to 1 in correspondence
  * of every Chebyshev coefficient that must be retained. The function
  * returns the number of Chebyshev coefficients to retain (i.e., the
- * number of bits in "mask" that have been set to 1).*/
+ * number of bits in \a mask that have been set to 1).
+ *
+ * \param[in] chebyshev Pointer to a \ref pcomp_chebyshev_t structure
+ * used to compute the forward Chebyshev transform (from the space of
+ * the fit residuals to the Chebyshev space)
+ *
+ * \param[in] inv_chebyshev Pointer to a \ref pcomp_chebyshev_t
+ * structure representing the inverse transform of \a chebyshev.
+ *
+ * \param[in] max_allowable_error The maximum allowed discrepancy for
+ * the chopped Chebyshev, as measured in the space of the fit
+ * residuals.
+ *
+ * \param[out] mask Bitmask that will contain the position of the
+ * unchopped Chebyshev terms of the transform of the fit residuals.
+ * Use \ref pcomp_mask_get_bit to access each element.
+ *
+ * \param[out] max_error If not \c NULL, it will be set to the maximum
+ * error due to the chopping of the Chebyshev transform represented by
+ * \a mask.
+ *
+ * \returns The number of bits equal to one in \a mask, i.e., the
+ * number of unchopped Chebyshev coefficients.
+ */
 size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
                                  pcomp_chebyshev_t* inv_chebyshev,
                                  double max_allowable_error,
@@ -1391,7 +1593,7 @@ size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
 
         inv_chebyshev->input[positions[cur_coeff]]
             = chebyshev->output[positions[cur_coeff]];
-        pcomp_mask_set_bit(mask, positions[cur_coeff]);
+        pcomp_mask_set_bit(mask, positions[cur_coeff], 1);
         ++cur_coeff;
 
         pcomp_run_chebyshev(inv_chebyshev, inv_chebyshev->dir, NULL,
@@ -1427,6 +1629,57 @@ static void clear_chunk(pcomp_polycomp_chunk_t* chunk)
         free(chunk->cheby_coeffs);
 }
 
+/** \ingroup poly
+ *
+ * \brief Compress the first \a num_of_samples elements in \a input
+ * and store them in \a chunk.
+ *
+ * The function determines if the data in \a input can be efficiently
+ * compressed using polynomial compression with the parameters
+ * described by \a params. If it is so, it stores the compressed data
+ * in \a chunk. If the compression ratio is small or equal to one, or
+ * if the compression error is too large, the function copies the data
+ * in \a input into \a chunk in uncompressed format.
+ *
+ * The following example shows how to use this function together with
+ * \ref pcomp_init_chunk:
+ *
+ * \code{.c}
+ * double input[] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0,
+ *                    7.0, 8.0, 9.0, 11.0 };
+ * size_t input_size = sizeof(input) / sizeof(input[0]);
+ * pcomp_polycomp_chunk_t* chunk;
+ * pcomp_polycomp_t* polycomp;
+ * double max_error;
+ * size_t idx;
+ *
+ * polycomp = pcomp_init_polycomp(input_size, 2, 1.0e-5,
+ *                                PCOMP_ALG_USE_CHEBYSHEV);
+ * chunk = pcomp_init_chunk(input_size);
+ *
+ * pcomp_run_polycomp_on_chunk(polycomp, input, input_size, chunk,
+ *                             &max_error);
+ * \endcode
+ *
+ * \param[in] params Pointer to a \a pcomp_polycomp_t structure
+ * (created using \ref pcomp_init_polycomp) which provides the
+ * parameters of the compression.
+ *
+ * \param[in] input The sequence of numbers to compress. Their number
+ * is equal to the parameter \a num_of_samples
+ *
+ * \param[in] num_of_samples Number of values in \a input to compress
+ *
+ * \param[inout] chunk The chunk that will contain the data, either in
+ * compressed or uncompressed format. It must have already been
+ * initialized via a call to \ref pcomp_init_chunk.
+ *
+ * \param[out] max_error On exit, the function writes the compression
+ * error here. It can be \c NULL.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS (if no errors occurred), or
+ * the error code.
+ */
 int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
                                 const double* input,
                                 pcomp_chunk_size_t num_of_samples,
@@ -1481,8 +1734,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
             = (max_residual >= params->max_allowable_error)
               && (params->algorithm != PCOMP_ALG_NO_CHEBYSHEV);
 
-        /* If the Chebyshev transform is needed, truncate it as much
-         * as possible */
+        /* If the Chebyshev transform is needed, chop it as much as
+         * possible */
         if (apply_chebyshev) {
             mask = malloc(pcomp_chunk_cheby_mask_size(num_of_samples));
             if (mask == NULL)
@@ -1559,6 +1812,41 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
     return PCOMP_STAT_SUCCESS;
 }
 
+/** \ingroup poly
+ *
+ * \brief Decompress the data in a chunk
+ *
+ * This function performs the decompression of a chunk, and it is the
+ * counterpart of \ref pcomp_run_polycomp_on_chunk. Here is an
+ * example:
+ *
+ * \code{.c}
+ * double* decompr;
+ * pcomp_chebyshev_t* inv_chebyshev;
+ *
+ * // We assume that "chunk" has already been initialized somewhere
+ * decompr = malloc(sizeof(double) *
+ *                  pcomp_chunk_num_of_samples(chunk));
+ *
+ * inv_chebyshev = pcomp_init_chebyshev(input_size,
+ *                                      PCOMP_TD_INVERSE);
+ * pcomp_decompress_polycomp_chunk(decompr, chunk, inv_chebyshev);
+ * \endcode
+ *
+ * \param[out] output Pointer to the array that will contain the
+ * uncompressed data
+ *
+ * \param[in] chunk The chunk to decompress
+ *
+ * \param[in] inv_chebyshev Pointer to a \ref pcomp_chebyshev_t object
+ * that performs the inverse Chebyshev transform. The function does
+ * not allocate an object of this kind because in this way such
+ * objects can be reused on subsequent calls to \ref
+ * pcomp_decompress_polycomp_chunk.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS if no error occurred, or
+ * the error code.
+ */
 int pcomp_decompress_polycomp_chunk(double* output,
                                     const pcomp_polycomp_chunk_t* chunk,
                                     pcomp_chebyshev_t* inv_chebyshev)
@@ -1614,10 +1902,69 @@ int pcomp_decompress_polycomp_chunk(double* output,
     return PCOMP_STAT_SUCCESS;
 }
 
-/***********************************************************************
+/** \ingroup poly
  *
+ * \brief Compress the array \a input_buf using polynomial compression
+ *
+ * This function compresses the first \a input_size elements of the
+ * array \a input_buf using the polynomial compression scheme. The
+ * output is an array of chunks saved in \a output_buf (the number of
+ * elements of this array is saved in \a num_of_chunks). The \a params
+ * variable specifies the parameters used by the compression
+ * algorithm.
+ *
+ * Here is an example showing how to compress a sequence of numbers in
+ * the variable \a input:
+ *
+ * \code{.c}
+ * double input[] = { 1.0, 2.0, 3.0, 4.0, 3.0, 2.0,
+ *                    1.0, 2.0, 6.0, 7.0, 9.0 };
+ * size_t input_size = sizeof(input) / sizeof(input[0]);
+ * double* decompr;
+ * size_t decompr_size;
+ * pcomp_polycomp_chunk_t** chunks;
+ * size_t num_of_chunks;
+ * pcomp_polycomp_t* params;
+ * size_t idx;
+ *
+ * params = pcomp_init_polycomp(4, 2, 1.0e-5, PCOMP_ALG_USE_CHEBYSHEV);
+ * pcomp_compress_polycomp(&chunks, &num_of_chunks, input, input_size,
+ *                         params);
+ *
+ * // Print some information for each chunk
+ * for(idx = 0; idx < num_of_chunks; ++idx) {
+ *     printf("Chunk %lu of %lu: %s\n", idx + 1, num_of_chunks,
+ *            pcomp_chunk_is_compressed(chunks[idx]) ?
+ *                "compressed" : "uncompressed");
+ * }
+ * \endcode
+ *
+ * Once the sequence \a input_buf is compressed, the array of chunks
+ * can either be analyzed (e.g., using a \c for loop as in the example
+ * above) or encoded using the \ref pcomp_encode_chunks. Once the
+ * variable \a output_buf is no longer used, it should be freed via a
+ * call to \ref pcomp_free_chunks.
+ *
+ * \param[out] output_buf Pointer to a variable that will receive the
+ * address of an array of \ref pcomp_polycomp_chunk_t variables
+ * created by the function. Such array contains the whole set of data
+ * in \a input in compressed format. The array can be freed via a call
+ * to \ref pcomp_free_chunks.
+ *
+ * \param[out] num_of_chunks On output, the variable will contain the
+ * number of chunks saved in \a output_buf.
+ *
+ * \param[in] input_buf Pointer to the array of numbers to compress.
+ *
+ * \param[in] input_size Number of elements in \a input_buf to
+ * compress.
+ *
+ * \param[in] params Parameters used for the compression. The variable
+ * must have been created via a call to \ref pcomp_init_polycomp.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS if no error occurred, or
+ * the error code.
  */
-
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
                             size_t* num_of_chunks,
                             const double* input_buf, size_t input_size,
@@ -1674,6 +2021,20 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
     return PCOMP_STAT_SUCCESS;
 }
 
+/** \ingroup poly
+ *
+ * \brief Compute the sum of the number of samples encoded in \a
+ *chunk_array
+ *
+ * \param[in] chunk_array Array of \ref pcomp_polycomp_chunk_t
+ * variables. Typically, such array is created via a call to \ref
+ * pcomp_compress_polycomp.
+ *
+ * \param[in] num_of_chunks Number of elements in \a chunk_array
+ *
+ * \returns The overall number of samples encoded in the sequence of
+ * chunks
+ */
 size_t
 pcomp_total_num_of_samples(pcomp_polycomp_chunk_t* const chunk_array[],
                            size_t num_of_chunks)
@@ -1693,6 +2054,25 @@ pcomp_total_num_of_samples(pcomp_polycomp_chunk_t* const chunk_array[],
     return total;
 }
 
+/** \ingroup poly
+ *
+ * \brief Decompress a sequence of chunks
+ *
+ * This function is the counterpart for \ref pcomp_compress_polycomp.
+ *
+ * \param[out] output_buf Pointer to the variable that will hold the
+ * uncompressed data. It must have room for a number of elements at
+ * least equal to the return value of \ref pcomp_total_num_of_samples.
+ *
+ * \param[in] chunk_array Array of chunks holding the data in
+ * compressed format.
+ *
+ * \param[in] num_of_chunks Number of elements in the array \a
+ * chunk_array.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS if no error occurred, or
+ * the error code.
+ */
 int pcomp_decompress_polycomp(
     double* output_buf, pcomp_polycomp_chunk_t* const chunk_array[],
     size_t num_of_chunks)
@@ -1730,6 +2110,16 @@ int pcomp_decompress_polycomp(
     return PCOMP_STAT_SUCCESS;
 }
 
+/** \ingroup poly
+ *
+ * \brief Free an array of chunks
+ *
+ * \param[in] chunk_array An array of chunks. This variable must have
+ * been allocated by a call to \ref pcomp_compress_polycomp.
+ *
+ * \param[in] num_of_chunks Number of elements in the array \a
+ * chunk_array
+ */
 void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
                        size_t num_of_chunks)
 {
@@ -1745,6 +2135,23 @@ void pcomp_free_chunks(pcomp_polycomp_chunk_t* chunk_array[],
     free(chunk_array);
 }
 
+/** \ingroup poly
+ *
+ * \brief Number of bytes required by \ref pcomp_encode_chunks
+ *
+ * This function computes the number of bytes required to encode the
+ * array of chunks in the variable \a chunks. Unlike functions like
+ * \ref pcomp_rle_bufsize, this function provides an exact estimate,
+ * not an upper bound.
+ *
+ * \param[in] chunks Array of chunks to encode. This should have been
+ * initialized via a call to \ref pcomp_compress_polycomp.
+ *
+ * \param[in] num_of_chunks Number of elements in \a chunks.
+ *
+ * \returns The number of bytes required for the output buffer used by
+ * \ref pcomp_encode_chunks.
+ */
 size_t pcomp_chunks_num_of_bytes(pcomp_polycomp_chunk_t* const chunks[],
                                  size_t num_of_chunks)
 {
@@ -1769,6 +2176,37 @@ size_t pcomp_chunks_num_of_bytes(pcomp_polycomp_chunk_t* const chunks[],
         buf = ((type*)buf) + 1;                                        \
     }
 
+/** \ingroup poly
+ *
+ * \brief Encode a list of chunks into a sequence of raw bytes
+ *
+ * This function transforms an array of instances to \ref
+ * pcomp_polycomp_chunk_t variables into a sequence of raw bytes,
+ * suitable for I/O. It can be used together with \ref
+ * pcomp_compress_polycomp to compress a dataset and save it into a
+ * binary file.
+ *
+ * To decode byte sequences produced by this function, use \ref
+ * pcomp_decode_chunks.
+ *
+ * \param[out] buf Pointer to a memory buffer that will receive the
+ * result of the encoding. It must have room for a number of bytes (\c
+ * uint8_t) at least equal to the return value of \ref
+ * pcomp_chunks_num_of_bytes.
+ *
+ * \param[inout] buf_size On input, it should contain the number of
+ * bytes that can be written in \a buf. On exit, it will contain the
+ * number of bytes actually written. The latter number is equal to the
+ * value returned by \ref pcomp_chunks_num_of_bytes.
+ *
+ * \param[in] chunk_array Array of chunks to encode
+ *
+ * \param[in] num_of_chunks Number of elements in the array \a
+ * chunk_array.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS if no error occurred, or
+ * the error code.
+ */
 int pcomp_encode_chunks(void* buf, size_t* buf_size,
                         pcomp_polycomp_chunk_t* const chunk_array[],
                         size_t num_of_chunks)
@@ -1838,6 +2276,31 @@ int pcomp_encode_chunks(void* buf, size_t* buf_size,
         pointer = ((type*)(pointer)) + 1;                              \
     }
 
+/** \ingroup poly
+ *
+ * \brief Decode a byte sequence created by \ref pcomp_encode_chunks
+ * into an array of chunks.
+ *
+ * This function can be used to read from a binary file or a socket a
+ * sequence of chunks encoded by \ref pcomp_encode_chunks. The
+ * function allocates memory for an array of \ref
+ * pcomp_polycomp_chunk_t structures and returns it in the variable \a
+ * chunk_array. The latter variable must be freed using \ref
+ * pcomp_free_chunks once it is no longer needed.
+ *
+ * This function is the counterpart for \ref pcomp_encode_chunks.
+ *
+ * \param[out] chunk_array Pointer to an array that will contain the
+ * chunks decoded from \a buf.
+ *
+ * \param[out] num_of_chunks On exit, this variable will hold the
+ * number of chunks saved in \a chunk_array.
+ *
+ * \param[in] Pointer to the byte sequence to decode.
+ *
+ * \returns Either \ref PCOMP_STAT_SUCCESS if no error occurred, or
+ * the error code.
+ */
 int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
                         size_t* num_of_chunks, const void* buf)
 {

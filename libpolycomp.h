@@ -452,8 +452,8 @@ int pcomp_polyfit_and_chebyshev(pcomp_polycomp_t* params,
                                 const double* input,
                                 double* max_residual);
 
-int pcomp_mask_get_bit(uint8_t* mask, size_t pos);
-void pcomp_mask_set_bit(uint8_t* mask, size_t pos);
+int pcomp_mask_get_bit(const uint8_t* mask, size_t pos);
+void pcomp_mask_set_bit(uint8_t* mask, size_t pos, int value);
 size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
                                  pcomp_chebyshev_t* inv_chebyshev,
                                  double max_allowable_error,
