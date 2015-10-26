@@ -53,8 +53,9 @@
  * Error codes
  */
 #define PCOMP_STAT_SUCCESS 0 /** \brief All ok */
-#define PCOMP_STAT_INVALID_ENCODING 1 /** \brief Decompression error   \
-                                         */
+#define PCOMP_STAT_INVALID_ENCODING                                    \
+    1 /** \brief Decompression error                                   \
+         */
 #define PCOMP_STAT_INVALID_BUFFER                                      \
     2 /** \brief Output buffer too small */
 #define PCOMP_STAT_INVALID_FIT 3 /** \brief Least-square fit error */
@@ -335,6 +336,8 @@ pcomp_chebyshev_direction(const pcomp_chebyshev_t* plan);
 int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
                         pcomp_transform_direction_t dir, double* output,
                         const double* input);
+const double* pcomp_chebyshev_input(const pcomp_chebyshev_t* plan);
+const double* pcomp_chebyshev_output(const pcomp_chebyshev_t* plan);
 
 /***********************************************************************
  * Polynomial compression (low-level functions)
@@ -436,9 +439,25 @@ pcomp_polycomp_num_of_poly_coeffs(const pcomp_polycomp_t* params);
 double pcomp_polycomp_max_error(const pcomp_polycomp_t* params);
 pcomp_polycomp_algorithm_t
 pcomp_polycomp_algorithm(const pcomp_polycomp_t* params);
+pcomp_chebyshev_t*
+pcomp_polycomp_forward_cheby(const pcomp_polycomp_t* params);
+pcomp_chebyshev_t*
+pcomp_polycomp_backward_cheby(const pcomp_polycomp_t* params);
 double pcomp_polycomp_period(const pcomp_polycomp_t* params);
 
 void pcomp_polycomp_set_period(pcomp_polycomp_t* params, double period);
+
+int pcomp_polyfit_and_chebyshev(pcomp_polycomp_t* params,
+                                double* coeffs, double* cheby_residuals,
+                                const double* input,
+                                double* max_residual);
+
+int pcomp_mask_get_bit(uint8_t* mask, size_t pos);
+void pcomp_mask_set_bit(uint8_t* mask, size_t pos);
+size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
+                                 pcomp_chebyshev_t* inv_chebyshev,
+                                 double max_allowable_error,
+                                 uint8_t* mask, double* max_error);
 
 int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** chunk_array[],
                             size_t* num_of_chunks,

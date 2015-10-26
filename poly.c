@@ -83,14 +83,14 @@
  * the compression. The functions that allow to allocate/free/manage
  * this structure are the following:
  *
- * - \ref pcomp_init_polycomp
- * - \ref pcomp_free_polycomp
+ * - \ref pcomp_init_polycomp and \ref pcomp_free_polycomp
  * - \ref pcomp_polycomp_samples_per_chunk
  * - \ref pcomp_polycomp_num_of_poly_coeffs
  * - \ref pcomp_polycomp_max_error
  * - \ref pcomp_polycomp_algorithm
- * - \ref pcomp_polycomp_period
- * - \ref pcomp_polycomp_set_period
+ * - \ref pcomp_polycomp_forward_cheby and \ref
+ *   pcomp_polycomp_backward_cheby
+ * - \ref pcomp_polycomp_period and \ref pcomp_polycomp_set_period
  *
  * Moreover, the function implements a number of facilities to compute
  * polynomial fits and Chebyshev transforms of discrete data.
@@ -138,6 +138,10 @@
  *
  * - \ref pcomp_run_chebyshev applies the Chebyshev transform (either in
  *   the forward or inverse direction) to a dataset.
+ *
+ * - \ref pcomp_chebyshev_input and \ref pcomp_chebyshev_output allow
+ *   to access to the input and output data used by the last call to
+ *   \ref pcomp_run_chebyshev.
  */
 
 /**********************************************************************/
@@ -533,6 +537,48 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
     return PCOMP_STAT_SUCCESS;
 }
 
+/** \ingroup poly
+ *
+ * \brief Return the input data used in the last call to \ref
+ *pcomp_run_chebyshev
+ *
+ * If \ref pcomp_run_chebyshev was never called, the array returned by
+ * this function contains garbage.
+ *
+ * \param[in] plan Pointer to a Chebyshev plan created by \ref
+ * pcomp_init_chebyshev
+ *
+ * \return A pointer to the first element of the array of elements
+ * used as input by the last call to \ref pcomp_run_chebyshev.
+ */
+const double* pcomp_chebyshev_input(const pcomp_chebyshev_t* plan)
+{
+    if (plan == NULL)
+        abort();
+    return plan->input;
+}
+
+/** \ingroup poly
+ *
+ * \brief Return the output (Chebyshev transform) of the last call to
+ *\ref pcomp_run_chebyshev
+ *
+ * If \ref pcomp_run_chebyshev was never called, the array returned by
+ * this function contains garbage.
+ *
+ * \param[in] plan Pointer to a Chebyshev plan created by \ref
+ * pcomp_init_chebyshev
+ *
+ * \return A pointer to the first element of the array of elements
+ * containing the output of the last call to \ref pcomp_run_chebyshev.
+ */
+const double* pcomp_chebyshev_output(const pcomp_chebyshev_t* plan)
+{
+    if (plan == NULL)
+        abort();
+    return plan->output;
+}
+
 /***********************************************************************
  * Types and functions used for applying the combined
  * fitting/Chebyshev transforms
@@ -573,7 +619,7 @@ pcomp_init_polycomp(pcomp_chunk_size_t samples_per_chunk,
 {
     pcomp_polycomp_t* params = malloc(sizeof(pcomp_polycomp_t));
     if (params == NULL)
-	abort();
+        abort();
 
     params->samples_per_chunk = samples_per_chunk;
     params->poly_fit
@@ -688,6 +734,44 @@ pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
         abort();
 
     return params->algorithm;
+}
+
+/** \ingroup poly
+ *
+ * \brief Return a pointer to a \ref pcomp_chebyshev_t structure
+ * representing the forward Chebyshev transform.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The algorithm to be used by the compressor.
+ */
+pcomp_chebyshev_t*
+pcomp_polycomp_forward_cheby(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->chebyshev;
+}
+
+/** \ingroup poly
+ *
+ * \brief Return a pointer to a \ref pcomp_chebyshev_t structure
+ * representing the forward Chebyshev transform.
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * containing the compression parameters
+ *
+ * \returns The algorithm to be used by the compressor.
+ */
+pcomp_chebyshev_t*
+pcomp_polycomp_backward_cheby(const pcomp_polycomp_t* params)
+{
+    if (params == NULL)
+        abort();
+
+    return params->inv_chebyshev;
 }
 
 /** \ingroup poly
@@ -861,7 +945,7 @@ pcomp_init_chunk(pcomp_chunk_size_t num_of_samples)
     pcomp_polycomp_chunk_t* chunk
         = malloc(sizeof(pcomp_polycomp_chunk_t));
     if (chunk == NULL)
-	abort();
+        abort();
 
     chunk->num_of_samples = num_of_samples;
 
@@ -887,14 +971,14 @@ pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
         = malloc(sizeof(pcomp_polycomp_chunk_t));
     const size_t num_of_bytes = sizeof(double) * num_of_samples;
     if (chunk == NULL)
-	abort();
+        abort();
 
     chunk->num_of_samples = num_of_samples;
 
     chunk->is_compressed = 0;
     chunk->uncompressed = malloc(num_of_bytes);
     if (chunk->uncompressed == NULL)
-	abort();
+        abort();
     memcpy(chunk->uncompressed, samples, num_of_bytes);
 
     chunk->num_of_poly_coeffs = 0;
@@ -921,7 +1005,7 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
 
     chunk = malloc(sizeof(pcomp_polycomp_chunk_t));
     if (chunk == NULL)
-	abort();
+        abort();
 
     chunk->num_of_samples = num_of_samples;
     chunk->is_compressed = 1;
@@ -931,22 +1015,22 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     size = num_of_poly_coeffs * sizeof(double);
     chunk->poly_coeffs = malloc(size);
     if (chunk->poly_coeffs == NULL)
-	abort();
+        abort();
     memcpy(chunk->poly_coeffs, poly_coeffs, size);
 
     chunk->num_of_cheby_coeffs = num_of_cheby_coeffs;
     if (num_of_cheby_coeffs > 0) {
         size = num_of_cheby_coeffs * sizeof(double);
         chunk->cheby_coeffs = malloc(size);
-	if (chunk->cheby_coeffs == NULL)
-	    abort();
+        if (chunk->cheby_coeffs == NULL)
+            abort();
         memcpy(chunk->cheby_coeffs, cheby_coeffs, size);
 
         size = pcomp_chunk_cheby_mask_size(num_of_samples)
                * sizeof(uint8_t);
         chunk->cheby_mask = malloc(size);
-	if (chunk->cheby_mask == NULL)
-	    abort();
+        if (chunk->cheby_mask == NULL)
+            abort();
         memcpy(chunk->cheby_mask, cheby_mask, size);
     }
     else {
@@ -1098,16 +1182,43 @@ pcomp_chunk_cheby_mask(const pcomp_polycomp_chunk_t* chunk)
     return chunk->cheby_mask;
 }
 
-/***********************************************************************
- * This routine implements the core of the "polynomial compression": a
- * polynomial fitting plus a Chebyshev transform on the residuals. It
- * is a static function because we're going to wrap a nicer interface
- * around it.
+/**********************************************************************/
+
+/** \ingroup poly
+ *
+ * \brief Compute a polynomial fit of the data in \a input and a
+ * Chebyshev transform of the residuals
+ *
+ * \param[in] params Pointer to a \ref pcomp_polycomp_t structure
+ * initialized by \ref pcomp_init_polycomp.
+ *
+ * \param[out] coeffs Pointer to the array that on exit will hold the
+ * coefficients of the best-fit polynomial. It must have enough room
+ * for a number of elements equal to the return value of \ref
+ * pcomp_polycomp_num_of_poly_coeffs.
+ *
+ * \param[out] cheby_residuals Pointer to an array that on exit will
+ * contain the Chebyshev transform of the residuals of the fit. It can
+ * be \c NULL; in any case, these numbers can be obtained by the use
+ * of a call to \ref pcomp_polycomp_forward_cheby and \ref
+ * pcomp_chebyshev_output.
+ *
+ * \param[in] input Pointer to the array of values to be transformed.
+ * The number of values used is equal to the return value of the
+ * function \ref pcomp_polycomp_samples_per_chunk.
+ *
+ * \param[out] max_residual Pointer to a variable that will hold the
+ * maximum absolute value of the discrepancy between each sample in \a
+ * input and the polynomial fit. It can be \c NULL.
+ *
+ * \returns If no errors occurred, \ref PCOMP_STAT_SUCCESS. Otherwise,
+ * the function returns the code of the error.
  */
 
-static int polyfit_and_chebyshev(pcomp_polycomp_t* params,
-                                 double* coeffs, const double* input,
-                                 double* max_residual)
+int pcomp_polyfit_and_chebyshev(pcomp_polycomp_t* params,
+                                double* coeffs, double* cheby_residuals,
+                                const double* input,
+                                double* max_residual)
 {
     size_t idx;
     int status;
@@ -1136,6 +1247,13 @@ static int polyfit_and_chebyshev(pcomp_polycomp_t* params,
     if (params->algorithm != PCOMP_ALG_NO_CHEBYSHEV) {
         status = pcomp_run_chebyshev(
             params->chebyshev, params->chebyshev->dir, NULL, NULL);
+
+        if (cheby_residuals != NULL
+            && cheby_residuals != params->chebyshev->output) {
+            memcpy(cheby_residuals, params->chebyshev->output,
+                   sizeof(params->chebyshev->output[0])
+                       * params->chebyshev->num_of_samples);
+        }
     }
 
     return status;
@@ -1179,12 +1297,16 @@ static void sort_positions(pcomp_chunk_size_t positions[],
     sort_positions(positions + front, coeffs, num - front);
 }
 
-static int get_bit(uint8_t* mask, size_t pos)
+/** \ingrou poly
+ */
+int pcomp_mask_get_bit(uint8_t* mask, size_t pos)
 {
     return (mask[pos / CHAR_BIT] & (1 << (pos % CHAR_BIT))) != 0;
 }
 
-static void set_bit(uint8_t* mask, size_t pos)
+/** \ingrou poly
+ */
+void pcomp_mask_set_bit(uint8_t* mask, size_t pos)
 {
     mask[pos / CHAR_BIT] |= (1 << (pos % CHAR_BIT));
 }
@@ -1202,14 +1324,20 @@ static double compute_discrepancy(double a[], double b[], size_t num)
     return err;
 }
 
-/* On exit, the bits in "bitmask" will be set to 1 in correspondence of
- * every Chebyshev coefficient that must be retained. The function
+/** \ingroup poly
+ *
+ * \brief Find the smallest subset of Chebyshev coefficients that can
+ * approximate a Chebyshev transform with an error less than \a
+ * max_allowable_error.
+ *
+ * On exit, the bits in "bitmask" will be set to 1 in correspondence
+ * of every Chebyshev coefficient that must be retained. The function
  * returns the number of Chebyshev coefficients to retain (i.e., the
  * number of bits in "mask" that have been set to 1).*/
-static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
-                              pcomp_chebyshev_t* inv_chebyshev,
-                              double max_allowable_error, uint8_t* mask,
-                              double* max_error)
+size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
+                                 pcomp_chebyshev_t* inv_chebyshev,
+                                 double max_allowable_error,
+                                 uint8_t* mask, double* max_error)
 {
     size_t idx;
     size_t cur_coeff = 0;
@@ -1243,7 +1371,7 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
     positions = malloc(chebyshev->num_of_samples
                        * sizeof(pcomp_chunk_size_t));
     if (positions == NULL)
-	abort();
+        abort();
     for (idx = 0; idx < chebyshev->num_of_samples; ++idx) {
         positions[idx] = idx;
     }
@@ -1263,7 +1391,7 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
 
         inv_chebyshev->input[positions[cur_coeff]]
             = chebyshev->output[positions[cur_coeff]];
-        set_bit(mask, positions[cur_coeff]);
+        pcomp_mask_set_bit(mask, positions[cur_coeff]);
         ++cur_coeff;
 
         pcomp_run_chebyshev(inv_chebyshev, inv_chebyshev->dir, NULL,
@@ -1282,10 +1410,8 @@ static size_t trunc_chebyshev(pcomp_chebyshev_t* chebyshev,
     return cur_coeff;
 }
 
-/* This function is used internally by
- * "pcomp_run_polycomp_on_chunk"
- * and "pcomp_decompress_poly_chunk" to make sure there is no
- * memory
+/* This function is used internally by "pcomp_run_polycomp_on_chunk"
+ * and "pcomp_decompress_poly_chunk" to make sure there is no memory
  * leak on the chunk passed as argument. */
 static void clear_chunk(pcomp_polycomp_chunk_t* chunk)
 {
@@ -1326,8 +1452,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
 
     if (params->period > 0.0) {
         buf = malloc(num_of_samples * sizeof(input[0]));
-	if (buf == NULL)
-	    abort();
+        if (buf == NULL)
+            abort();
         pcomp_straighten(buf, input, num_of_samples, params->period);
         straightened_input = buf; /* This preserve const-correctness */
     }
@@ -1336,8 +1462,7 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
     }
 
     if (num_of_samples <= params->poly_fit->num_of_coeffs) {
-        /* The number of element is so small that is better to
-         * store
+        /* The number of element is so small that is better to store
          * them uncompressed */
         chunk->is_compressed = 0;
     }
@@ -1348,10 +1473,10 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
          * transform */
         coeffs
             = malloc(sizeof(double) * params->poly_fit->num_of_coeffs);
-	if (coeffs == NULL)
-	    abort();
-        polyfit_and_chebyshev(params, coeffs, straightened_input,
-                              &max_residual);
+        if (coeffs == NULL)
+            abort();
+        pcomp_polyfit_and_chebyshev(params, coeffs, NULL,
+                                    straightened_input, &max_residual);
         apply_chebyshev
             = (max_residual >= params->max_allowable_error)
               && (params->algorithm != PCOMP_ALG_NO_CHEBYSHEV);
@@ -1360,9 +1485,9 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
          * as possible */
         if (apply_chebyshev) {
             mask = malloc(pcomp_chunk_cheby_mask_size(num_of_samples));
-	    if (mask == NULL)
-		abort();
-            cheby_coeffs_to_retain = trunc_chebyshev(
+            if (mask == NULL)
+                abort();
+            cheby_coeffs_to_retain = pcomp_find_chebyshev_mask(
                 params->chebyshev, params->inv_chebyshev,
                 params->max_allowable_error, mask, max_error);
 
@@ -1394,12 +1519,12 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
             chunk->cheby_mask = mask;
             chunk->cheby_coeffs
                 = malloc(sizeof(double) * cheby_coeffs_to_retain);
-	    if (chunk->cheby_coeffs == NULL)
-		abort();
+            if (chunk->cheby_coeffs == NULL)
+                abort();
             cheby_idx = 0;
             for (idx = 0; idx < params->chebyshev->num_of_samples;
                  ++idx) {
-                if (get_bit(mask, idx)) {
+                if (pcomp_mask_get_bit(mask, idx)) {
                     chunk->cheby_coeffs[cheby_idx++]
                         = params->chebyshev->output[idx];
                 }
@@ -1418,8 +1543,8 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
             free(coeffs);
 
         chunk->uncompressed = malloc(sizeof(double) * num_of_samples);
-	if (chunk->uncompressed == NULL)
-	    abort();
+        if (chunk->uncompressed == NULL)
+            abort();
         for (idx = 0; idx < num_of_samples; ++idx)
             chunk->uncompressed[idx] = input[idx];
 
@@ -1461,7 +1586,7 @@ int pcomp_decompress_polycomp_chunk(double* output,
                 abort();
 
             for (idx = 0; idx < chunk->num_of_samples; ++idx) {
-                if (get_bit(chunk->cheby_mask, idx)) {
+                if (pcomp_mask_get_bit(chunk->cheby_mask, idx)) {
                     if (cur_cheby_idx >= chunk->num_of_cheby_coeffs) {
                         abort();
                     }
@@ -1514,7 +1639,7 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
     *output_buf
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
     if (*output_buf == NULL)
-	abort();
+        abort();
 
     chunk_params = pcomp_init_polycomp(
         params->samples_per_chunk, params->poly_fit->num_of_coeffs,
@@ -1734,7 +1859,7 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
     *chunk_array
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
     if (*chunk_array == NULL)
-	abort();
+        abort();
 
     for (chunk_idx = 0; chunk_idx < *num_of_chunks; ++chunk_idx) {
         uint8_t is_compressed;
