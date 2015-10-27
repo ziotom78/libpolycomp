@@ -38,47 +38,59 @@
 
 /**********************************************************************/
 
-/** \defgroup poly Polynomial compression
- *
- * ### The algorithm and its applicability
+/** \defgroup poly Polynomial compression functions
  *
  * Polynomial compression relies on a simple idea, that is to divide
  * the input data stream into subsets of consecutive samples (called
  * "chunks"), and to approximate each chunk by means of a polynomial.
  * Such compression is inherently lossy, as the residuals of the
- * fitting procedure are usually discarded.
+ * fitting procedure are usually discarded. If the polynomial used for
+ * the fitting produces residuals that are too large, usually the
+ * samples in the chunk are saved in uncompressed form.
  *
  * This idea has been widely applied in the literature. Libpolycomp
- * implements a significant improvement over it, because in case the
- * polynomial used for the fitting is not good enough (i.e., the
- * magnitude of the residuals is larger than the desired error
- * threshold) it saves selected components of the Chebyshev transform
- * of the residuals together with the polynomial.
+ * implements an improvement over it, because if the fit residuals are
+ * too large, the library saves a chopped sequence of the Chebyshev
+ * transform of the residuals. This allows to achieve better
+ * compression ratios in those cases where polynomial fitting is not
+ * always enough to keep compression errors below the desired
+ * threshold. This kind of compression works quite well for smooth
+ * data series, where changes between consecutive samples are well
+ * described by slowly varying continuous functions. It is not
+ * suitable if the signal contains noise, unless this noise is
+ * significantly smaller than the signal and than the error threshold.
  *
- * It is possible to avoid the usage of Chebyshev transforms. In this
- * case, if no polynomial of the desired degree are able to fit the
- * data with the given error threshold, the data for that chunk is
+ * Libpolycomp allows to avoid the usage of Chebyshev transforms. In
+ * this case, if no polynomial of the desired degree are able to fit
+ * the data with the given error threshold, the data for that chunk is
  * saved uncompressed.
  *
- * This works quite well for smooth data series, where changes between
- * consecutive samples are well described by slowly varying continuous
- * functions. It is not suitable if the signal contains noise, unless
- * this noise is significantly smaller than the signal and than the
- * error threshold.
+ * The typical workflow for applying polynomial compression is the
+ * following:
  *
- * ### Implementation details
+ * 1. Allocate a new \ref pcomp_polycomp_t object via a call to \ref
+ *    pcomp_init_polycomp. Such object contains the parameters to be
+ *    used for the compression, e.g., the size of each chunk, the
+ *    degree of the fitting polynomial, whether to apply or not the
+ *    Chebyshev transform to the residuals, etc.
  *
- * The Libpolycomp library implements two families of functions which
- * implement polynomial compression:
+ * 2. Split the data into chunks and compress each of them using the
+ *    function \ref pcomp_compress_polycomp.
  *
- * - Low-level functions are useful to work with each chunk
- *   separately, or when one needs to optimize the compression
- *   parameters.
+ * 3. Convert the list of chunks into a byte sequence using \ref
+ *    pcomp_encode_chunks, typically with the purpose of saving it
+ *    into a file or sending it through a pipe/socket/etc.
  *
- * - High-level functions are used for compressing/decompressing long
- *   streams when no particular needs are required.
+ * The decompression workflow is specular:
  *
- * Both the low-level and high-level functions use the \ref
+ * 1. Process the byte sequence containing the compressed data using
+ *    \ref pcomp_decode_chunks. This will produce a list of chunks
+ *    that are still compressed.
+ *
+ * 2. Decompress the chunks using the function \ref
+ *    pcomp_decompress_polycomp.
+ *
+ * The compression functions described in this page use the \ref
  * pcomp_polycomp_t structure to determine which parameters to use for
  * the compression. The functions that allow to allocate/free/manage
  * this structure are the following:
@@ -88,60 +100,14 @@
  * - \ref pcomp_polycomp_num_of_poly_coeffs
  * - \ref pcomp_polycomp_max_error
  * - \ref pcomp_polycomp_algorithm
- * - \ref pcomp_polycomp_forward_cheby and \ref
- *   pcomp_polycomp_backward_cheby
  * - \ref pcomp_polycomp_period and \ref pcomp_polycomp_set_period
  *
- * Moreover, the function implements a number of facilities to compute
- * polynomial fits and Chebyshev transforms of discrete data.
- * Libpolycomp uses the GNU Scientific Library (GSL) to implement the
- * former, and the FFTW library for the latter.
- *
- * ### Low-level functions
- *
- * ### High-level functions
- *
- * ### Mathematical routines
- *
- * The following set of Libpolycomp routines allows to compute the
- * least squares best fit between a set of floating-point numbers
- * \f$x_i\f$ (with \f$i=1\ldots N\f$) and a polynomial, through the
- * points \f$(i, x_i)\f$:
- *
- * - \ref pcomp_init_poly_fit and \ref pcomp_free_poly_fit are used to
- *   initialize and free a \ref pcomp_poly_fit_data_t structure. Such
- *   structure can be used to apply repeatedly a fitting process to
- *   different sets of data, provided that the number of points
- *   \f$N\f$ and the degree of the fitting polynomial stay constant.
- *
- * - \ref pcomp_poly_fit_num_of_samples and \ref
- *   pcomp_poly_fit_num_of_coeffs are used to retrieve the fields of
- *   an instance of the opaque structure \ref pcomp_poly_fit_data_t.
- *
- * - \ref pcomp_run_poly_fit calculates the least-squares best fit
- *   between a set of points and a polynomial.
- *
- * The following set of routines compute the Chebyshev transform of a
- * set of floating-point numbers. They are a tiny wrapper around
- * analogous functions of the FFTW library, with the main purpose of
- * using the correct normalization constants in the forward and
- * inverse transforms:
- *
- * - \ref pcomp_init_chebyshev and \ref pcomp_free_chebyshev are used
- *   to allocate and free a \ref pcomp_chebyshev_t structure, which
- *   describes how to compute a Chebyshev transform for a set of
- *   \f$N\f$ numbers.
- *
- * - \ref pcomp_chebyshev_num_of_samples and \ref
- *   pcomp_chebyshev_direction are used to query the parameters of an
- *   instance of the opaque structure \ref pcomp_chebyshev_t.
- *
- * - \ref pcomp_run_chebyshev applies the Chebyshev transform (either in
- *   the forward or inverse direction) to a dataset.
- *
- * - \ref pcomp_chebyshev_input and \ref pcomp_chebyshev_output allow
- *   to access to the input and output data used by the last call to
- *   \ref pcomp_run_chebyshev.
+ * It is possible to use a set of more low-level functions to use
+ * polynomial compression. Refer to \ref poly_lowlevel for further
+ * information.
+ */
+
+/** \defgroup poly_lowlevel Polynomial compression (low-level functions)
  */
 
 /**********************************************************************/
@@ -186,7 +152,7 @@ struct __pcomp_poly_fit_data_t {
     gsl_matrix* cov_matrix;
 };
 
-/** \ingroup poly
+/** \ingroup polyfit
  *
  * \brief Allocate a new instance of the \ref pcomp_poly_fit_data_t
  * structure on the heap
@@ -234,7 +200,7 @@ pcomp_poly_fit_data_t* pcomp_init_poly_fit(size_t num_of_samples,
     return poly_fit;
 }
 
-/** \ingroup poly
+/** \ingroup polyfit
  *
  * \brief Free an instance of the \ref pcomp_poly_fit_data_t that has
  * been allocated via a call to \ref pcomp_init_poly_fit.
@@ -255,7 +221,7 @@ void pcomp_free_poly_fit(pcomp_poly_fit_data_t* poly_fit)
     free(poly_fit);
 }
 
-/** \ingroup poly
+/** \ingroup polyfit
  *
  * \brief Return the number of samples to be used in a polynomial fit
  *
@@ -273,7 +239,7 @@ pcomp_poly_fit_num_of_samples(const pcomp_poly_fit_data_t* poly_fit)
     return poly_fit->num_of_samples;
 }
 
-/** \ingroup poly
+/** \ingroup polyfit
  *
  * \brief Return the number of coefficients of the least-squares
  * fitting polynomial
@@ -292,7 +258,7 @@ pcomp_poly_fit_num_of_coeffs(const pcomp_poly_fit_data_t* poly_fit)
     return poly_fit->num_of_coeffs;
 }
 
-/** \ingroup poly
+/** \ingroup polyfit
  *
  * \brief Calculates a polynomial least-squares fit.
  *
@@ -370,7 +336,7 @@ struct __pcomp_chebyshev_t {
     pcomp_transform_direction_t dir;
 };
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Allocate a new instance of the \ref pcomp_chebyshev_t
  * structure on the heap
@@ -414,7 +380,7 @@ pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
     return chebyshev;
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Free the memory allocated by a previous call to \ref
  * pcomp_init_chebyshev.
@@ -438,7 +404,7 @@ void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
     free(plan);
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Return the number of samples in a Chebyshev transform
  *
@@ -455,7 +421,7 @@ size_t pcomp_chebyshev_num_of_samples(const pcomp_chebyshev_t* plan)
     return plan->num_of_samples;
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Return the direction of a Chebyshev transform
  *
@@ -483,9 +449,26 @@ static double chebyshev_normalization(pcomp_transform_direction_t dir,
         return 0.5;
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Compute a forward/backward Chebyshev discrete transform
+ *
+ * \code{.c}
+ * #define NUM_OF_POINTS 3
+ * double points[NUM_OF_POINTS] = { 0.0, 1.0, 3.0 };
+ * double transform[NUM_OF_POINTS];
+ * pcomp_chebyshev_t* chebyshev;
+ * size_t idx;
+ *
+ * chebyshev = pcomp_init_chebyshev(NUM_OF_POINTS, PCOMP_TD_DIRECT);
+ * pcomp_run_chebyshev(chebyshev, PCOMP_TD_DIRECT, transform, points);
+ *
+ * puts("Transform:");
+ * for (idx = 0; idx < NUM_OF_POINTS; ++idx) {
+ *     printf("%f\t", transform[idx]);
+ * }
+ * puts("");
+ * \endcode
  *
  * \param[in] plan Pointer to a Chebyshev plan created by \ref
  * pcomp_init_chebyshev
@@ -537,7 +520,7 @@ int pcomp_run_chebyshev(pcomp_chebyshev_t* plan,
     return PCOMP_STAT_SUCCESS;
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Return the input data used in the last call to \ref
  *pcomp_run_chebyshev
@@ -558,7 +541,7 @@ const double* pcomp_chebyshev_input(const pcomp_chebyshev_t* plan)
     return plan->input;
 }
 
-/** \ingroup poly
+/** \ingroup cheby
  *
  * \brief Return the output (Chebyshev transform) of the last call to
  *\ref pcomp_run_chebyshev
@@ -736,7 +719,7 @@ pcomp_polycomp_algorithm(const pcomp_polycomp_t* params)
     return params->algorithm;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return a pointer to a \ref pcomp_chebyshev_t structure
  * representing the forward Chebyshev transform.
@@ -755,7 +738,7 @@ pcomp_polycomp_forward_cheby(const pcomp_polycomp_t* params)
     return params->chebyshev;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return a pointer to a \ref pcomp_chebyshev_t structure
  * representing the forward Chebyshev transform.
@@ -855,7 +838,7 @@ static double eval_poly(double* coeffs, size_t num_of_coeffs, double x)
 
 /***********************************************************************/
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Remove sudden jumps from \a input
  *
@@ -939,7 +922,7 @@ struct __pcomp_polycomp_chunk_t {
     double* cheby_coeffs;
 };
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object
  *
@@ -973,7 +956,7 @@ pcomp_init_chunk(pcomp_chunk_size_t num_of_samples)
     return chunk;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object and
  * fill it with data in uncompressed form.
@@ -1016,7 +999,7 @@ pcomp_init_uncompressed_chunk(pcomp_chunk_size_t num_of_samples,
     return chunk;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Allocate memory for a \ref pcomp_polycomp_chunk_t object and
  * fill it with data compressed using the polynomial compression
@@ -1097,7 +1080,7 @@ pcomp_polycomp_chunk_t* pcomp_init_compressed_chunk(
     return chunk;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Free memory associated with a \ref pcomp_poly_chunk_t
  *
@@ -1129,7 +1112,7 @@ void pcomp_free_chunk(pcomp_polycomp_chunk_t* chunk)
     free(chunk);
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return the number of samples in a chunk
  *
@@ -1146,7 +1129,7 @@ pcomp_chunk_num_of_samples(const pcomp_polycomp_chunk_t* chunk)
     return chunk->num_of_samples;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return the number of bytes necessary to encode a chunk
  *
@@ -1190,7 +1173,7 @@ size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
     }
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return nonzero if the chunk holds data in uncompressed form.
  */
@@ -1202,7 +1185,7 @@ int pcomp_chunk_is_compressed(const pcomp_polycomp_chunk_t* chunk)
     return chunk->is_compressed;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief If the chunks contain uncompressed data, returns a pointer
  * to the first element. Otherwise, return \c NULL.
@@ -1219,7 +1202,7 @@ pcomp_chunk_uncompressed_data(const pcomp_polycomp_chunk_t* chunk)
     return chunk->uncompressed;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief If the chunks contain compressed data, returns the number of
  * polynomial coefficients used in the compression. Otherwise, return
@@ -1237,7 +1220,7 @@ pcomp_chunk_num_of_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
     return chunk->num_of_poly_coeffs;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief If the chunks contain compressed data, returns a pointer to
  * the first element of the array of coefficients of the interpolating
@@ -1255,7 +1238,7 @@ pcomp_chunk_poly_coeffs(const pcomp_polycomp_chunk_t* chunk)
     return chunk->poly_coeffs;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief If the chunks contain compressed data, returns the number of
  * nonzero Chebyshev coefficients held in the chunk. Otherwise, return
@@ -1273,7 +1256,7 @@ pcomp_chunk_num_of_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
     return chunk->num_of_cheby_coeffs;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief If the chunks contain compressed data, returns a pointer to
  * the first element of the Chebyshev transform of the fit residuals.
@@ -1291,7 +1274,7 @@ pcomp_chunk_cheby_coeffs(const pcomp_polycomp_chunk_t* chunk)
     return chunk->cheby_coeffs;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return the number of bytes required for the bitmask of
  * nonzero Chebyshev coefficients.
@@ -1315,7 +1298,7 @@ size_t pcomp_chunk_cheby_mask_size(pcomp_chunk_size_t chunk_size)
            + ((chunk_size % CHAR_BIT) > 0 ? 1 : 0);
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return a pointer to the bitmask of nonzero Chebyshev
  * coefficients for a chunk
@@ -1336,7 +1319,7 @@ pcomp_chunk_cheby_mask(const pcomp_polycomp_chunk_t* chunk)
 
 /**********************************************************************/
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Compute a polynomial fit of the data in \a input and a
  * Chebyshev transform of the residuals
@@ -1453,7 +1436,7 @@ static void sort_positions(pcomp_chunk_size_t positions[],
     sort_positions(positions + front, coeffs, num - front);
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Return the value of the bit at the position \a pos in the
  * bitmask \a mask.
@@ -1469,7 +1452,7 @@ int pcomp_mask_get_bit(const uint8_t* mask, size_t pos)
     return (mask[pos / CHAR_BIT] & (1 << (pos % CHAR_BIT))) != 0;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Set the value of the bit at position \a pos in the bitmask \a
  *
@@ -1503,7 +1486,7 @@ static double compute_discrepancy(double a[], double b[], size_t num)
     return err;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Find the smallest subset of Chebyshev coefficients that can
  * approximate a Chebyshev transform with an error less than \a
@@ -1629,7 +1612,7 @@ static void clear_chunk(pcomp_polycomp_chunk_t* chunk)
         free(chunk->cheby_coeffs);
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Compress the first \a num_of_samples elements in \a input
  * and store them in \a chunk.
@@ -1812,7 +1795,7 @@ int pcomp_run_polycomp_on_chunk(pcomp_polycomp_t* params,
     return PCOMP_STAT_SUCCESS;
 }
 
-/** \ingroup poly
+/** \ingroup poly_lowlevel
  *
  * \brief Decompress the data in a chunk
  *

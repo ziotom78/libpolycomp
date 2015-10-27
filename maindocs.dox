@@ -20,4 +20,52 @@
  * - \ref diffRLE
  * - \ref quant
  * - \ref poly
+ *
+ * The library implements also a number of ancillary functions to
+ * compute least-squares polynomial fits (\ref polyfit) and discrete
+ * Chebyshev transforms (\ref cheby).
+ */
+
+/** \defgroup polyfit Least-squares polynomial fits
+ *
+ * This set of Libpolycomp routines allows to compute the least
+ * squares best fit between a set of floating-point numbers \f$x_i\f$
+ * (with \f$i=1\ldots N\f$) and a polynomial, through the points
+ * \f$(i, x_i)\f$. It is used internally by the polynomial compression
+ * functions (\ref poly), but the API is exposed to the library
+ * user. */
+
+/** \defgroup cheby Discrete Chebyshev transforms
+ *
+ * The following set of routines compute the Chebyshev transform of a
+ * set of floating-point numbers. They form a tiny wrapper around
+ * analogous functions of the FFTW library, with the main purpose of
+ * using the correct normalization constants in the forward and
+ * inverse transforms.
+ *
+ * The definition of the forward transform (\f$g \rightarrow F\f$) is
+ * the following: \f[ F_k = \frac2{N - 1} \sum_{n=1}^N{}''
+ * g_n\,\cos\left(\frac{\pi(n - 1)(k - 1)}{N - 1}\right),\f] where
+ * \f[\sum_{n=1}^N{}'' x_n \equiv \frac{x_1}2 + \sum_{n=2}^{N - 1} x_n +
+ * \frac{x_N}2.\f]
+ *
+ * The backward transform is defined by the following equation: \f[g_n
+ * = \sum_{n=1}^N{}'' F_n \cos\left(\frac{\pi(n - 1)(k - 1)}{N -
+ * 1}\right).\f]
+ *
+ * To compute the Chebyshev transform of an array of numbers, the user
+ * must allocate a \ref pcomp_chebyshev_t structure using the function
+ * \ref pcomp_init_chebyshev. Such structure contains the details
+ * about the transform to compute, i.e., the number of elements
+ * \f$N\f$ and the direction (either forward or backward). The
+ * computation of the transform is done by the function \ref
+ * pcomp_run_chebyshev.
+ *
+ * Since the forward and backward transforms differ only by the
+ * multiplicative constant, the function \ref pcomp_run_chebyshev is
+ * not too picky and allows the caller to specify the direction of the
+ * transform. It is therefore possible to use the same \ref
+ * pcomp_chebyshev_t object to compute both the forward and the
+ * backward transform (with two separate calls to \ref
+ * pcomp_run_chebyshev).
  */
