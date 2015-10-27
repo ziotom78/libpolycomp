@@ -1,0 +1,26 @@
+var group__poly__lowlevel =
+[
+    [ "pcomp_chunk_cheby_coeffs", "group__poly__lowlevel.html#ga35031f8a7cf52240cfb523dc61cfd32e", null ],
+    [ "pcomp_chunk_cheby_mask", "group__poly__lowlevel.html#ga8874e60b925bcd6720b87f35bf1e667d", null ],
+    [ "pcomp_chunk_cheby_mask_size", "group__poly__lowlevel.html#ga278cdcfa644b93f84559f9827e29457f", null ],
+    [ "pcomp_chunk_is_compressed", "group__poly__lowlevel.html#ga6c68ca23c00d0c68290cbee421b46959", null ],
+    [ "pcomp_chunk_num_of_bytes", "group__poly__lowlevel.html#gaf216d8d9fd3b321ff894348ee6db048f", null ],
+    [ "pcomp_chunk_num_of_cheby_coeffs", "group__poly__lowlevel.html#gab55d42fa84ab4ed1ffcaec8586780d74", null ],
+    [ "pcomp_chunk_num_of_poly_coeffs", "group__poly__lowlevel.html#ga7547592c7b14173dafd69fa488177a17", null ],
+    [ "pcomp_chunk_num_of_samples", "group__poly__lowlevel.html#ga141568816a3a902b8575be472e63ea4b", null ],
+    [ "pcomp_chunk_poly_coeffs", "group__poly__lowlevel.html#ga99a18b73c465cf2d7272697b5ad47f00", null ],
+    [ "pcomp_chunk_uncompressed_data", "group__poly__lowlevel.html#ga484af052733f1b0d51fc6ca881378a48", null ],
+    [ "pcomp_decompress_polycomp_chunk", "group__poly__lowlevel.html#gae2227fe2823fe2ce04d9c1a1d99dc294", null ],
+    [ "pcomp_find_chebyshev_mask", "group__poly__lowlevel.html#gabf2ff8322ae622908407d94ac1873317", null ],
+    [ "pcomp_free_chunk", "group__poly__lowlevel.html#gaf50ddd62f855c2dfc1bc96ff00d5749e", null ],
+    [ "pcomp_init_chunk", "group__poly__lowlevel.html#ga43fbe9e5919993793a6d6bc21052db0a", null ],
+    [ "pcomp_init_compressed_chunk", "group__poly__lowlevel.html#ga0ff14c414978ab762b24993b7e607a2e", null ],
+    [ "pcomp_init_uncompressed_chunk", "group__poly__lowlevel.html#ga28f80a1f4ebc88b78e077911f7609252", null ],
+    [ "pcomp_mask_get_bit", "group__poly__lowlevel.html#gab793c0d3bc98503acefd4c4d095ddd45", null ],
+    [ "pcomp_mask_set_bit", "group__poly__lowlevel.html#gad21094e8f3ade1288b47870b9c45c879", null ],
+    [ "pcomp_polycomp_backward_cheby", "group__poly__lowlevel.html#ga9af675aacf01f812bda7244f488771a3", null ],
+    [ "pcomp_polycomp_forward_cheby", "group__poly__lowlevel.html#ga18386cb1be87dc5f53c412d597496a56", null ],
+    [ "pcomp_polyfit_and_chebyshev", "group__poly__lowlevel.html#ga30c82bb784b5207c2699b1db70d985ea", null ],
+    [ "pcomp_run_polycomp_on_chunk", "group__poly__lowlevel.html#ga16fd7dc37524f6a0ba57d29ca766a54d", null ],
+    [ "pcomp_straighten", "group__poly__lowlevel.html#gaf29ad7a7a070d4e13bc7ab2788b914a9", null ]
+];

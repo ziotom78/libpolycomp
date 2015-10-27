@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Libpolycomp: Polynomial compression</title>
+<title>Libpolycomp: Polynomial compression functions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('group__poly.html','');});
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Polynomial compression</div>  </div>
+<div class="title">Polynomial compression functions</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -123,36 +123,6 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gafa3292680395741f74f5db0177f2a07b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a> (size_t num_of_samples, size_t num_of_coeffs)</td></tr>
-<tr class="memdesc:gafa3292680395741f74f5db0177f2a07b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a new instance of the pcomp_poly_fit_data_t structure on the heap.  <a href="#gafa3292680395741f74f5db0177f2a07b">More...</a><br /></td></tr>
-<tr class="separator:gafa3292680395741f74f5db0177f2a07b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac8e5a21c4a3478a398b08d4d7e0385ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a> (<a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *poly_fit)</td></tr>
-<tr class="memdesc:gac8e5a21c4a3478a398b08d4d7e0385ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free an instance of the pcomp_poly_fit_data_t that has been allocated via a call to <a class="el" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a>.  <a href="#gac8e5a21c4a3478a398b08d4d7e0385ea">More...</a><br /></td></tr>
-<tr class="separator:gac8e5a21c4a3478a398b08d4d7e0385ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa12ceda9b06ff4d60c21f719da8bd942"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaa12ceda9b06ff4d60c21f719da8bd942">pcomp_poly_fit_num_of_samples</a> (const <a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *poly_fit)</td></tr>
-<tr class="memdesc:gaa12ceda9b06ff4d60c21f719da8bd942"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of samples to be used in a polynomial fit.  <a href="#gaa12ceda9b06ff4d60c21f719da8bd942">More...</a><br /></td></tr>
-<tr class="separator:gaa12ceda9b06ff4d60c21f719da8bd942"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafeec2bb424071797103a20b21d16922c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gafeec2bb424071797103a20b21d16922c">pcomp_poly_fit_num_of_coeffs</a> (const <a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *poly_fit)</td></tr>
-<tr class="memdesc:gafeec2bb424071797103a20b21d16922c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of coefficients of the least-squares fitting polynomial.  <a href="#gafeec2bb424071797103a20b21d16922c">More...</a><br /></td></tr>
-<tr class="separator:gafeec2bb424071797103a20b21d16922c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a> (<a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *poly_fit, double *coeffs, const double *points)</td></tr>
-<tr class="memdesc:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates a polynomial least-squares fit.  <a href="#gabc5eb759afb7304280d28e1ca53c8ff4">More...</a><br /></td></tr>
-<tr class="separator:gabc5eb759afb7304280d28e1ca53c8ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a> (size_t num_of_samples, <a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> dir)</td></tr>
-<tr class="memdesc:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a new instance of the pcomp_chebyshev_t structure on the heap.  <a href="#ga4b7e004c7b6735e6b026cfd81d30c993">More...</a><br /></td></tr>
-<tr class="separator:ga4b7e004c7b6735e6b026cfd81d30c993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3d0118144149874c40c65d275d8052a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="memdesc:gaa3d0118144149874c40c65d275d8052a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the memory allocated by a previous call to <a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>.  <a href="#gaa3d0118144149874c40c65d275d8052a">More...</a><br /></td></tr>
-<tr class="separator:gaa3d0118144149874c40c65d275d8052a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8ecdba8b5b837800fceed690f421d15f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga8ecdba8b5b837800fceed690f421d15f">pcomp_chebyshev_num_of_samples</a> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="memdesc:ga8ecdba8b5b837800fceed690f421d15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of samples in a Chebyshev transform.  <a href="#ga8ecdba8b5b837800fceed690f421d15f">More...</a><br /></td></tr>
-<tr class="separator:ga8ecdba8b5b837800fceed690f421d15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga06c796c90a77f5af0a7248e8082b4bdb">pcomp_chebyshev_direction</a> (const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan)</td></tr>
-<tr class="memdesc:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the direction of a Chebyshev transform.  <a href="#ga06c796c90a77f5af0a7248e8082b4bdb">More...</a><br /></td></tr>
-<tr class="separator:ga06c796c90a77f5af0a7248e8082b4bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a> (<a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *plan, <a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> dir, double *output, const double *input)</td></tr>
-<tr class="memdesc:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute a forward/backward Chebyshev discrete transform.  <a href="#ga76b1fdcbb1b1dba4191db3a9a0fe91be">More...</a><br /></td></tr>
-<tr class="separator:ga76b1fdcbb1b1dba4191db3a9a0fe91be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3192eb47cac9f94936f283fcc2dccf74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a> (pcomp_chunk_size_t samples_per_chunk, pcomp_poly_size_t num_of_coeffs, double max_allowable_error, <a class="el" href="group__poly.html#ga1bc63ccaec65919ae95887c08e83eb6b">pcomp_polycomp_algorithm_t</a> algorithm)</td></tr>
 <tr class="memdesc:ga3192eb47cac9f94936f283fcc2dccf74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate space for a pcomp_polycomp_t structure.  <a href="#ga3192eb47cac9f94936f283fcc2dccf74">More...</a><br /></td></tr>
 <tr class="separator:ga3192eb47cac9f94936f283fcc2dccf74"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,49 +147,53 @@ Functions</h2></td></tr>
 <tr class="memitem:gac8ca2f9b0748609a25ff8b9016093a88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gac8ca2f9b0748609a25ff8b9016093a88">pcomp_polycomp_set_period</a> (<a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params, double period)</td></tr>
 <tr class="memdesc:gac8ca2f9b0748609a25ff8b9016093a88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the periodicity of the data to be compressed.  <a href="#gac8ca2f9b0748609a25ff8b9016093a88">More...</a><br /></td></tr>
 <tr class="separator:gac8ca2f9b0748609a25ff8b9016093a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaf29ad7a7a070d4e13bc7ab2788b914a9">pcomp_straighten</a> (double *output, const double *input, size_t num_of_samples, double period)</td></tr>
-<tr class="memdesc:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove sudden jumps from <em>input</em>.  <a href="#gaf29ad7a7a070d4e13bc7ab2788b914a9">More...</a><br /></td></tr>
-<tr class="separator:gaf29ad7a7a070d4e13bc7ab2788b914a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87725918ac9dc89d532647768dc0a812"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> **output_buf[], size_t *num_of_chunks, const double *input_buf, size_t input_size, const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *params)</td></tr>
+<tr class="memdesc:ga87725918ac9dc89d532647768dc0a812"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compress the array <em>input_buf</em> using polynomial compression.  <a href="#ga87725918ac9dc89d532647768dc0a812">More...</a><br /></td></tr>
+<tr class="separator:ga87725918ac9dc89d532647768dc0a812"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad9c5b17fd5d5dac2e23d19ae3e8ad9ee"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gad9c5b17fd5d5dac2e23d19ae3e8ad9ee">pcomp_total_num_of_samples</a> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const chunk_array[], size_t num_of_chunks)</td></tr>
+<tr class="memdesc:gad9c5b17fd5d5dac2e23d19ae3e8ad9ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the sum of the number of samples encoded in <em>chunk_array</em>.  <a href="#gad9c5b17fd5d5dac2e23d19ae3e8ad9ee">More...</a><br /></td></tr>
+<tr class="separator:gad9c5b17fd5d5dac2e23d19ae3e8ad9ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaec113fa0273bc8207942f8f763d4d202"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gaec113fa0273bc8207942f8f763d4d202">pcomp_decompress_polycomp</a> (double *output_buf, <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const chunk_array[], size_t num_of_chunks)</td></tr>
+<tr class="memdesc:gaec113fa0273bc8207942f8f763d4d202"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompress a sequence of chunks.  <a href="#gaec113fa0273bc8207942f8f763d4d202">More...</a><br /></td></tr>
+<tr class="separator:gaec113fa0273bc8207942f8f763d4d202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0daad245f72a0857d0ecf1632b0af1ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga0daad245f72a0857d0ecf1632b0af1ed">pcomp_free_chunks</a> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *chunk_array[], size_t num_of_chunks)</td></tr>
+<tr class="memdesc:ga0daad245f72a0857d0ecf1632b0af1ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free an array of chunks.  <a href="#ga0daad245f72a0857d0ecf1632b0af1ed">More...</a><br /></td></tr>
+<tr class="separator:ga0daad245f72a0857d0ecf1632b0af1ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9da3460a4c6e8fdabd4fca9ab155888c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga9da3460a4c6e8fdabd4fca9ab155888c">pcomp_chunks_num_of_bytes</a> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const chunks[], size_t num_of_chunks)</td></tr>
+<tr class="memdesc:ga9da3460a4c6e8fdabd4fca9ab155888c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bytes required by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>.  <a href="#ga9da3460a4c6e8fdabd4fca9ab155888c">More...</a><br /></td></tr>
+<tr class="separator:ga9da3460a4c6e8fdabd4fca9ab155888c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdb33574b0b28724ec6785bfe7e240d2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a> (void *buf, size_t *buf_size, <a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const chunk_array[], size_t num_of_chunks)</td></tr>
+<tr class="memdesc:gafdb33574b0b28724ec6785bfe7e240d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encode a list of chunks into a sequence of raw bytes.  <a href="#gafdb33574b0b28724ec6785bfe7e240d2">More...</a><br /></td></tr>
+<tr class="separator:gafdb33574b0b28724ec6785bfe7e240d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga388baf20639fc3adca5debcf62f03046"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__poly.html#ga388baf20639fc3adca5debcf62f03046">pcomp_decode_chunks</a> (<a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> **chunk_array[], size_t *num_of_chunks, const void *buf)</td></tr>
+<tr class="memdesc:ga388baf20639fc3adca5debcf62f03046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode a byte sequence created by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a> into an array of chunks.  <a href="#ga388baf20639fc3adca5debcf62f03046">More...</a><br /></td></tr>
+<tr class="separator:ga388baf20639fc3adca5debcf62f03046"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<h3>The algorithm and its applicability</h3>
-<p>Polynomial compression relies on a simple idea, that is to divide the input data stream into subsets of consecutive samples (called "chunks"), and to approximate each chunk by means of a polynomial. Such compression is inherently lossy, as the residuals of the fitting procedure are usually discarded.</p>
-<p>This idea has been widely applied in the literature. Libpolycomp implements a significant improvement over it, because in case the polynomial used for the fitting is not good enough (i.e., the magnitude of the residuals is larger than the desired error threshold) it saves selected components of the Chebyshev transform of the residuals together with the polynomial.</p>
-<p>It is possible to avoid the usage of Chebyshev transforms. In this case, if no polynomial of the desired degree are able to fit the data with the given error threshold, the data for that chunk is saved uncompressed.</p>
-<p>This works quite well for smooth data series, where changes between consecutive samples are well described by slowly varying continuous functions. It is not suitable if the signal contains noise, unless this noise is significantly smaller than the signal and than the error threshold.</p>
-<h3>Implementation details</h3>
-<p>The Libpolycomp library implements two families of functions which implement polynomial compression:</p>
+<p>Polynomial compression relies on a simple idea, that is to divide the input data stream into subsets of consecutive samples (called "chunks"), and to approximate each chunk by means of a polynomial. Such compression is inherently lossy, as the residuals of the fitting procedure are usually discarded. If the polynomial used for the fitting produces residuals that are too large, usually the samples in the chunk are saved in uncompressed form.</p>
+<p>This idea has been widely applied in the literature. Libpolycomp implements an improvement over it, because if the fit residuals are too large, the library saves a chopped sequence of the Chebyshev transform of the residuals. This allows to achieve better compression ratios in those cases where polynomial fitting is not always enough to keep compression errors below the desired threshold. This kind of compression works quite well for smooth data series, where changes between consecutive samples are well described by slowly varying continuous functions. It is not suitable if the signal contains noise, unless this noise is significantly smaller than the signal and than the error threshold.</p>
+<p>Libpolycomp allows to avoid the usage of Chebyshev transforms. In this case, if no polynomial of the desired degree are able to fit the data with the given error threshold, the data for that chunk is saved uncompressed.</p>
+<p>The typical workflow for applying polynomial compression is the following:</p>
+<ol type="1">
+<li>Allocate a new pcomp_polycomp_t object via a call to <a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>. Such object contains the parameters to be used for the compression, e.g., the size of each chunk, the degree of the fitting polynomial, whether to apply or not the Chebyshev transform to the residuals, etc.</li>
+<li>Split the data into chunks and compress each of them using the function <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</li>
+<li>Convert the list of chunks into a byte sequence using <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>, typically with the purpose of saving it into a file or sending it through a pipe/socket/etc.</li>
+</ol>
+<p>The decompression workflow is specular:</p>
+<ol type="1">
+<li>Process the byte sequence containing the compressed data using <a class="el" href="group__poly.html#ga388baf20639fc3adca5debcf62f03046">pcomp_decode_chunks</a>. This will produce a list of chunks that are still compressed.</li>
+<li>Decompress the chunks using the function <a class="el" href="group__poly.html#gaec113fa0273bc8207942f8f763d4d202">pcomp_decompress_polycomp</a>.</li>
+</ol>
+<p>The compression functions described in this page use the pcomp_polycomp_t structure to determine which parameters to use for the compression. The functions that allow to allocate/free/manage this structure are the following:</p>
 <ul>
-<li>Low-level functions are useful to work with each chunk separately, or when one needs to optimize the compression parameters.</li>
-<li>High-level functions are used for compressing/decompressing long streams when no particular needs are required.</li>
-</ul>
-<p>Both the low-level and high-level functions use the pcomp_polycomp_t structure to determine which parameters to use for the compression. The functions that allow to allocate/free/manage this structure are the following:</p>
-<ul>
-<li><a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a></li>
-<li><a class="el" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a></li>
+<li><a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a> and <a class="el" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a></li>
 <li><a class="el" href="group__poly.html#gab78e51afbc007f4a5e941cd4911ac190">pcomp_polycomp_samples_per_chunk</a></li>
 <li><a class="el" href="group__poly.html#gafa7c47c8c364e21792c92e70c7b13f95">pcomp_polycomp_num_of_poly_coeffs</a></li>
 <li><a class="el" href="group__poly.html#gad8672475e686bc31189cb096234f6737">pcomp_polycomp_max_error</a></li>
 <li><a class="el" href="group__poly.html#ga348ae5dd69b4c9fac6ed7b16df414b07">pcomp_polycomp_algorithm</a></li>
-<li><a class="el" href="group__poly.html#ga18c17d9420262cdb765aa07554dcd13a">pcomp_polycomp_period</a></li>
-<li><a class="el" href="group__poly.html#gac8ca2f9b0748609a25ff8b9016093a88">pcomp_polycomp_set_period</a></li>
+<li><a class="el" href="group__poly.html#ga18c17d9420262cdb765aa07554dcd13a">pcomp_polycomp_period</a> and <a class="el" href="group__poly.html#gac8ca2f9b0748609a25ff8b9016093a88">pcomp_polycomp_set_period</a></li>
 </ul>
-<p>Moreover, the function implements a number of facilities to compute polynomial fits and Chebyshev transforms of discrete data. Libpolycomp uses the GNU Scientific Library (GSL) to implement the former, and the FFTW library for the latter.</p>
-<h3>Low-level functions</h3>
-<h3>High-level functions</h3>
-<h3>Mathematical routines</h3>
-<p>The following set of Libpolycomp routines allows to compute the least squares best fit between a set of floating-point numbers <img class="formulaInl" alt="$x_i$" src="form_0.png"/> (with <img class="formulaInl" alt="$i=1\ldots N$" src="form_1.png"/>) and a polynomial, through the points <img class="formulaInl" alt="$(i, x_i)$" src="form_2.png"/>:</p>
-<ul>
-<li><a class="el" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a> and <a class="el" href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a> are used to initialize and free a pcomp_poly_fit_data_t structure. Such structure can be used to apply repeatedly a fitting process to different sets of data, provided that the number of points <img class="formulaInl" alt="$N$" src="form_3.png"/> and the degree of the fitting polynomial stay constant.</li>
-<li><a class="el" href="group__poly.html#gaa12ceda9b06ff4d60c21f719da8bd942">pcomp_poly_fit_num_of_samples</a> and <a class="el" href="group__poly.html#gafeec2bb424071797103a20b21d16922c">pcomp_poly_fit_num_of_coeffs</a> are used to retrieve the fields of an instance of the opaque structure pcomp_poly_fit_data_t.</li>
-<li><a class="el" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a> calculates the least-squares best fit between a set of points and a polynomial.</li>
-</ul>
-<p>The following set of routines compute the Chebyshev transform of a set of floating-point numbers. They are a tiny wrapper around analogous functions of the FFTW library, with the main purpose of using the correct normalization constants in the forward and inverse transforms:</p>
-<ul>
-<li><a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a> and <a class="el" href="group__poly.html#gaa3d0118144149874c40c65d275d8052a">pcomp_free_chebyshev</a> are used to allocate and free a pcomp_chebyshev_t structure, which describes how to compute a Chebyshev transform for a set of <img class="formulaInl" alt="$N$" src="form_3.png"/> numbers.</li>
-<li><a class="el" href="group__poly.html#ga8ecdba8b5b837800fceed690f421d15f">pcomp_chebyshev_num_of_samples</a> and <a class="el" href="group__poly.html#ga06c796c90a77f5af0a7248e8082b4bdb">pcomp_chebyshev_direction</a> are used to query the parameters of an instance of the opaque structure pcomp_chebyshev_t.</li>
-<li><a class="el" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a> applies the Chebyshev transform (either in the forward or inverse direction) to a dataset. </li>
-</ul>
+<p>It is possible to use a set of more low-level functions to use polynomial compression. Refer to <a class="el" href="group__poly__lowlevel.html">Polynomial compression (low-level functions)</a> for further information. </p>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="ga1bc63ccaec65919ae95887c08e83eb6b"></a>
 <div class="memitem">
@@ -232,7 +206,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Kind of algorithm used for the polynomial compression. </p>
-<p>See the discussion in the section <a class="el" href="group__poly.html">Polynomial compression</a> for more information. </p>
+<p>See the discussion in the section <a class="el" href="group__poly.html">Polynomial compression functions</a> for more information. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff"></a>PCOMP_ALG_USE_CHEBYSHEV&#160;</td><td class="fielddoc">
 <p>When needed, apply the Chebyshev transform to the residuals of the polynomial fit. </p>
@@ -242,7 +216,7 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p>Definition at line <a class="el" href="libpolycomp_8h_source.html#l00352">352</a> of file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
+<p>Definition at line <a class="el" href="libpolycomp_8h_source.html#l00355">355</a> of file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
 
 </div>
 </div>
@@ -266,114 +240,313 @@ Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p>Definition at line <a class="el" href="libpolycomp_8h_source.html#l00319">319</a> of file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
+<p>Definition at line <a class="el" href="libpolycomp_8h_source.html#l00320">320</a> of file <a class="el" href="libpolycomp_8h_source.html">libpolycomp.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ga06c796c90a77f5af0a7248e8082b4bdb"></a>
+<a class="anchor" id="ga9da3460a4c6e8fdabd4fca9ab155888c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> pcomp_chebyshev_direction </td>
+          <td class="memname">size_t pcomp_chunks_num_of_bytes </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td>
-          <td class="paramname"><em>plan</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const&#160;</td>
+          <td class="paramname"><em>chunks</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return the direction of a Chebyshev transform. </p>
+<p>Number of bytes required by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>. </p>
+<p>This function computes the number of bytes required to encode the array of chunks in the variable <em>chunks</em>. Unlike functions like <a class="el" href="group___r_l_e.html#gac092b6d2dd746e65f8a514acdc558eae">pcomp_rle_bufsize</a>, this function provides an exact estimate, not an upper bound.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">plan</td><td>Pointer to the Chebyshev plan.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">chunks</td><td>Array of chunks to encode. This should have been initialized via a call to <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_chunks</td><td>Number of elements in <em>chunks</em>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a> value specifying the normalization used for the Chebyshev transform specified by <em>plan</em>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of bytes required for the output buffer used by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00460">460</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02138">2138</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga8ecdba8b5b837800fceed690f421d15f"></a>
+<a class="anchor" id="ga87725918ac9dc89d532647768dc0a812"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t pcomp_chebyshev_num_of_samples </td>
+          <td class="memname">int pcomp_compress_polycomp </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td>
-          <td class="paramname"><em>plan</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> **&#160;</td>
+          <td class="paramname"><em>output_buf</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double *&#160;</td>
+          <td class="paramname"><em>input_buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>input_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a> *&#160;</td>
+          <td class="paramname"><em>params</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return the number of samples in a Chebyshev transform. </p>
+<p>Compress the array <em>input_buf</em> using polynomial compression. </p>
+<p>This function compresses the first <em>input_size</em> elements of the array <em>input_buf</em> using the polynomial compression scheme. The output is an array of chunks saved in <em>output_buf</em> (the number of elements of this array is saved in <em>num_of_chunks</em>). The <em>params</em> variable specifies the parameters used by the compression algorithm.</p>
+<p>Here is an example showing how to compress a sequence of numbers in the variable <em>input:</em> </p>
+<div class="fragment"><div class="line"><span class="keywordtype">double</span> input[] = { 1.0, 2.0, 3.0, 4.0, 3.0, 2.0,</div>
+<div class="line">                   1.0, 2.0, 6.0, 7.0, 9.0 };</div>
+<div class="line"><span class="keywordtype">size_t</span> input_size = <span class="keyword">sizeof</span>(input) / <span class="keyword">sizeof</span>(input[0]);</div>
+<div class="line"><span class="keywordtype">double</span>* decompr;</div>
+<div class="line"><span class="keywordtype">size_t</span> decompr_size;</div>
+<div class="line"><a class="code" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a>** chunks;</div>
+<div class="line"><span class="keywordtype">size_t</span> num_of_chunks;</div>
+<div class="line"><a class="code" href="struct____pcomp__polycomp__t.html">pcomp_polycomp_t</a>* params;</div>
+<div class="line"><span class="keywordtype">size_t</span> idx;</div>
+<div class="line"></div>
+<div class="line">params = <a class="code" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>(4, 2, 1.0e-5, <a class="code" href="group__poly.html#gga1bc63ccaec65919ae95887c08e83eb6ba896a47692787ffdd9e291447b82ca6ff">PCOMP_ALG_USE_CHEBYSHEV</a>);</div>
+<div class="line"><a class="code" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>(&amp;chunks, &amp;num_of_chunks, input, input_size,</div>
+<div class="line">                        params);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// Print some information for each chunk</span></div>
+<div class="line"><span class="keywordflow">for</span>(idx = 0; idx &lt; num_of_chunks; ++idx) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;Chunk %lu of %lu: %s\n&quot;</span>, idx + 1, num_of_chunks,</div>
+<div class="line">           <a class="code" href="group__poly__lowlevel.html#ga6c68ca23c00d0c68290cbee421b46959">pcomp_chunk_is_compressed</a>(chunks[idx]) ?</div>
+<div class="line">               <span class="stringliteral">&quot;compressed&quot;</span> : <span class="stringliteral">&quot;uncompressed&quot;</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Once the sequence <em>input_buf</em> is compressed, the array of chunks can either be analyzed (e.g., using a <code>for</code> loop as in the example above) or encoded using the <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>. Once the variable <em>output_buf</em> is no longer used, it should be freed via a call to <a class="el" href="group__poly.html#ga0daad245f72a0857d0ecf1632b0af1ed">pcomp_free_chunks</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">plan</td><td>Pointer to the Chebyshev plan.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">output_buf</td><td>Pointer to a variable that will receive the address of an array of pcomp_polycomp_chunk_t variables created by the function. Such array contains the whole set of data in <em>input</em> in compressed format. The array can be freed via a call to <a class="el" href="group__poly.html#ga0daad245f72a0857d0ecf1632b0af1ed">pcomp_free_chunks</a>.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">num_of_chunks</td><td>On output, the variable will contain the number of chunks saved in <em>output_buf</em>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">input_buf</td><td>Pointer to the array of numbers to compress.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">input_size</td><td>Number of elements in <em>input_buf</em> to compress.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">params</td><td>Parameters used for the compression. The variable must have been created via a call to <a class="el" href="group__poly.html#ga3192eb47cac9f94936f283fcc2dccf74">pcomp_init_polycomp</a>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of elements that are used in the Chebyshev transform specified by <em>plan</em>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Either PCOMP_STAT_SUCCESS if no error occurred, or the error code. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00441">441</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l01951">1951</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gaa3d0118144149874c40c65d275d8052a"></a>
+<a class="anchor" id="ga388baf20639fc3adca5debcf62f03046"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void pcomp_free_chebyshev </td>
+          <td class="memname">int pcomp_decode_chunks </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td>
-          <td class="paramname"><em>plan</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> **&#160;</td>
+          <td class="paramname"><em>chunk_array</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>buf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Free the memory allocated by a previous call to <a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a>. </p>
+<p>Decode a byte sequence created by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a> into an array of chunks. </p>
+<p>This function can be used to read from a binary file or a socket a sequence of chunks encoded by <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>. The function allocates memory for an array of pcomp_polycomp_chunk_t structures and returns it in the variable <em>chunk_array</em>. The latter variable must be freed using <a class="el" href="group__poly.html#ga0daad245f72a0857d0ecf1632b0af1ed">pcomp_free_chunks</a> once it is no longer needed.</p>
+<p>This function is the counterpart for <a class="el" href="group__poly.html#gafdb33574b0b28724ec6785bfe7e240d2">pcomp_encode_chunks</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">plan</td><td>Pointer to the structure to be freed. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">chunk_array</td><td>Pointer to an array that will contain the chunks decoded from <em>buf</em>.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">num_of_chunks</td><td>On exit, this variable will hold the number of chunks saved in <em>chunk_array</em>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Pointer</td><td>to the byte sequence to decode.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Either PCOMP_STAT_SUCCESS if no error occurred, or the error code. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00415">415</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02287">2287</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gac8e5a21c4a3478a398b08d4d7e0385ea"></a>
+<a class="anchor" id="gaec113fa0273bc8207942f8f763d4d202"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void pcomp_free_poly_fit </td>
+          <td class="memname">int pcomp_decompress_polycomp </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *&#160;</td>
-          <td class="paramname"><em>poly_fit</em></td><td>)</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>output_buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const&#160;</td>
+          <td class="paramname"><em>chunk_array</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Free an instance of the pcomp_poly_fit_data_t that has been allocated via a call to <a class="el" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a>. </p>
+<p>Decompress a sequence of chunks. </p>
+<p>This function is the counterpart for <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">poly_fit</td><td>Pointer to the structure to be freed </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">output_buf</td><td>Pointer to the variable that will hold the uncompressed data. It must have room for a number of elements at least equal to the return value of <a class="el" href="group__poly.html#gad9c5b17fd5d5dac2e23d19ae3e8ad9ee">pcomp_total_num_of_samples</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">chunk_array</td><td>Array of chunks holding the data in compressed format.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_chunks</td><td>Number of elements in the array <em>chunk_array</em>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Either PCOMP_STAT_SUCCESS if no error occurred, or the error code. </dd></dl>
+
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02059">2059</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gafdb33574b0b28724ec6785bfe7e240d2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pcomp_encode_chunks </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>buf_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const&#160;</td>
+          <td class="paramname"><em>chunk_array</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encode a list of chunks into a sequence of raw bytes. </p>
+<p>This function transforms an array of instances to pcomp_polycomp_chunk_t variables into a sequence of raw bytes, suitable for I/O. It can be used together with <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a> to compress a dataset and save it into a binary file.</p>
+<p>To decode byte sequences produced by this function, use <a class="el" href="group__poly.html#ga388baf20639fc3adca5debcf62f03046">pcomp_decode_chunks</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buf</td><td>Pointer to a memory buffer that will receive the result of the encoding. It must have room for a number of bytes (<code>uint8_t</code>) at least equal to the return value of <a class="el" href="group__poly.html#ga9da3460a4c6e8fdabd4fca9ab155888c">pcomp_chunks_num_of_bytes</a>.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf_size</td><td>On input, it should contain the number of bytes that can be written in <em>buf</em>. On exit, it will contain the number of bytes actually written. The latter number is equal to the value returned by <a class="el" href="group__poly.html#ga9da3460a4c6e8fdabd4fca9ab155888c">pcomp_chunks_num_of_bytes</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">chunk_array</td><td>Array of chunks to encode</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_chunks</td><td>Number of elements in the array <em>chunk_array</em>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Either PCOMP_STAT_SUCCESS if no error occurred, or the error code. </dd></dl>
+
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02193">2193</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga0daad245f72a0857d0ecf1632b0af1ed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pcomp_free_chunks </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *&#160;</td>
+          <td class="paramname"><em>chunk_array</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Free an array of chunks. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">chunk_array</td><td>An array of chunks. This variable must have been allocated by a call to <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_chunks</td><td>Number of elements in the array <em>chunk_array</em> </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00237">237</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02106">2106</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -399,88 +572,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00592">592</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ga4b7e004c7b6735e6b026cfd81d30c993"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a>* pcomp_init_chebyshev </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>num_of_samples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a>&#160;</td>
-          <td class="paramname"><em>dir</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Allocate a new instance of the pcomp_chebyshev_t structure on the heap. </p>
-<p>Despite the fact that this function takes the parameter <em>dir</em>, the function which actually computes the Chebyshev transform (<a class="el" href="group__poly.html#ga76b1fdcbb1b1dba4191db3a9a0fe91be">pcomp_run_chebyshev</a>) allow to specify the desired direction. The purpose of having <em>dir</em> encoded in pcomp_chebyshev_t is that sometimes it is useful to keep it memorized in the structure itself.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_samples</td><td>Number of floating-point numbers that will be transformed</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">dir</td><td>Direction of the transform (either forward or backward). This is used to determine the normalization constant of the transform:<ul>
-<li>If computing a forward transform, the normalization is <img class="formulaInl" alt="$1 / (N - 1)$" src="form_16.png"/>, with <img class="formulaInl" alt="$N$" src="form_3.png"/> the number of samples.</li>
-<li>If computing a backward transform, the normalization is 1.</li>
-</ul>
-</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A newly created instance of pcomp_poly_fit_data_t structure. This must be freed using <a class="el" href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a>, once it is no longer used. </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00392">392</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="gafa3292680395741f74f5db0177f2a07b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a>* pcomp_init_poly_fit </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>num_of_samples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>num_of_coeffs</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Allocate a new instance of the pcomp_poly_fit_data_t structure on the heap. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_samples</td><td>Number of floating-point numbers that must fit the polynomial</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_coeffs</td><td>Number of coefficients of the least-squares fitting polynomial <img class="formulaInl" alt="$p(x)$" src="form_4.png"/>. This is equal to <img class="formulaInl" alt="$\deg p(x) + 1$" src="form_5.png"/>, where <img class="formulaInl" alt="$\deg p(x)$" src="form_6.png"/> is the degree of the polynomial. Thus, for a parabolic polynomial of the form <img class="formulaInl" alt="$p(x) = a x^2 + b x + c$" src="form_7.png"/>, <em>num_of_coeffs</em> = 3.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A newly created instance of pcomp_poly_fit_data_t structure. This must be freed using <a class="el" href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a>, once it is no longer used. </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00203">203</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00628">628</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -532,61 +624,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to the newly allocate pcomp_polycomp_t structure. This must be freed using <a class="el" href="group__poly.html#ga5abae32ef61a1a8a0f73b2ccdb0667a7">pcomp_free_polycomp</a>, once it is no longer used. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00564">564</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="gafeec2bb424071797103a20b21d16922c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t pcomp_poly_fit_num_of_coeffs </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *&#160;</td>
-          <td class="paramname"><em>poly_fit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the number of coefficients of the least-squares fitting polynomial. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">poly_fit</td><td>Pointer to the structure detailing the fit</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of coefficients for the fitting polynomial (one plus the polynomial degree) </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00280">280</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="gaa12ceda9b06ff4d60c21f719da8bd942"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t pcomp_poly_fit_num_of_samples </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *&#160;</td>
-          <td class="paramname"><em>poly_fit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the number of samples to be used in a polynomial fit. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">poly_fit</td><td>Pointer to the structure detailing the fit</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of samples that should be passed to a call to <a class="el" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a>. </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00261">261</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00598">598</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -613,7 +651,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The algorithm to be used by the compressor. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00678">678</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00714">714</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -640,7 +678,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The maximum allowable error for the polynomial compression. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00659">659</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00695">695</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -659,7 +697,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the number of coefficients for the fitting polynomial used in the polynomial compression. </p>
-<p>The return value has the same meaning as the value returned by the <a class="el" href="group__poly.html#gafeec2bb424071797103a20b21d16922c">pcomp_poly_fit_num_of_coeffs</a>.</p>
+<p>The return value has the same meaning as the value returned by the <a class="el" href="group__polyfit.html#gafeec2bb424071797103a20b21d16922c">pcomp_poly_fit_num_of_coeffs</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">params</td><td>Pointer to a pcomp_polycomp_t structure containing the compression parameters</td></tr>
@@ -668,7 +706,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of coefficients of the fitting polynomial. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00641">641</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00677">677</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -696,7 +734,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The periodicity. If zero or negative, no periodicity is assumed in the data to be compressed. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00699">699</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00773">773</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -715,7 +753,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the number of samples per chunk. </p>
-<p>This function returns the size of each chunk but the last one in the input data for a polynomial compression. Such chunks contain a set of consecutive values in the input array passed to routines as pcomp_compress_polycomp.</p>
+<p>This function returns the size of each chunk but the last one in the input data for a polynomial compression. Such chunks contain a set of consecutive values in the input array passed to routines as <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">params</td><td>Pointer to a pcomp_polycomp_t structure containing the compression parameters</td></tr>
@@ -724,7 +762,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of samples in each chunk. </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00619">619</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00655">655</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -763,146 +801,25 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00725">725</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l00799">799</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga76b1fdcbb1b1dba4191db3a9a0fe91be"></a>
+<a class="anchor" id="gad9c5b17fd5d5dac2e23d19ae3e8ad9ee"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int pcomp_run_chebyshev </td>
+          <td class="memname">size_t pcomp_total_num_of_samples </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct____pcomp__chebyshev__t.html">pcomp_chebyshev_t</a> *&#160;</td>
-          <td class="paramname"><em>plan</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__poly.html#ga916be96db23ae0292046887134631aca">pcomp_transform_direction_t</a>&#160;</td>
-          <td class="paramname"><em>dir</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>input</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Compute a forward/backward Chebyshev discrete transform. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">plan</td><td>Pointer to a Chebyshev plan created by <a class="el" href="group__poly.html#ga4b7e004c7b6735e6b026cfd81d30c993">pcomp_init_chebyshev</a></td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">dir</td><td>Direction of the transform. This parameter overrides the internal direction of <em>plan</em> (returned by <a class="el" href="group__poly.html#ga06c796c90a77f5af0a7248e8082b4bdb">pcomp_chebyshev_direction</a>).</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of <code>double</code> values that will contain the Chebyshev transform of <em>input</em>. It must have room for a number of elements at least equal to the return value of pcomp_num_of_samples.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>Array of <code>double</code> values to be transformed. The function will use the first N elements, where N is the return value of pcomp_num_of_samples.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>PCOMP_STAT_SUCCESS when successful. </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00499">499</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="gabc5eb759afb7304280d28e1ca53c8ff4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int pcomp_run_poly_fit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a> *&#160;</td>
-          <td class="paramname"><em>poly_fit</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>coeffs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>points</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculates a polynomial least-squares fit. </p>
-<p>Compute a least-squares fit between the numbers <img class="formulaInl" alt="$x_i$" src="form_0.png"/> (with <img class="formulaInl" alt="$i = 1 \ldots N$" src="form_8.png"/>) and the polynomial <img class="formulaInl" alt="$p(x)$" src="form_4.png"/> through the points <img class="formulaInl" alt="$(i, x_i)_{i=1}^N$" src="form_9.png"/>. The coefficients of <img class="formulaInl" alt="$p(x)$" src="form_4.png"/> are saved in <em>coeffs</em>, from the least to the greatest degree.</p>
-<p>Here is an example of the usage of this function:</p>
-<div class="fragment"><div class="line"><span class="keywordtype">double</span> points[] = { 1.0, 3.0, 5.0 };</div>
-<div class="line"><span class="keywordtype">double</span> coeffs[2];</div>
-<div class="line"><span class="keyword">const</span> <span class="keywordtype">size_t</span> num_of_points = <span class="keyword">sizeof</span>(points) / <span class="keyword">sizeof</span>(points[0]);</div>
-<div class="line"><span class="keyword">const</span> <span class="keywordtype">size_t</span> num_of_coeffs = <span class="keyword">sizeof</span>(coeffs) / <span class="keyword">sizeof</span>(coeffs[0]);</div>
-<div class="line"><a class="code" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a>* poly_fit;</div>
-<div class="line"></div>
-<div class="line">poly_fit = <a class="code" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a>(num_of_points, num_of_coeffs);</div>
-<div class="line"><a class="code" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a>(poly_fit, coeffs, points);</div>
-<div class="line">printf(<span class="stringliteral">&quot;The data are fitted by the polynomial y = %f + %f x\n&quot;</span>,</div>
-<div class="line">       coeffs[0], coeffs[1]);</div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">poly_fit</td><td>Pointer to a pcomp_poly_fit_data_t structure, created using the <a class="el" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a> function.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">coeffs</td><td>Pointer to an array where the coefficients of the polynomial will be stored on exit. The array must have room for a number of elements greater or equal than the value returned by <a class="el" href="group__poly.html#gafeec2bb424071797103a20b21d16922c">pcomp_poly_fit_num_of_coeffs</a>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">points</td><td>Array of numbers <img class="formulaInl" alt="$x_i$" src="form_0.png"/> to use in the fit. The number of elements considered in the fit is equal to the return value of <a class="el" href="group__poly.html#gaa12ceda9b06ff4d60c21f719da8bd942">pcomp_poly_fit_num_of_samples</a>.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>PCOMP_STAT_SUCCESS if the fit was computed successfully, PCOMP_STAT_INVALID_FIT if the data are incorrect (e.g., there are fewer samples than unknowns). </dd></dl>
-
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00328">328</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="gaf29ad7a7a070d4e13bc7ab2788b914a9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void pcomp_straighten </td>
-          <td>(</td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
+          <td class="paramtype"><a class="el" href="struct____pcomp__polycomp__chunk__t.html">pcomp_polycomp_chunk_t</a> *const&#160;</td>
+          <td class="paramname"><em>chunk_array</em>[], </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>num_of_samples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>period</em>&#160;</td>
+          <td class="paramname"><em>num_of_chunks</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -912,20 +829,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Remove sudden jumps from <em>input</em>. </p>
-<p>Assuming that the data in the array <em>input</em> have a periodicity equal to <em>period</em>, the function copies them to <em>output</em> while applying a positive/negative offset equal to a multiple of <em>period</em>.</p>
-<p>It is ok for <em>input</em> and <em>output</em> to point to the same memory location.</p>
+<p>Compute the sum of the number of samples encoded in <em>chunk_array</em>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to the array that will contain the result. It must have room for at least <em>num_of_samples</em> values.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>Array of <em>num_of_samples</em> values to process.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_samples</td><td>Number of samples to process in <em>input</em> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">period</td><td>Periodicity of the data. If less or equal to zero, <em>input</em> is copied verbatim to <em>output</em>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">chunk_array</td><td>Array of pcomp_polycomp_chunk_t variables. Typically, such array is created via a call to <a class="el" href="group__poly.html#ga87725918ac9dc89d532647768dc0a812">pcomp_compress_polycomp</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_of_chunks</td><td>Number of elements in <em>chunk_array</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The overall number of samples encoded in the sequence of chunks </dd></dl>
 
-<p>Definition at line <a class="el" href="poly_8c_source.html#l00790">790</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
+<p>Definition at line <a class="el" href="poly_8c_source.html#l02022">2022</a> of file <a class="el" href="poly_8c_source.html">poly.c</a>.</p>
 
 </div>
 </div>
@@ -934,7 +848,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
+    <li class="footer">Generated on Tue Oct 27 2015 09:46:37 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

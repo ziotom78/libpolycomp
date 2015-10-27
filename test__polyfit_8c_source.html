@@ -144,20 +144,20 @@ $(document).ready(function(){initNavTree('test__polyfit_8c_source.html','');});
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">double</span> coeffs[2];</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">double</span> points[] = { 1.0, 3.0, 5.0 };</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a>* poly_fit = <a class="code" href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a>(3, 2);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    assert(<a class="code" href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a>(poly_fit, coeffs, points)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="struct____pcomp__poly__fit__data__t.html">pcomp_poly_fit_data_t</a>* poly_fit = <a class="code" href="group__polyfit.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a>(3, 2);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    assert(<a class="code" href="group__polyfit.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a>(poly_fit, coeffs, points)</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;           == PCOMP_STAT_SUCCESS);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    assert(fabs(coeffs[0] - (-1.0)) &lt; 1.0e-7);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    assert(fabs(coeffs[1] - (+2.0)) &lt; 1.0e-7);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a>(poly_fit);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="group__polyfit.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a>(poly_fit);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="ttc" id="struct____pcomp__poly__fit__data__t_html"><div class="ttname"><a href="struct____pcomp__poly__fit__data__t.html">__pcomp_poly_fit_data_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00175">poly.c:175</a></div></div>
-<div class="ttc" id="group__poly_html_gabc5eb759afb7304280d28e1ca53c8ff4"><div class="ttname"><a href="group__poly.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a></div><div class="ttdeci">int pcomp_run_poly_fit(pcomp_poly_fit_data_t *poly_fit, double *coeffs, const double *points)</div><div class="ttdoc">Calculates a polynomial least-squares fit. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00328">poly.c:328</a></div></div>
-<div class="ttc" id="group__poly_html_gac8e5a21c4a3478a398b08d4d7e0385ea"><div class="ttname"><a href="group__poly.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a></div><div class="ttdeci">void pcomp_free_poly_fit(pcomp_poly_fit_data_t *poly_fit)</div><div class="ttdoc">Free an instance of the pcomp_poly_fit_data_t that has been allocated via a call to pcomp_init_poly_f...</div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00237">poly.c:237</a></div></div>
-<div class="ttc" id="group__poly_html_gafa3292680395741f74f5db0177f2a07b"><div class="ttname"><a href="group__poly.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a></div><div class="ttdeci">pcomp_poly_fit_data_t * pcomp_init_poly_fit(size_t num_of_samples, size_t num_of_coeffs)</div><div class="ttdoc">Allocate a new instance of the pcomp_poly_fit_data_t structure on the heap. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00203">poly.c:203</a></div></div>
+<div class="ttc" id="group__polyfit_html_gabc5eb759afb7304280d28e1ca53c8ff4"><div class="ttname"><a href="group__polyfit.html#gabc5eb759afb7304280d28e1ca53c8ff4">pcomp_run_poly_fit</a></div><div class="ttdeci">int pcomp_run_poly_fit(pcomp_poly_fit_data_t *poly_fit, double *coeffs, const double *points)</div><div class="ttdoc">Calculates a polynomial least-squares fit. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00301">poly.c:301</a></div></div>
+<div class="ttc" id="struct____pcomp__poly__fit__data__t_html"><div class="ttname"><a href="struct____pcomp__poly__fit__data__t.html">__pcomp_poly_fit_data_t</a></div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00145">poly.c:145</a></div></div>
+<div class="ttc" id="group__polyfit_html_gafa3292680395741f74f5db0177f2a07b"><div class="ttname"><a href="group__polyfit.html#gafa3292680395741f74f5db0177f2a07b">pcomp_init_poly_fit</a></div><div class="ttdeci">pcomp_poly_fit_data_t * pcomp_init_poly_fit(size_t num_of_samples, size_t num_of_coeffs)</div><div class="ttdoc">Allocate a new instance of the pcomp_poly_fit_data_t structure on the heap. </div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00173">poly.c:173</a></div></div>
+<div class="ttc" id="group__polyfit_html_gac8e5a21c4a3478a398b08d4d7e0385ea"><div class="ttname"><a href="group__polyfit.html#gac8e5a21c4a3478a398b08d4d7e0385ea">pcomp_free_poly_fit</a></div><div class="ttdeci">void pcomp_free_poly_fit(pcomp_poly_fit_data_t *poly_fit)</div><div class="ttdoc">Free an instance of the pcomp_poly_fit_data_t that has been allocated via a call to pcomp_init_poly_f...</div><div class="ttdef"><b>Definition:</b> <a href="poly_8c_source.html#l00210">poly.c:210</a></div></div>
 <div class="ttc" id="libpolycomp_8h_html"><div class="ttname"><a href="libpolycomp_8h.html">libpolycomp.h</a></div><div class="ttdoc">Header file for Libpolycomp. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('test__polyfit_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>test_polyfit.c</b></li>
-    <li class="footer">Generated on Sun Oct 25 2015 07:42:34 for Libpolycomp by
+    <li class="footer">Generated on Tue Oct 27 2015 09:46:37 for Libpolycomp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
