@@ -1,15 +1,16 @@
 # libpolycomp
 
-A library which implements a polynomial compression, as well as other
+A C library which implements a polynomial compression, as well as other
 well-known compression techniques.
 
 ## Building the library
 
 You need the following dependencies:
 
-1. CMake (https://cmake.org/)
-2. GNU Scientific Library (http://www.gnu.org/software/gsl/)
-3. FFTW (http://www.fftw.org/)
+1. A C compiler (tested compilers: GCC 4.8, Clang 3.4, Intel C compiler 16.0)
+2. CMake (https://cmake.org/)
+3. GNU Scientific Library (http://www.gnu.org/software/gsl/)
+4. FFTW (http://www.fftw.org/)
 
 Enter the directory containing the `libpolycomp` sources and run the
 following commands:
@@ -25,7 +26,7 @@ system-wide, run the following command as root:
 
     make install
 
-The source code is written using C98, so it should compile almost
+The source code is written using C89, so it should compile almost
 everywhere.
 
 ## Documentation
