@@ -25,15 +25,16 @@ project (libpolycomp
   VERSION 1.0
   LANGUAGES C)
 
+option(BUILD_SHARED_LIBS "Build a shared library")
+option(ENABLE_OPENMP "Use OpenMP if available" ON)
+
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 #    "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_SOURCE_DIR}/cmake_modules")
 
-# This works with GCC and clang
+# This works with GCC, clang and the Intel C compiler
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -g")
-
-option(BUILD_SHARED_LIBS "Build a shared library")
 
 find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDE_DIRS})
@@ -42,6 +43,14 @@ set(LIBS ${LIBS} ${FFTW_LIBRARIES})
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GSL_LIBRARIES})
+
+if(ENABLE_OPENMP)
+  find_package(OpenMP)
+  if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+  endif(OPENMP_FOUND)
+endif(ENABLE_OPENMP)
 
 set(SOURCE_FILE_LIST
   diff_rle.c

@@ -29,6 +29,15 @@ system-wide, run the following command as root:
 The source code is written using C89, so it should compile almost
 everywhere.
 
+### OpenMP
+
+By default, OpenMP will be used if available. To disable OpenMP,
+change the ``cmake`` invocation above as follows:
+
+    # snip
+    cmake -DENABLE_OPENMP=OFF ..
+    # snip
+
 ## Documentation
 
 The documentation is kept using Doxygen, an online copy is available

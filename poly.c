@@ -823,21 +823,14 @@ static double eval_poly(double* coeffs, size_t num_of_coeffs, double x)
         abort();
 
     if (num_of_coeffs >= 1) {
-        size_t idx = num_of_coeffs - 1;
+        int idx = num_of_coeffs - 1;
         double result = coeffs[idx];
 
         if (num_of_coeffs == 1)
             return result;
 
-        --idx;
-        while (1) {
+        for (idx = num_of_coeffs - 2; idx >= 0; --idx)
             result = result * x + coeffs[idx];
-
-            if (idx > 0)
-                --idx;
-            else
-                break;
-        }
 
         return result;
     }
@@ -1960,8 +1953,9 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
                             const pcomp_polycomp_t* params)
 {
     size_t idx;
-    const double* cur_input = input_buf;
     pcomp_polycomp_t* chunk_params;
+    pcomp_polycomp_t* last_chunk_params;
+    size_t samples_in_last_chunk = 0;
 
     if (output_buf == NULL || num_of_chunks == NULL || input_buf == NULL
         || params == NULL || params->poly_fit == NULL)
@@ -1981,31 +1975,43 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
         params->samples_per_chunk, params->poly_fit->num_of_coeffs,
         params->max_allowable_error, params->algorithm);
 
-    /* Loop over the chunks and call
-     * "pcomp_run_polycomp_on_chunk" for
-     * each of them */
+    samples_in_last_chunk = input_size % params->samples_per_chunk;
+    if (samples_in_last_chunk != 0) {
+        last_chunk_params = pcomp_init_polycomp(
+            samples_in_last_chunk, params->poly_fit->num_of_coeffs,
+            params->max_allowable_error, params->algorithm);
+    }
+    else {
+        last_chunk_params = chunk_params;
+    }
+
+/* Loop over the chunks and call
+ * "pcomp_run_polycomp_on_chunk" for
+ * each of them */
+#pragma omp parallel for
     for (idx = 0; idx < *num_of_chunks; ++idx) {
-        size_t cur_chunk_size = params->samples_per_chunk;
+        const double* cur_input = input_buf
+                                  + params->samples_per_chunk * idx;
+        pcomp_polycomp_t* cur_params;
+        size_t cur_chunk_size;
 
-        if ((cur_input - input_buf) + cur_chunk_size > input_size)
-            cur_chunk_size
-                = (size_t)(input_size - (cur_input - input_buf));
-
-        if (cur_chunk_size != chunk_params->samples_per_chunk) {
-            pcomp_free_polycomp(chunk_params);
-
-            chunk_params = pcomp_init_polycomp(
-                cur_chunk_size, params->poly_fit->num_of_coeffs,
-                params->max_allowable_error, params->algorithm);
+        if (idx + 1 < *num_of_chunks) {
+            cur_params = chunk_params;
+            cur_chunk_size = params->samples_per_chunk;
+        }
+        else {
+            cur_params = last_chunk_params;
+            cur_chunk_size = samples_in_last_chunk;
         }
 
         (*output_buf)[idx] = pcomp_init_chunk(cur_chunk_size);
-        pcomp_run_polycomp_on_chunk(chunk_params, cur_input,
+        pcomp_run_polycomp_on_chunk(cur_params, cur_input,
                                     cur_chunk_size, (*output_buf)[idx],
                                     NULL);
-
-        cur_input += cur_chunk_size;
     }
+
+    pcomp_free_polycomp(chunk_params);
+    pcomp_free_polycomp(last_chunk_params);
 
     return PCOMP_STAT_SUCCESS;
 }
