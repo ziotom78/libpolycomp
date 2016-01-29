@@ -334,6 +334,9 @@ struct __pcomp_chebyshev_t {
     size_t num_of_samples;
     fftw_plan fftw_plan_ptr;
     pcomp_transform_direction_t dir;
+
+    /* Used internally by pcomp_find_chebyshev_mask */
+    pcomp_chunk_size_t* positions;
 };
 
 /** \ingroup cheby
@@ -377,6 +380,9 @@ pcomp_chebyshev_t* pcomp_init_chebyshev(size_t num_of_samples,
         FFTW_REDFT00, FFTW_ESTIMATE);
     chebyshev->dir = dir;
 
+    chebyshev->positions = malloc(chebyshev->num_of_samples
+                                  * sizeof(pcomp_chunk_size_t));
+
     return chebyshev;
 }
 
@@ -400,6 +406,9 @@ void pcomp_free_chebyshev(pcomp_chebyshev_t* plan)
 
     if (plan->fftw_plan_ptr != NULL)
         fftw_destroy_plan(plan->fftw_plan_ptr);
+
+    if (plan->positions != NULL)
+        free(plan->positions);
 
     free(plan);
 }
@@ -1526,7 +1535,6 @@ size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
 {
     size_t idx;
     size_t cur_coeff = 0;
-    pcomp_chunk_size_t* positions;
     double err;
 
     if (chebyshev == NULL || inv_chebyshev == NULL || mask == NULL
@@ -1553,14 +1561,12 @@ size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
      * positions: | 7 | 2 | 5 | ... |
      *            +---+---+---+-----+
      */
-    positions = malloc(chebyshev->num_of_samples
-                       * sizeof(pcomp_chunk_size_t));
-    if (positions == NULL)
+    if (chebyshev->positions == NULL)
         abort();
     for (idx = 0; idx < chebyshev->num_of_samples; ++idx) {
-        positions[idx] = idx;
+        chebyshev->positions[idx] = idx;
     }
-    sort_positions(positions, chebyshev->output,
+    sort_positions(chebyshev->positions, chebyshev->output,
                    chebyshev->num_of_samples);
 
     /* Start by setting all the coefficients to zero */
@@ -1574,9 +1580,9 @@ size_t pcomp_find_chebyshev_mask(pcomp_chebyshev_t* chebyshev,
     cur_coeff = 0;
     while (cur_coeff < chebyshev->num_of_samples) {
 
-        inv_chebyshev->input[positions[cur_coeff]]
-            = chebyshev->output[positions[cur_coeff]];
-        pcomp_mask_set_bit(mask, positions[cur_coeff], 1);
+        inv_chebyshev->input[chebyshev->positions[cur_coeff]]
+            = chebyshev->output[chebyshev->positions[cur_coeff]];
+        pcomp_mask_set_bit(mask, chebyshev->positions[cur_coeff], 1);
         ++cur_coeff;
 
         pcomp_run_chebyshev(inv_chebyshev, inv_chebyshev->dir, NULL,

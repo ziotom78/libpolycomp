@@ -60,6 +60,7 @@ void test_compression(void)
         assert(fabs(input[idx] - decompr[idx]) <= MAX_ERROR);
     }
 
+    free(decompr);
     pcomp_free_polycomp(params);
     pcomp_free_chunks(chunks, num_of_chunks);
 }
@@ -101,6 +102,7 @@ void test_encoding(void)
         assert(fabs(input[idx] - decompr[idx]) <= MAX_ERROR);
     }
 
+    free(decompr);
     pcomp_free_polycomp(params);
     pcomp_free_chunks(chunks, num_of_chunks);
 }
