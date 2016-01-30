@@ -2089,34 +2089,70 @@ int pcomp_decompress_polycomp(
     size_t num_of_chunks)
 {
     size_t idx;
-    double* cur_output_pos = output_buf;
-    pcomp_chebyshev_t* inv_chebyshev = NULL;
+    size_t* start_pos_list;
+    pcomp_chebyshev_t** inv_cheby_list = NULL;
+    pcomp_chebyshev_t* last_inv_cheby = NULL;
 
-    if (output_buf == NULL || chunk_array == NULL)
+    if (output_buf == NULL || chunk_array == NULL || num_of_chunks == 0)
         abort();
 
+    /* Precompute the position in the output buffer where the
+     * decompressed data from each chunk will be written: in this way,
+     * we prevent data races in the parallel for loop below. */
+    start_pos_list = malloc(sizeof(size_t) * num_of_chunks);
+    if (start_pos_list == NULL)
+        abort();
+
+    start_pos_list[0] = 0;
+    for (idx = 0; idx < num_of_chunks - 1; ++idx) {
+        start_pos_list[idx + 1] = start_pos_list[idx]
+                                  + chunk_array[idx]->num_of_samples;
+    }
+
+    /* Since FFTW's plan allocation functions are not reentrant, we
+     * must initialize them outside the parallel loop. */
+    inv_cheby_list
+        = malloc(sizeof(pcomp_chebyshev_t*) * omp_get_max_threads());
+    if (inv_cheby_list == NULL)
+        abort();
+    for (idx = 0; idx < omp_get_max_threads(); ++idx) {
+        inv_cheby_list[idx] = pcomp_init_chebyshev(
+            chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
+    }
+    if (chunk_array[num_of_chunks - 1]->num_of_samples
+        != chunk_array[0]->num_of_samples) {
+        last_inv_cheby = pcomp_init_chebyshev(
+            chunk_array[num_of_chunks - 1]->num_of_samples,
+            PCOMP_TD_INVERSE);
+    }
+    else
+        last_inv_cheby = NULL;
+
+#pragma omp parallel for
     for (idx = 0; idx < num_of_chunks; ++idx) {
+        pcomp_chebyshev_t* cur_inv_cheby;
         if (chunk_array[idx] == NULL)
             abort();
 
-        if (inv_chebyshev == NULL
-            || inv_chebyshev->num_of_samples
-                   != chunk_array[idx]->num_of_samples) {
-
-            /* This does no harm if inv_chebyshev==NULL */
-            pcomp_free_chebyshev(inv_chebyshev);
-
-            inv_chebyshev = pcomp_init_chebyshev(
-                chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
+        if (idx + 1 < num_of_chunks || last_inv_cheby == NULL) {
+            cur_inv_cheby = inv_cheby_list[omp_get_thread_num()];
+        }
+        else {
+            cur_inv_cheby = last_inv_cheby;
         }
 
         pcomp_decompress_polycomp_chunk(
-            cur_output_pos, chunk_array[idx], inv_chebyshev);
-
-        cur_output_pos += chunk_array[idx]->num_of_samples;
+            output_buf + start_pos_list[idx], chunk_array[idx],
+            cur_inv_cheby);
     }
 
-    pcomp_free_chebyshev(inv_chebyshev);
+    free(start_pos_list);
+
+    for (idx = 0; idx < omp_get_max_threads(); ++idx) {
+        pcomp_free_chebyshev(inv_cheby_list[idx]);
+    }
+    free(inv_cheby_list);
+    pcomp_free_chebyshev(last_inv_cheby);
 
     return PCOMP_STAT_SUCCESS;
 }
