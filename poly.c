@@ -36,6 +36,18 @@
 
 #include <fftw3.h>
 
+#ifdef WITH_OPENMP
+
+#include <omp.h>
+
+#else
+
+typedef int omp_int_t;
+static omp_int_t omp_get_thread_num(void) { return 0; }
+static omp_int_t omp_get_max_threads(void) { return 1; }
+
+#endif
+
 /**********************************************************************/
 
 /** \defgroup poly Polynomial compression functions
@@ -1948,7 +1960,7 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
                             const pcomp_polycomp_t* params)
 {
     size_t idx;
-    pcomp_polycomp_t* chunk_params;
+    pcomp_polycomp_t** chunk_params;
     pcomp_polycomp_t* last_chunk_params;
     size_t samples_in_last_chunk = 0;
 
@@ -1958,7 +1970,8 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
 
     /* Calculate how many chunks we'll create */
     *num_of_chunks = input_size / params->samples_per_chunk;
-    if (input_size % params->samples_per_chunk != 0)
+    samples_in_last_chunk = input_size % params->samples_per_chunk;
+    if (samples_in_last_chunk != 0)
         ++(*num_of_chunks);
 
     *output_buf
@@ -1966,23 +1979,26 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
     if (*output_buf == NULL)
         abort();
 
-    chunk_params = pcomp_init_polycomp(
-        params->samples_per_chunk, params->poly_fit->num_of_coeffs,
-        params->max_allowable_error, params->algorithm);
+    /* Allocate a pcomp_polycomp_t structure for each of the OpenMP
+     * threads */
+    chunk_params
+        = malloc(sizeof(pcomp_polycomp_t*) * omp_get_max_threads());
+    for (idx = 0; idx < omp_get_max_threads(); ++idx) {
+        chunk_params[idx] = pcomp_init_polycomp(
+            params->samples_per_chunk, params->poly_fit->num_of_coeffs,
+            params->max_allowable_error, params->algorithm);
+    }
 
-    samples_in_last_chunk = input_size % params->samples_per_chunk;
     if (samples_in_last_chunk != 0) {
+        /* This is going to be used by just *one* OpenMP process */
         last_chunk_params = pcomp_init_polycomp(
             samples_in_last_chunk, params->poly_fit->num_of_coeffs,
             params->max_allowable_error, params->algorithm);
     }
     else {
-        last_chunk_params = chunk_params;
+        last_chunk_params = NULL;
     }
 
-/* Loop over the chunks and call
- * "pcomp_run_polycomp_on_chunk" for
- * each of them */
 #pragma omp parallel for
     for (idx = 0; idx < *num_of_chunks; ++idx) {
         const double* cur_input = input_buf
@@ -1990,8 +2006,8 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
         pcomp_polycomp_t* cur_params;
         size_t cur_chunk_size;
 
-        if (idx + 1 < *num_of_chunks) {
-            cur_params = chunk_params;
+        if (idx + 1 < *num_of_chunks || last_chunk_params == NULL) {
+            cur_params = chunk_params[omp_get_thread_num()];
             cur_chunk_size = params->samples_per_chunk;
         }
         else {
@@ -1999,13 +2015,19 @@ int pcomp_compress_polycomp(pcomp_polycomp_chunk_t** output_buf[],
             cur_chunk_size = samples_in_last_chunk;
         }
 
+        if (cur_params == NULL)
+            abort();
+
         (*output_buf)[idx] = pcomp_init_chunk(cur_chunk_size);
         pcomp_run_polycomp_on_chunk(cur_params, cur_input,
                                     cur_chunk_size, (*output_buf)[idx],
                                     NULL);
     }
 
-    pcomp_free_polycomp(chunk_params);
+    for (idx = 0; idx < omp_get_max_threads(); ++idx)
+        pcomp_free_polycomp(chunk_params[idx]);
+    free(chunk_params);
+
     pcomp_free_polycomp(last_chunk_params);
 
     return PCOMP_STAT_SUCCESS;
@@ -2068,34 +2090,72 @@ int pcomp_decompress_polycomp(
     size_t num_of_chunks)
 {
     size_t idx;
-    double* cur_output_pos = output_buf;
-    pcomp_chebyshev_t* inv_chebyshev = NULL;
+    pcomp_chebyshev_t** inv_chebyshev_array = NULL;
+    size_t* start_pos;
 
-    if (output_buf == NULL || chunk_array == NULL)
+    if (output_buf == NULL || chunk_array == NULL || num_of_chunks == 0)
         abort();
 
+    /* Compute where the function should save the data after having
+     * decompressed each chunk. Here we do *not* assume that all the
+     * chunks but the last have the same size */
+    start_pos = malloc(sizeof(size_t) * num_of_chunks);
+    if (start_pos == NULL)
+        abort();
+
+    start_pos[0] = 0;
+    for (idx = 0; idx < num_of_chunks - 1; ++idx) {
+        start_pos[idx + 1] = start_pos[idx]
+                             + chunk_array[idx]->num_of_samples;
+    }
+
+    /* "inv_chebyshev_array" is an array of pointers to
+     * pcomp_chebyshev_t structures. We create them in advance so that
+     * OpenMP threads can work without interferences among them. NULL
+     * values are placed for those chunks whose size is equal to the
+     * size of the first chunk: in this case, we can just reuse the
+     * first pcomp_chebyshev_t array (the FFTW documentation says it's
+     * safe to call fftw_execute at the same time from many threads,
+     * see http://www.fftw.org/doc/Thread-safety.html). */
+    inv_chebyshev_array
+        = malloc(sizeof(pcomp_chebyshev_t) * num_of_chunks);
+    if (inv_chebyshev_array == NULL)
+        abort();
     for (idx = 0; idx < num_of_chunks; ++idx) {
+        if (idx == 0 || (chunk_array[idx]->num_of_samples
+                         != chunk_array[0]->num_of_samples)) {
+            inv_chebyshev_array[idx] = pcomp_init_chebyshev(
+                chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
+        }
+        else {
+            inv_chebyshev_array[idx] = NULL;
+        }
+    }
+
+/* Now decompress the chunks. The code is optimized for the case
+ * where most of the chunks have the same size as the first, but
+ * it works in the general case too */
+#pragma omp parallel for
+    for (idx = 0; idx < num_of_chunks; ++idx) {
+        pcomp_chebyshev_t* cur_cheby;
+
         if (chunk_array[idx] == NULL)
             abort();
 
-        if (inv_chebyshev == NULL
-            || inv_chebyshev->num_of_samples
-                   != chunk_array[idx]->num_of_samples) {
+        if (inv_chebyshev_array[idx] != NULL)
+            cur_cheby = inv_chebyshev_array[idx];
+        else
+            cur_cheby = inv_chebyshev_array[0];
 
-            /* This does no harm if inv_chebyshev==NULL */
-            pcomp_free_chebyshev(inv_chebyshev);
-
-            inv_chebyshev = pcomp_init_chebyshev(
-                chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
-        }
-
-        pcomp_decompress_polycomp_chunk(
-            cur_output_pos, chunk_array[idx], inv_chebyshev);
-
-        cur_output_pos += chunk_array[idx]->num_of_samples;
+        pcomp_decompress_polycomp_chunk(output_buf + start_pos[idx],
+                                        chunk_array[idx], cur_cheby);
     }
 
-    pcomp_free_chebyshev(inv_chebyshev);
+    free(start_pos);
+    for (idx = 0; idx < num_of_chunks; ++idx) {
+        pcomp_free_chebyshev(inv_chebyshev_array[idx]);
+    }
+    free(inv_chebyshev_array);
 
     return PCOMP_STAT_SUCCESS;
 }
@@ -2184,10 +2244,9 @@ size_t pcomp_chunks_num_of_bytes(pcomp_polycomp_chunk_t* const chunks[],
  * uint8_t) at least equal to the return value of \ref
  * pcomp_chunks_num_of_bytes.
  *
- * \param[inout] buf_size On input, it should contain the number of
- * bytes that can be written in \a buf. On exit, it will contain the
- * number of bytes actually written. The latter number is equal to the
- * value returned by \ref pcomp_chunks_num_of_bytes.
+ * \param[out] buf_size On exit, it will contain the number of bytes
+ * actually written in \a buf. The latter number is equal to the value
+ * returned by \ref pcomp_chunks_num_of_bytes.
  *
  * \param[in] chunk_array Array of chunks to encode
  *

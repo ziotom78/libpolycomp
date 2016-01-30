@@ -49,6 +49,10 @@ if(ENABLE_OPENMP)
   if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+
+    # This is needed, as a few compilers (e.g., clang) do not define the _OPENMP macro
+    # See https://llvm.org/bugs/show_bug.cgi?id=23492
+    add_definitions (-DWITH_OPENMP)
   endif(OPENMP_FOUND)
 endif(ENABLE_OPENMP)
 
