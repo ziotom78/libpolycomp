@@ -2105,6 +2105,13 @@ int pcomp_decompress_polycomp(
 
     start_pos_list[0] = 0;
     for (idx = 0; idx < num_of_chunks - 1; ++idx) {
+        /* The algorithm heavy relies on the fact that *all the
+         * chunks* but the last one have the same number of
+         * elements! */
+        if (chunk_array[idx]->num_of_samples
+            != chunk_array[0]->num_of_samples)
+            abort();
+
         start_pos_list[idx + 1] = start_pos_list[idx]
                                   + chunk_array[idx]->num_of_samples;
     }
@@ -2116,8 +2123,13 @@ int pcomp_decompress_polycomp(
     if (inv_cheby_list == NULL)
         abort();
     for (idx = 0; idx < omp_get_max_threads(); ++idx) {
-        inv_cheby_list[idx] = pcomp_init_chebyshev(
-            chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
+        if (idx < num_of_chunks) {
+            inv_cheby_list[idx] = pcomp_init_chebyshev(
+                chunk_array[idx]->num_of_samples, PCOMP_TD_INVERSE);
+        }
+        else {
+            inv_cheby_list[idx] = NULL;
+        }
     }
     if (chunk_array[num_of_chunks - 1]->num_of_samples
         != chunk_array[0]->num_of_samples) {
@@ -2259,11 +2271,13 @@ int pcomp_encode_chunks(void* buf, size_t* buf_size,
 {
     void* buf_ptr = buf;
     size_t chunk_idx;
+    uint64_t num_of_chunks_uint64 = (uint64_t)num_of_chunks;
 
     if (chunk_array == NULL || num_of_chunks == 0)
         abort();
 
-    SAVE_TO_PTR_AND_INCREMENT(buf_ptr, num_of_chunks, size_t);
+    SAVE_TO_PTR_AND_INCREMENT(buf_ptr, num_of_chunks_uint64, uint64_t);
+    num_of_chunks = num_of_chunks_uint64;
 
     for (chunk_idx = 0; chunk_idx < num_of_chunks; ++chunk_idx) {
         const pcomp_polycomp_chunk_t* cur_chunk
@@ -2360,11 +2374,15 @@ int pcomp_decode_chunks(pcomp_polycomp_chunk_t** chunk_array[],
     size_t cheby_mask_buf_size = 0;
     double* uncompr_buf = NULL;
     size_t uncompr_buf_size = 0;
+    uint64_t num_of_chunks_uint64;
 
     if (buf == NULL || chunk_array == NULL || num_of_chunks == NULL)
         abort();
 
-    READ_FROM_PTR_AND_INCREMENT(*num_of_chunks, cur_ptr, size_t);
+    READ_FROM_PTR_AND_INCREMENT(num_of_chunks_uint64, cur_ptr,
+                                uint64_t);
+    *num_of_chunks = num_of_chunks_uint64;
+
     *chunk_array
         = malloc(sizeof(pcomp_polycomp_chunk_t*) * (*num_of_chunks));
     if (*chunk_array == NULL)
