@@ -1156,15 +1156,20 @@ size_t pcomp_chunk_num_of_bytes(const pcomp_polycomp_chunk_t* chunk)
          * - the number N of polynomial coefficients (pcomp_poly_size_t)
          * - the size of the Chebyshev mask
          * - the number M of Chebyshev coefficients (pcomp_chunk_size_t)
-         * - Nx8 bytes for the polynomial
-         * - Mx8 bytes for the Chebyshev coefficients
+         * - Nx8 bytes for the polynomial (only if M > 0)
+         * - Mx8 bytes for the Chebyshev coefficients (only if M > 0)
          */
-        return sizeof(int8_t) + sizeof(pcomp_chunk_size_t)
-               + sizeof(pcomp_poly_size_t)
-               + pcomp_chunk_cheby_mask_size(chunk->num_of_samples)
-               + sizeof(pcomp_chunk_size_t)
-               + (chunk->num_of_poly_coeffs
-                  + chunk->num_of_cheby_coeffs) * sizeof(double);
+        size_t result = sizeof(int8_t) + sizeof(pcomp_chunk_size_t)
+                        + sizeof(pcomp_poly_size_t)
+                        + (chunk->num_of_poly_coeffs) * sizeof(double)
+                        + sizeof(pcomp_chunk_size_t);
+
+        if (chunk->num_of_cheby_coeffs > 0) {
+            result += pcomp_chunk_cheby_mask_size(chunk->num_of_samples)
+                      + chunk->num_of_cheby_coeffs * sizeof(double);
+        }
+
+        return result;
     }
     else {
         /* The size is calculated as follows:
