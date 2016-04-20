@@ -44,3 +44,9 @@ change the ``cmake`` invocation above as follows:
 
 The documentation is kept using Doxygen, an online copy is available
 at the site http://ziotom78.github.io/libpolycomp .
+
+## Python bindings
+
+A set of Python 3 bindings, as well as a stand-alone executable which
+implements compression/decompression of FITS files, is available here:
+https://github.com/ziotom78/polycomp
