@@ -3,6 +3,8 @@
 A C library which implements a polynomial compression, as well as other
 well-known compression techniques.
 
+This library is registered on ASCL.net (http://ascl.net/code/v/1373).
+
 ## Building the library
 
 You need the following dependencies:
