@@ -61,3 +61,7 @@ at the site http://ziotom78.github.io/libpolycomp .
 A set of Python 3 bindings, as well as a stand-alone executable which
 implements compression/decompression of FITS files, is available here:
 https://github.com/ziotom78/polycomp
+
+## License
+
+The code is released under the MIT license.
