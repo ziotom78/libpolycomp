@@ -23,11 +23,22 @@ following commands:
     cmake ..
     make
 
+If you need to specify custom locations for the include/library files,
+use CMake's variables `CMAKE_INCLUDE_PATH` and `CMAKE_LIBRARY_PATH`:
+
+    cmake -DCMAKE_INCLUDE_PATH=/myinclude -DCMAKE_LIBRARY_PATH=/mylib ..
+    
 By default, both a static and dynamic library will be compiled, with
 names "libpolycomp_static.a" and "libpolycomp.so". To install them
 system-wide, run the following command as root:
 
     make install
+
+If you do *not* want to install the library system-wide but prefer to
+specify a custom location, use the variable
+`CMAKE_INSTALL_PREFIX:PATH`:
+
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/mypolycomp ..
 
 The source code is written using C89, so it should compile almost
 everywhere.
@@ -70,3 +81,7 @@ efficient and configurable compression of astronomical timelines_
 	author = "M. Tomasi",
 }
 `````
+
+## License
+
+The code is released under the MIT license.
